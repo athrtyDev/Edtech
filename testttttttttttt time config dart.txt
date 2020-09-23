@@ -1,0 +1,197 @@
+/*
+Type				= Regular | Custom
+CustomDay			= 2019/12/31 
+WorkdayBegin
+WorkdayBreakBegin
+WorkdayBreakEnd
+WorkdayEnd
+WeekendBegin
+WeekendBreakBegin
+WeekendBreakEnd
+WeekendEnd
+DeliveryInterval 	= 60 min
+DeliveryBreak		= 30 min
+
+// *******************
+Type
+CustomDay
+BeginTime
+EndTime
+
+10:00 - 11:00
+11:30 - 12:30
+13:00 - 14:00
+14:30 - 15:30 
+*/
+
+
+//*************************** DeliveryTime class
+class DeliveryTime {
+  String type;				// Regular, Custom
+  DateTime customDay;
+  String beginTime;
+  String endTime;
+  bool isPastTime;
+  bool isSelected;
+  
+  DeliveryTime({this.type, this.customDay, this.beginTime, this.endTime, this.isPastTime, this.isSelected});
+
+  DeliveryTime.fromJson(Map<String, dynamic> json) {
+    type = json['type'];
+    customDay = DateFormat("yyyy/MM/dd").parse(json['customDay']);
+    beginTime = json['beginTime'];
+	endTime = json['endTime'];
+	isPastTime = false;		// by default every time is in future at first, and calculate it in logic 
+	isSelected = false;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['type'] = this.type;
+    data['customDay'] = this.customDay.toString() ?? '';
+    data['beginTime'] = this.beginTime.toString();
+	data['endTime'] = this.endTime.toString();
+    return data;
+  }
+}
+//*************************** DeliveryTimeDays class
+class DeliveryTimeDays {
+	String stringDate;
+	List<DeliveryTime> listTime;
+	
+	DeliveryTimeDays({this.stringDate, this.listTime});
+}
+
+//*************************** constants
+static final int futureOrderDays = 3;
+static final int stopDeliveryPriorMin = 30;
+
+//*************************** API service
+
+Future<List<DeliveryTime>> getDeliveryTime(String type) async {
+    QuerySnapshot itemSnapshot = await Firestore.instance
+        .collection('DeliveryTime'))
+        .getDocuments();
+
+    if(itemSnapshot.documents.isEmpty)
+      return null;
+    else
+      return itemSnapshot.documents.map((item) => new Item.fromJson(item.data)).toList();
+  }
+
+//*************************** delivery_model
+import 'package:education/core/viewmodels/base_model.dart';
+
+class DeliveryModel extends BaseModel {
+	List<DeliveryTimeDays> listTimeDays;
+	DeliveryTime selectedTime;
+	String selectedDay;
+	String confirmOrderErrorMessage;
+	
+	// Select delivery time page ruu newtreh uyd:
+	// unuudruus ireh 3n udur hurtleh tsagiin jagsaaltiig awchrah
+	void getDeliveryTimeLists() async {
+		setState(ViewState.Busy);
+		int futureDays = ConstantClasses.futureOrderDays;
+		
+		// Get all time and group custom days
+		List<DeliveryTime> listAllTime = await _api.getDeliveryTime();
+		HashMap mapTimeByDay = new HashMap<String, List<DeliveryTime>>();
+		for(var time in listAllTime) {
+			// Group them by either 'Regular' or custom day
+			String key = (item.type == 'Regular' ? 'Regular' : item.customDay);
+			List<DeliveryTime> customList;
+			
+			if(mapTimeByDay.containsKey(key))
+				customList = mapTimeByDay[key]
+			else
+				customList = new List<DeliveryTime>[];
+			
+			// add list to hashmap with day key
+			customList.add(time);
+			customList.sort((a, b) => a.beginTime.compareTo(b.beginTime));
+			mapTimeByDay[key] = customList;
+		}
+		
+		// Set today's time STATUS if it is in the past
+		if(mapTimeByDay.containsKey('Regular')) {
+			List<DeliveryTime> listTodayTime = mapTimeByDay['Regular'];
+			
+			DateFormat dateFormatWithHour = DateFormat("yyyy-MM-dd HH:mm:ss");
+			DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+			String stringToday = dateFormat.format(DateTime.now());
+			DateTime now = DateTime.now();
+			
+			for(var time in listTodayTime) {
+				DateTime endTime = dateFormatWithHour.parse(stringToday + " " + time.endTime);
+				now = now.add(Duration(mins: ConstantClasses.stopDeliveryPriorMin)));
+				if(now.isAfter(endTime)) 
+					time.isPastTime = true;
+			}
+		}
+		
+		
+		// Prepare next X day's time list
+		listTimeDays = new List<DeliveryTimeDays>[];
+		var orderDay = DateTime.now();
+		for (var i = 0; i < futureDays; i++) {
+			// loop day
+			orderDay = orderDay.add(Duration(days: i)));
+			
+			// Get that day's time setting
+			List<DeliveryTime> listCurrentDayTime = null;
+			String stringDay = DateFormat('yyyy-MM-dd').format(orderDay);
+			// check if that loop day has custom orderday setting
+			if(mapTimeByDay.containsKey(stringDay))				// means there is custom settings on that day
+				listCurrentDayTime = mapTimeByDay[stringDay];
+			else if(mapTimeByDay.containsKey('Regular')) // no custom, so get Regular setting
+				listCurrentDayTime = mapTimeByDay['Regular'];
+			
+			
+			DeliveryTimeDays(stringDay, listCurrentDayTime);
+			listTimeDays.add(DeliveryTimeDays);
+		}
+		setState(ViewState.Idle);
+	}
+	
+	void selectDeliveryTime(String stringDay, DeliveryTime time) {
+		time.isSelected = true;
+		selectedTime = time;
+		selectedDay = stringDay;
+		notifyListeners();
+	}
+	
+	void confirmOrder() {
+		setState(ViewState.Busy);
+		print('Selected time: ' + selectedDay + ' ' + selectedTime);
+		
+		
+		
+		/**
+		Order:
+		
+		Order class
+		creares from item class
+		selectedDay, selectedTime,
+		user info...
+		
+		
+		**/
+		setState(ViewState.Idle);
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
