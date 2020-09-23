@@ -40,7 +40,7 @@ class _HomeViewState extends State<HomeView> {
                         : Padding(
                       padding: EdgeInsets.all(30),
                       child: ListView(children: <Widget>[
-                        Text('Өнөөдрийн сорил', style: TextStyle(fontSize: 22, color: Colors.blue, fontWeight: FontWeight.bold)),
+                        Text('Өнөөдрийн сорил2', style: TextStyle(fontSize: 22, color: Colors.blue, fontWeight: FontWeight.bold)),
                         SizedBox(height: 15),
                         // CHALLENGE
                         Container(
