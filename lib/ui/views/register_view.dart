@@ -150,6 +150,8 @@ class _RegisterViewState extends State<RegisterView>{
                                         if (_nameInput.text != '' && _passwordInput.text != '' && _ageInput.text != '') {
                                           if(await model.registerUser(_nameInput.text, _passwordInput.text, _ageInput.text)) {
                                             // Register success
+                                            SharedPreferences prefs = await SharedPreferences.getInstance();
+                                            prefs.setString('username', _nameInput.text);
                                             Navigator.pushNamed(context, '/mainPage', arguments: null);
                                           } else {
                                             // Register fail. Username exists
