@@ -12,6 +12,7 @@ void main() async{
   SharedPreferences.setMockInitialValues({});
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String username = prefs.getString('username');
+  username = null;
   print('Username exist? ' + (username ?? 'null'));
   runApp(MyApp(username));
 }

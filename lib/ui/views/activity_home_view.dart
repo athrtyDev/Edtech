@@ -103,7 +103,7 @@ class _ActivityHomeViewState extends State<ActivityHomeView> {
                                               padding: EdgeInsets.fromLTRB(0, 0, 10, 3),
                                               child: activity.difficulty == 'easy' ? Image.asset('lib/ui/images/icon_easy.png', height: 20)
                                                   : (activity.difficulty == 'medium' ? Image.asset('lib/ui/images/icon_medium.png', height: 20)
-                                                    : (activity.difficulty == 'easy' ? Image.asset('lib/ui/images/icon_medium.png', height: 20) : Text(''))),
+                                                    : (activity.difficulty == 'hard' ? Image.asset('lib/ui/images/icon_hard.png', height: 20) : Text(''))),
                                             )
                                           ],
                                         ),

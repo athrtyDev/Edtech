@@ -44,7 +44,7 @@ class _ProfileViewState extends State<ProfileView> {
                             slivers: <Widget>[
                               SliverPersistentHeader(
                                 delegate: _SliverAppBarDelegate(model.loggedUser),
-                                pinned: true,
+                                pinned: false,
                                 floating: true,
                               ),
                               SliverFillRemaining(
@@ -166,13 +166,47 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
       height: 140,
-      decoration: BoxDecoration(
-          image: DecorationImage(image: AssetImage("lib/ui/images/profile_header.png"), fit: BoxFit.cover)),
+      //color: Colors.deepOrangeAccent,
       child: Stack(
-        children: [
-
-        ],
-      ),
+          children: [
+            // NAME
+            Positioned(
+              top: 10,
+              left: 50,
+              child: Text(_loggedUser.name, style: TextStyle(fontSize: 30, color: Colors.blue, fontWeight: FontWeight.bold)),
+            ),
+            Positioned(
+              top: 60,
+              left: 50,
+              child: Text('Бүтээлүүд', style: TextStyle(color: Colors.blue.withOpacity(0.6), fontWeight: FontWeight.bold, fontSize: 17)),
+            ),
+            Positioned(
+              top: 85,
+              left: 90,
+              child: Text(_loggedUser.postTotal.toString(), style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 25)),
+            ),
+            Positioned(
+              top: 60,
+              left: 170,
+              child: Text('Ур чадвар', style: TextStyle(color: Colors.blue.withOpacity(0.6), fontWeight: FontWeight.bold, fontSize: 17)),
+            ),
+            Positioned(
+              top: 85,
+              left: 190,
+              child: Text('+' + _loggedUser.skillTotal.toString(), style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 25)),
+            ),
+            Positioned(
+              top: 60,
+              left: 300,
+              child: Text('Like', style: TextStyle(color: Colors.blue.withOpacity(0.6), fontWeight: FontWeight.bold, fontSize: 17)),
+            ),
+            Positioned(
+              top: 85,
+              left: 310,
+              child: Text(_loggedUser.likeTotal.toString(), style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 25)),
+            ),
+            // SKILLS
+          ]),
     );
   }
 

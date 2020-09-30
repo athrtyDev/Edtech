@@ -213,11 +213,11 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                                             padding: EdgeInsets.fromLTRB(0, 0, 10, 3),
                                             child: widget.activity.difficulty == 'easy' ? Image.asset('lib/ui/images/icon_easy.png', height: 30)
                                                 : (widget.activity.difficulty == 'medium' ? Image.asset('lib/ui/images/icon_medium.png', height: 30)
-                                                : (widget.activity.difficulty == 'easy' ? Image.asset('lib/ui/images/icon_medium.png', height: 30) : Text(''))),
+                                                : (widget.activity.difficulty == 'hard' ? Image.asset('lib/ui/images/icon_hard.png', height: 30) : Text(''))),
                                           ),
                                           Text(widget.activity.difficulty == 'easy' ? 'Амархан'
                                               : (widget.activity.difficulty == 'medium' ? 'Дунд зэрэг'
-                                              : (widget.activity.difficulty == 'easy' ? 'Хэцүү' : Text(''))),
+                                              : (widget.activity.difficulty == 'hard' ? 'Хэцүү' : Text(''))),
                                               style: TextStyle(color: Colors.blue, fontSize: 16, fontWeight: FontWeight.w600))
                                         ],
                                       ),

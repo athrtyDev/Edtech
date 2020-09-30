@@ -4,6 +4,7 @@ import 'package:education/core/viewmodels/register_model.dart';
 import 'package:education/ui/views/base_view.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterView extends StatefulWidget {
   final String name;
