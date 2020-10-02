@@ -1,5 +1,6 @@
 import 'package:education/core/viewmodels/activity_home_model.dart';
 import 'package:education/core/viewmodels/activity_instruction_model.dart';
+import 'package:education/core/viewmodels/gallery_model.dart';
 import 'package:education/core/viewmodels/main_page_model.dart';
 import 'package:education/core/viewmodels/profile_model.dart';
 import 'package:education/core/viewmodels/publish_model.dart';
@@ -23,4 +24,5 @@ void setupLocator() {
   locator.registerFactory(() => ActivityInstructionModel());
   locator.registerFactory(() => PublishModel());
   locator.registerFactory(() => ProfileModel());
+  locator.registerFactory(() => GalleryModel());
 }

@@ -1,20 +1,20 @@
+import 'package:education/core/classes/constant.dart';
 import 'package:education/core/classes/post.dart';
-import 'package:education/core/classes/user.dart';
+import 'package:education/core/viewmodels/gallery_model.dart';
 import 'package:flutter/material.dart';
 import 'package:education/core/enums/view_state.dart';
 import 'package:education/ui/views/base_view.dart';
 import 'package:flutter/foundation.dart';
-import 'package:education/core/viewmodels/profile_model.dart';
 
-class ProfileView extends StatefulWidget {
-  ProfileView({Key key}) : super(key: key);
+class GalleryView extends StatefulWidget {
+  GalleryView({Key key}) : super(key: key);
 
   @override
-  _ProfileViewState createState() => _ProfileViewState();
+  _GalleryViewState createState() => _GalleryViewState();
 }
 
-class _ProfileViewState extends State<ProfileView> {
-  _ProfileViewState({Key key});
+class _GalleryViewState extends State<GalleryView> {
+  _GalleryViewState({Key key});
 
   ScrollController scrollViewController;
 
@@ -32,25 +32,15 @@ class _ProfileViewState extends State<ProfileView> {
 
   @override
   Widget build(BuildContext context) {
-    return BaseView<ProfileModel>(
+    return BaseView<GalleryModel>(
         onModelReady: (model) => model.loadPostsByUser(context),
         builder: (context, model, child) => Scaffold(
                   backgroundColor: Colors.white,
                   body: SafeArea(
                     child: model.state == ViewState.Busy
                         ? Container(child: Center(child: CircularProgressIndicator()))
-                        :
-                          CustomScrollView(
-                            slivers: <Widget>[
-                              SliverPersistentHeader(
-                                delegate: _SliverAppBarDelegate(model.loggedUser),
-                                pinned: false,
-                                floating: true,
-                              ),
-                              SliverFillRemaining(
-                                child: Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
-                                  child: model.listUserAllPosts == null ? Center(child: Image.asset('lib/ui/images/no_post.png', height: 350)) :
+                        : Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+                                  child: model.listAllPosts == null ? Center(child: Image.asset('lib/ui/images/no_post.png', height: 350)) :
                                   GridView.count(
                                     controller: scrollViewController,
                                     crossAxisCount: 2,
@@ -59,7 +49,7 @@ class _ProfileViewState extends State<ProfileView> {
                                     scrollDirection: Axis.vertical,
                                     crossAxisSpacing: 6.0,
                                     mainAxisSpacing: 8.0,
-                                    children: model.listUserAllPosts.map((Post post) {
+                                    children: model.listAllPosts.map((Post post) {
                                       return Hero(
                                         tag: 'activity_' + post.postId,
                                         child: GestureDetector(
@@ -73,6 +63,16 @@ class _ProfileViewState extends State<ProfileView> {
                                                 color: Colors.white,
                                                 child: Column(
                                                   children: [
+                                                    Row(
+                                                      children: [
+                                                        Padding(
+                                                          padding: EdgeInsets.fromLTRB(5, 10, 0, 5),
+                                                          child: Container(
+                                                              child: Text(post.userName,
+                                                                  style: TextStyle(fontSize: 12, color: Colors.black54, fontWeight: FontWeight.w600))),
+                                                        )
+                                                      ],
+                                                    ),
                                                     Expanded(
                                                         child: Container(
                                                             width: (MediaQuery.of(context).size.width - 6) / 2,
@@ -90,8 +90,7 @@ class _ProfileViewState extends State<ProfileView> {
                                                         Padding(
                                                           padding: EdgeInsets.fromLTRB(5, 2, 0, 2),
                                                           child: Container(
-                                                              child: Text(post.activity.name + ' ' ,
-                                                                  style: TextStyle(fontSize: 12, color: Colors.black54, fontWeight: FontWeight.w600))),
+                                                              child: Text(post.activity.name, style: TextStyle(fontSize: 12, color: Colors.black54, fontWeight: FontWeight.w600))),
                                                         )
                                                       ],
                                                     ),
@@ -106,12 +105,6 @@ class _ProfileViewState extends State<ProfileView> {
                                                             height: 25,
                                                             child: Center(child: Text(post.activity.activityType == 'diy' ? 'Бүтээл' : (post.activity.activityType == 'discover' ? 'Өөрийгөө нээ' : (post.activity.activityType == 'dance' ? 'Бүжиг' : '')),
                                                                 style: TextStyle(color: Colors.white, fontSize: 11)))),
-                                                        Padding(
-                                                          padding: EdgeInsets.fromLTRB(0, 0, 10, 3),
-                                                          child: post.activity.difficulty == 'easy' ? Image.asset('lib/ui/images/icon_easy.png', height: 20)
-                                                              : (post.activity.difficulty == 'medium' ? Image.asset('lib/ui/images/icon_medium.png', height: 20)
-                                                              : (post.activity.difficulty == 'easy' ? Image.asset('lib/ui/images/icon_medium.png', height: 20) : Text(''))),
-                                                        )
                                                       ],
                                                     ),
                                                   ],
@@ -120,7 +113,7 @@ class _ProfileViewState extends State<ProfileView> {
                                               // Gallery count round
                                               Positioned(
                                                 right: 5,
-                                                top: 5,
+                                                bottom: 15,
                                                 child: Container(
                                                   decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(20))),
                                                   width: 35,
@@ -142,88 +135,8 @@ class _ProfileViewState extends State<ProfileView> {
                                     }).toList(),
                                   ),
                                 ),
-                              )
-                            ]
-                          ),
                 ),
               ),
             );
-  }
-}
-
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  _SliverAppBarDelegate(this._loggedUser);
-
-  final User _loggedUser;
-
-  @override
-  double get minExtent => 50.0;
-
-  @override
-  double get maxExtent => 140.0;
-
-  @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Container(
-      height: 140,
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        color: Colors.deepOrange.withOpacity(0.7),
-        /*image: DecorationImage(
-          image: AssetImage("lib/ui/images/profile_header_male.png"),
-          fit: BoxFit.fitWidth,
-        ),*/
-      ),
-      child: Stack(
-          children: [
-            // NAME
-            Positioned(
-              top: 10,
-              left: 50,
-              child: Icon(Icons.school, color: Colors.white, size: 40),
-            ),
-            Positioned(
-              top: 14,
-              left: 100,
-              child: Text(_loggedUser.name, style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold)),
-            ),
-            Positioned(
-              top: 60,
-              left: 50,
-              child: Text('Бүтээлүүд', style: TextStyle(color: Colors.white.withOpacity(0.8), fontWeight: FontWeight.bold, fontSize: 17)),
-            ),
-            Positioned(
-              top: 85,
-              left: 90,
-              child: Text(_loggedUser.postTotal.toString(), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 25)),
-            ),
-            Positioned(
-              top: 60,
-              left: 170,
-              child: Text('Ур чадвар', style: TextStyle(color: Colors.white.withOpacity(0.8), fontWeight: FontWeight.bold, fontSize: 17)),
-            ),
-            Positioned(
-              top: 85,
-              left: 190,
-              child: Text('+' + _loggedUser.skillTotal.toString(), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 25)),
-            ),
-            Positioned(
-              top: 60,
-              left: 300,
-              child: Text('Like', style: TextStyle(color: Colors.white.withOpacity(0.8), fontWeight: FontWeight.bold, fontSize: 17)),
-            ),
-            Positioned(
-              top: 85,
-              left: 310,
-              child: Text(_loggedUser.likeTotal.toString(), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 25)),
-            ),
-            // SKILLS
-          ]),
-    );
-  }
-
-  @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return true;
   }
 }

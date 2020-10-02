@@ -1,5 +1,6 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:education/core/viewmodels/main_page_model.dart';
+import 'package:education/ui/views/gallery_view.dart';
 import 'package:education/ui/views/home_view.dart';
 import 'package:education/ui/views/profile_view.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +50,7 @@ class _MainPageViewState extends State<MainPageView> {
                       },
                       children: <Widget>[
                         HomeView(),
-                        Container(color: Colors.green),
+                        GalleryView(),
                         ProfileView(),
                       ],
                     ),
