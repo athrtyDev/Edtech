@@ -35,7 +35,7 @@ class _ProfileViewState extends State<ProfileView> {
     return BaseView<ProfileModel>(
         onModelReady: (model) => model.loadPostsByUser(context),
         builder: (context, model, child) => Scaffold(
-                  backgroundColor: Colors.white,
+                  backgroundColor: Colors.grey[300],
                   body: SafeArea(
                     child: model.state == ViewState.Busy
                         ? Container(child: Center(child: CircularProgressIndicator()))
