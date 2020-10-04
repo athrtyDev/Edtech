@@ -106,12 +106,6 @@ class _ProfileViewState extends State<ProfileView> {
                                                             height: 25,
                                                             child: Center(child: Text(post.activity.activityType == 'diy' ? 'Бүтээл' : (post.activity.activityType == 'discover' ? 'Өөрийгөө нээ' : (post.activity.activityType == 'dance' ? 'Бүжиг' : '')),
                                                                 style: TextStyle(color: Colors.white, fontSize: 11)))),
-                                                        Padding(
-                                                          padding: EdgeInsets.fromLTRB(0, 0, 10, 3),
-                                                          child: post.activity.difficulty == 'easy' ? Image.asset('lib/ui/images/icon_easy.png', height: 20)
-                                                              : (post.activity.difficulty == 'medium' ? Image.asset('lib/ui/images/icon_medium.png', height: 20)
-                                                              : (post.activity.difficulty == 'easy' ? Image.asset('lib/ui/images/icon_medium.png', height: 20) : Text(''))),
-                                                        )
                                                       ],
                                                     ),
                                                   ],
@@ -119,21 +113,32 @@ class _ProfileViewState extends State<ProfileView> {
                                               ),
                                               // Gallery count round
                                               Positioned(
-                                                right: 5,
-                                                top: 5,
-                                                child: Container(
-                                                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(20))),
-                                                  width: 35,
-                                                  height: 20,
-                                                  child: Center(
-                                                      child: Row(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: [
-                                                          Image.asset('lib/ui/images/icon_love.png', height: 15),
-                                                          SizedBox(width: 5),
-                                                          Text(post.likeCount.toString(), style: TextStyle(color: Colors.black, fontSize: 11)),
-                                                        ],
-                                                      )
+                                                right: 0,
+                                                bottom: 0,
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    if(post.isUserLiked) {
+                                                      model.dislikePost(post);
+                                                    } else {
+                                                      model.likePost(post);
+                                                    }
+                                                  },
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(20)),
+                                                    ),
+                                                    width: 57,
+                                                    height: 48,
+                                                    child: Center(
+                                                        child: Row(
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          children: [
+                                                            post.isUserLiked ? Image.asset('lib/ui/images/icon_love_liked.png', height: 23)
+                                                                : Image.asset('lib/ui/images/icon_love.png', height: 18),
+                                                            SizedBox(width: 5),
+                                                            Text(post.likeCount == null ? '0' : post.likeCount.toString(), style: TextStyle(color: Colors.black, fontSize: 14)),
+                                                          ],
+                                                        )),
                                                   ),
                                                 ),
                                               ),

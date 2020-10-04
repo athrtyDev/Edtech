@@ -1,4 +1,3 @@
-import 'package:education/core/classes/constant.dart';
 import 'package:education/core/classes/post.dart';
 import 'package:education/core/viewmodels/gallery_model.dart';
 import 'package:flutter/material.dart';
@@ -69,9 +68,9 @@ class _GalleryViewState extends State<GalleryView> {
                                               padding: EdgeInsets.fromLTRB(5, 5, 0, 5),
                                               child: Row(
                                                 children: [
-                                                  Icon(Icons.person, color: Colors.black54),
+                                                  Icon(Icons.person, color: Colors.black),
                                                   SizedBox(width: 5),
-                                                  Text(post.userName, style: TextStyle(fontSize: 14, color: Colors.black54, fontWeight: FontWeight.w700)),
+                                                  Text(post.userName, style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.w700)),
                                                 ],
                                               )),
                                           Expanded(
@@ -123,21 +122,33 @@ class _GalleryViewState extends State<GalleryView> {
                                     ),
                                     // Gallery count round
                                     Positioned(
-                                      right: 5,
-                                      bottom: 15,
-                                      child: Container(
-                                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(20))),
-                                        width: 35,
-                                        height: 20,
-                                        child: Center(
-                                            child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Image.asset('lib/ui/images/icon_love.png', height: 15),
-                                            SizedBox(width: 5),
-                                            Text(post.likeCount.toString(), style: TextStyle(color: Colors.black, fontSize: 11)),
-                                          ],
-                                        )),
+                                      right: 0,
+                                      bottom: 0,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                            if(post.isUserLiked) {
+                                              model.dislikePost(post);
+                                            } else {
+                                              model.likePost(post);
+                                            }
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(20)),
+                                          ),
+                                          width: 57,
+                                          height: 48,
+                                          child: Center(
+                                              child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              post.isUserLiked ? Image.asset('lib/ui/images/icon_love_liked.png', height: 23)
+                                              : Image.asset('lib/ui/images/icon_love.png', height: 18),
+                                              SizedBox(width: 5),
+                                              Text(post.likeCount == null ? '0' : post.likeCount.toString(), style: TextStyle(color: Colors.black, fontSize: 14)),
+                                            ],
+                                          )),
+                                        ),
                                       ),
                                     ),
                                   ])),

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:education/core/classes/activity.dart';
 import 'package:education/core/classes/item.dart';
+import 'package:education/core/classes/like.dart';
 import 'package:education/core/classes/order.dart';
 import 'package:education/core/classes/post.dart';
 import 'package:http/http.dart' as http;
@@ -120,6 +121,34 @@ class Api {
     else {
       return postSnapshot.documents.map((post) => new Post.fromJson(post.data)).toList();
     }
+  }
+
+  Future<List<Like>> getAllLikes() async {
+    QuerySnapshot postSnapshot = await Firestore.instance
+        .collection('Like')
+        .getDocuments();
+    if(postSnapshot.documents.isEmpty) {
+      return null;
+    }
+    else {
+      return postSnapshot.documents.map((like) => new Like.fromJson(like.data)).toList();
+    }
+  }
+
+  void likePost(Post post, String userId) {
+    Like like = new Like();
+    like.postId = post.postId;
+    like.likedUserId = userId;
+    final CollectionReference ref = Firestore.instance.collection('Like');
+    ref.document().setData(like.toJson());
+  }
+
+  void dislikePost(Post post, String userId) {
+    Firestore.instance.collection('Like')
+        .where("likedUserId", isEqualTo: userId).where("postId", isEqualTo: post.postId)
+        .getDocuments().then((snapshot){
+      snapshot.documents.first.reference.delete();
+    });
   }
 
   Future<List<Order>> getCurrentOrders(int futureDays) async {

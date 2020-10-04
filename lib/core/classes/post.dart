@@ -16,7 +16,9 @@ class Post {
   User user;
   File uploadingFile;
   int skillPoints;
+  // tuslah
   int likeCount;
+  bool isUserLiked = false;
 
   Post({this.postId, this.activity, this.user, this.uploadMediaType, this.userId, this.userName,
     //this.activityId, this.activityName,
