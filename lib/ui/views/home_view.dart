@@ -32,15 +32,13 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return BaseView<HomeModel>(
-        onModelReady: (model) => model.initHomeView(),
-        builder: (context, model, child) => Scaffold(
-                body: SafeArea(
-                    child: model.state == ViewState.Busy
-                        ? Container(child: Center(child: CircularProgressIndicator()))
-                        : Padding(
-                      padding: EdgeInsets.all(30),
-                      child: ListView(children: <Widget>[
-                        /*Text('Өнөөдрийн сорил', style: TextStyle(fontSize: 22, color: Colors.blue, fontWeight: FontWeight.bold)),
+      onModelReady: (model) => model.initHomeView(),
+      builder: (context, model, child) => Scaffold(
+        body: SafeArea(
+          child: model.state == ViewState.Busy
+              ? Container(child: Center(child: CircularProgressIndicator()))
+              : ListView(children: <Widget>[
+                  /*Text('Өнөөдрийн сорил', style: TextStyle(fontSize: 22, color: Colors.blue, fontWeight: FontWeight.bold)),
                         SizedBox(height: 15),
                         // CHALLENGE
                         Container(
@@ -58,129 +56,170 @@ class _HomeViewState extends State<HomeView> {
                               ],
                               image: DecorationImage(image: AssetImage("lib/ui/images/tmp_challenge.jpg"), fit: BoxFit.fitWidth)),
                         ),*/
-                        // ALL ACTIVITY TYPES
-                        SizedBox(height: 45),
-                        Text('Өөрийгөө нээх', style: TextStyle(fontSize: 22, color: Colors.blue, fontWeight: FontWeight.bold)),
-                        SizedBox(height: 15),
-                        Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(context, '/activity', arguments: 'diy');
-                              },
-                              child: Container(
-                                height: 130,
-                                width: (width - 60 - 30) / 3,
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.all(Radius.circular(15)),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 5,
-                                      blurRadius: 7,
-                                      offset: Offset(3, 3), // changes position of shadow
-                                    ),
-                                  ],
+                  Container(
+                    height: 300,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("lib/ui/images/gallery_header.png"),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  // ALL ACTIVITY TYPES
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(20, 35, 20, 0),
+                      child: Text('Өөрийгөө нээх', style: TextStyle(fontSize: 22, color: Colors.blue, fontWeight: FontWeight.bold)),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, '/activity',
+                                arguments: 'diy');
+                          },
+                          child: Container(
+                            height: 130,
+                            width: (width - 30 - 20) / 3,
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 5,
+                                  blurRadius: 7,
+                                  offset: Offset(
+                                      3, 3), // changes position of shadow
                                 ),
-                                child: Stack(
-                                  children: [
-                                    Positioned(
-                                      top: -1,
-                                      left: 3,
-                                      child: Image.asset('lib/ui/images/home_game.png', height: 85),
-                                    ),
-                                    Positioned(
-                                      top: 83,
-                                      left: 13,
-                                      child: Text('Бүтээл', style: TextStyle(fontSize: 18, color: Colors.deepOrange, fontWeight: FontWeight.w500)),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                              ],
                             ),
-                            SizedBox(width: 15),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(context, '/activity', arguments: 'discover');
-                              },
-                              child: Container(
-                                height: 130,
-                                width: (width - 60 - 30) / 3,
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.all(Radius.circular(15)),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 5,
-                                      blurRadius: 7,
-                                      offset: Offset(3, 3), // changes position of shadow
-                                    ),
-                                  ],
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  top: -1,
+                                  left: 8,
+                                  child: Image.asset(
+                                      'lib/ui/images/home_game.png',
+                                      height: 85),
                                 ),
-                                child: Stack(
-                                  children: [
-                                    Positioned(
-                                      top: -8,
-                                      left: -23,
-                                      child: Image.asset('lib/ui/images/home_discover.png', height: 100),
-                                    ),
-                                    Positioned(
-                                      top: 83,
-                                      left: 18,
-                                      child: Text('Урлаг', style: TextStyle(fontSize: 18, color: Colors.deepOrange, fontWeight: FontWeight.w500)),
-                                    ),
-                                  ],
+                                Positioned(
+                                  top: 83,
+                                  left: 20,
+                                  child: Text('Бүтээл',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.deepOrange,
+                                          fontWeight: FontWeight.w500)),
                                 ),
-                              ),
+                              ],
                             ),
-                            SizedBox(width: 15),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(context, '/activity', arguments: 'dance');
-                              },
-                              child: Container(
-                                height: 130,
-                                width: (width - 60 - 30) / 3,
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.all(Radius.circular(15)),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 5,
-                                      blurRadius: 7,
-                                      offset: Offset(3, 3), // changes position of shadow
-                                    ),
-                                  ],
-                                ),
-                                child: Stack(
-                                  children: [
-                                    Positioned(
-                                      top: -20,
-                                      left: -35,
-                                      child: Image.asset('lib/ui/images/home_dance.png', height: 130),
-                                    ),
-                                    Positioned(
-                                      top: 83,
-                                      left: 17,
-                                      child: Text('Бүжиг', style: TextStyle(fontSize: 18, color: Colors.deepOrange, fontWeight: FontWeight.w500)),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            )
-                          ],
+                          ),
                         ),
+                        SizedBox(width: 15),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, '/activity',
+                                arguments: 'discover');
+                          },
+                          child: Container(
+                            height: 130,
+                            width: (width - 60 - 30) / 3,
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 5,
+                                  blurRadius: 7,
+                                  offset: Offset(
+                                      3, 3), // changes position of shadow
+                                ),
+                              ],
+                            ),
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  top: -8,
+                                  left: -23,
+                                  child: Image.asset(
+                                      'lib/ui/images/home_discover.png',
+                                      height: 100),
+                                ),
+                                Positioned(
+                                  top: 83,
+                                  left: 22,
+                                  child: Text('Урлаг',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.deepOrange,
+                                          fontWeight: FontWeight.w500)),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 15),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, '/activity',
+                                arguments: 'dance');
+                          },
+                          child: Container(
+                            height: 130,
+                            width: (width - 60 - 30) / 3,
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 5,
+                                  blurRadius: 7,
+                                  offset: Offset(
+                                      3, 3), // changes position of shadow
+                                ),
+                              ],
+                            ),
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  top: -20,
+                                  left: -35,
+                                  child: Image.asset(
+                                      'lib/ui/images/home_dance.png',
+                                      height: 130),
+                                ),
+                                Positioned(
+                                  top: 83,
+                                  left: 17,
+                                  child: Text('Бүжиг',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.deepOrange,
+                                          fontWeight: FontWeight.w500)),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  /*
+                        // ОНЦЛОХ
                         SizedBox(height: 45),
                         Text('Онцлох', style: TextStyle(fontSize: 22, color: Colors.blue, fontWeight: FontWeight.bold)),
                         SizedBox(height: 10),
-                        // FEATURED ACTIVITIES
-                        /*Container(
+                        Container(
                           height: 200,
                           child: model.state == ViewState.Busy ? Center(child: CircularProgressIndicator()) :
                           GridView.count(
@@ -251,10 +290,9 @@ class _HomeViewState extends State<HomeView> {
                             }).toList(),
                           ),
                         ),*/
-                      ]),
-                    ),
-                ),
-              ),
-            );
+                ]),
+        ),
+      ),
+    );
   }
 }

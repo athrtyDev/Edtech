@@ -53,9 +53,10 @@ class ProfileModel extends BaseModel {
 
   void likePost(Post post) {
     post.isUserLiked = true;
-    if(post.likeCount == null)
-      post.likeCount = 0;
+    post.likeCount = post.likeCount ?? 0;
+    loggedUser.likeTotal = loggedUser.likeTotal ?? 0;
     post.likeCount++;
+    loggedUser.likeTotal++;
     _api.likePost(post, loggedUser.id);
     notifyListeners();
   }
@@ -63,6 +64,7 @@ class ProfileModel extends BaseModel {
   void dislikePost(Post post) {
     post.isUserLiked = false;
     post.likeCount--;
+    loggedUser.likeTotal--;
     _api.dislikePost(post, loggedUser.id);
     notifyListeners();
   }

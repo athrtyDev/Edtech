@@ -56,7 +56,7 @@ class _GalleryViewState extends State<GalleryView> {
                               child: GestureDetector(
                                   onTap: () {
                                     setState(() {
-                                      //Navigator.pushNamed(context, '/activity_instruction', arguments: activity);
+                                      Navigator.pushNamed(context, '/post_detail', arguments: post).then((value) => setState(() {}));
                                     });
                                   },
                                   child: Stack(children: [
@@ -68,9 +68,9 @@ class _GalleryViewState extends State<GalleryView> {
                                               padding: EdgeInsets.fromLTRB(5, 5, 0, 5),
                                               child: Row(
                                                 children: [
-                                                  Icon(Icons.person, color: Colors.black),
+                                                  Icon(Icons.person, color: Colors.black45),
                                                   SizedBox(width: 5),
-                                                  Text(post.userName, style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.w700)),
+                                                  Text(post.userName, style: TextStyle(fontSize: 14, color: Colors.black45, fontWeight: FontWeight.w700)),
                                                 ],
                                               )),
                                           Expanded(

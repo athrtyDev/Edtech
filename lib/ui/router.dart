@@ -3,6 +3,7 @@ import 'package:education/core/classes/post.dart';
 import 'package:education/ui/views/activity_home_view.dart';
 import 'package:education/ui/views/activity_instruction_view.dart';
 import 'package:education/ui/views/gallery_view.dart';
+import 'package:education/ui/views/post_detail_view.dart';
 import 'package:education/ui/views/profile_view.dart';
 import 'package:education/ui/views/publish_view.dart';
 import 'package:education/ui/views/register_view.dart';
@@ -27,6 +28,9 @@ class Router {
       case '/activity_instruction':
         var activity = settings.arguments as Activity;
         return MaterialPageRoute(builder: (_) => ActivityInstructionView(activity: activity));
+      case '/post_detail':
+        var post = settings.arguments as Post;
+        return MaterialPageRoute(builder: (_) => PostDetailView(post: post));
       case '/publish':
         var post = settings.arguments as Post;
         return MaterialPageRoute(builder: (_) => PublishView(post: post));

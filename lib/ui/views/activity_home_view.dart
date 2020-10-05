@@ -41,13 +41,13 @@ class _ActivityHomeViewState extends State<ActivityHomeView> {
             return new Future.value(true);
           },
           child: Scaffold(
-            backgroundColor: Colors.grey[300],
+            backgroundColor: model.allActivity == null ? Colors.white : Colors.grey[300],
             body: SafeArea(
               child: model.state == ViewState.Busy
                   ? Container(child: Center(child: CircularProgressIndicator()))
                   : Padding(
                       padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
-                      child: model.allActivity == null ? Center(child: Text('Мэдээлэл байхгүй байна.')) :
+                      child: model.allActivity == null ? Center(child: Image.asset('lib/ui/images/no_post.png', height: 450)) :
                       GridView.count(
                         controller: scrollViewController,
                         crossAxisCount: 2,

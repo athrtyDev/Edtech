@@ -65,7 +65,7 @@ class _ProfileViewState extends State<ProfileView> {
                                         child: GestureDetector(
                                             onTap: () {
                                               setState(() {
-                                                //Navigator.pushNamed(context, '/activity_instruction', arguments: activity);
+                                                Navigator.pushNamed(context, '/post_detail', arguments: post).then((value) => setState(() {}));
                                               });
                                             },
                                             child: Stack(children: [
@@ -111,7 +111,7 @@ class _ProfileViewState extends State<ProfileView> {
                                                   ],
                                                 ),
                                               ),
-                                              // Gallery count round
+                                              // LIKE
                                               Positioned(
                                                 right: 0,
                                                 bottom: 0,
@@ -165,62 +165,58 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   double get minExtent => 50.0;
 
   @override
-  double get maxExtent => 140.0;
+  double get maxExtent => 135.0;
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      height: 140,
+      height: 130,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-        color: Colors.deepOrange.withOpacity(0.7),
-        /*image: DecorationImage(
-          image: AssetImage("lib/ui/images/profile_header_male.png"),
-          fit: BoxFit.fitWidth,
-        ),*/
+        color: Colors.white,
       ),
       child: Stack(
           children: [
             // NAME
             Positioned(
-              top: 10,
-              left: 50,
-              child: Icon(Icons.school, color: Colors.white, size: 40),
+              top: 13,
+              left: 40,
+              child: Icon(Icons.school, color: Colors.deepOrange.withOpacity(0.7), size: 35),
             ),
             Positioned(
-              top: 14,
-              left: 100,
-              child: Text(_loggedUser.name, style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold)),
-            ),
-            Positioned(
-              top: 60,
-              left: 50,
-              child: Text('Бүтээлүүд', style: TextStyle(color: Colors.white.withOpacity(0.8), fontWeight: FontWeight.bold, fontSize: 17)),
-            ),
-            Positioned(
-              top: 85,
+              top: 17,
               left: 90,
-              child: Text(_loggedUser.postTotal.toString(), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 25)),
+              child: Text('Сайн уу, ' + _loggedUser.name, style: TextStyle(fontSize: 25, color: Colors.deepOrange.withOpacity(0.7), fontWeight: FontWeight.bold)),
             ),
             Positioned(
-              top: 60,
+              top: 65,
+              left: 40,
+              child: Text('Бүтээлүүд', style: TextStyle(color: Colors.deepOrange.withOpacity(0.7), fontWeight: FontWeight.bold, fontSize: 16)),
+            ),
+            Positioned(
+              top: 85,
+              left: 70,
+              child: Text(_loggedUser.postTotal.toString(), style: TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.bold, fontSize: 23)),
+            ),
+            Positioned(
+              top: 65,
               left: 170,
-              child: Text('Ур чадвар', style: TextStyle(color: Colors.white.withOpacity(0.8), fontWeight: FontWeight.bold, fontSize: 17)),
+              child: Text('Ур чадвар', style: TextStyle(color: Colors.deepOrange.withOpacity(0.7), fontWeight: FontWeight.bold, fontSize: 16)),
             ),
             Positioned(
               top: 85,
-              left: 190,
-              child: Text('+' + _loggedUser.skillTotal.toString(), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 25)),
+              left: 185,
+              child: Text('+' + _loggedUser.skillTotal.toString(), style: TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.bold, fontSize: 23)),
             ),
             Positioned(
-              top: 60,
-              left: 300,
-              child: Text('Like', style: TextStyle(color: Colors.white.withOpacity(0.8), fontWeight: FontWeight.bold, fontSize: 17)),
-            ),
-            Positioned(
-              top: 85,
+              top: 65,
               left: 310,
-              child: Text(_loggedUser.likeTotal.toString(), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 25)),
+              child: Text('Like', style: TextStyle(color: Colors.deepOrange.withOpacity(0.7), fontWeight: FontWeight.bold, fontSize: 16)),
+            ),
+            Positioned(
+              top: 85,
+              left: 315,
+              child: Text(_loggedUser.likeTotal.toString(), style: TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.bold, fontSize: 23)),
             ),
             // SKILLS
           ]),

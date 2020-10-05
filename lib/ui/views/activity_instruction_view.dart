@@ -49,7 +49,7 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
         },
         child: SafeArea(
           child: Scaffold(
-              backgroundColor: Colors.white,
+              backgroundColor: Colors.transparent,
               body: model.state == ViewState.Busy
                   ? Container(child: Center(child: CircularProgressIndicator()))
                   : ListView(children: <Widget>[
@@ -64,12 +64,12 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                               padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                               child: Row(
                                 children: [
-                                  Icon(Icons.school, color: Colors.blue, size: 30),
+                                  Icon(Icons.school, color: Colors.white, size: 30),
                                   SizedBox(width: 15),
                                   Container(
                                     width: 250,
                                     child: Text(widget.activity.name,
-                                        style: TextStyle(fontSize: 25, color: Colors.blue, fontWeight: FontWeight.w700, letterSpacing: 1.3)),
+                                        style: TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.w700, letterSpacing: 1.3)),
                                   ),
                                 ],
                               ),
@@ -79,12 +79,12 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                                 padding: EdgeInsets.fromLTRB(20, 10, 0, 15),
                                 child: Row(
                                   children: [
-                                    Icon(Icons.info, color: Colors.grey, size: 30),
+                                    Icon(Icons.info, color: Colors.white, size: 30),
                                     SizedBox(width: 15),
                                     Container(
                                       width: 300,
                                       child: Text(widget.activity.instruction,
-                                          style: TextStyle(color: Colors.black45, fontWeight: FontWeight.w700, letterSpacing: 1.7)),
+                                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, letterSpacing: 1.7)),
                                     ),
                                   ],
                                 ))
@@ -92,11 +92,11 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                         ),
                       ),
                       // seperator
-                      Container(
+                      /*Container(
                         width: MediaQuery.of(context).size.width,
                         height: 3,
                         color: Colors.grey[200],
-                      ),
+                      ),*/
                       // Video instruction
                       Container(
                         height: 400,
@@ -157,12 +157,12 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                               ],
                             ))),
                       ),
-                      // seperator
+                      /*// seperator
                       Container(
                         width: MediaQuery.of(context).size.width,
                         height: 3,
                         color: Colors.grey[200],
-                      ),
+                      ),*/
                       // TYPE, DIFFICULTY
                       Container(
                         height: 120,
@@ -203,8 +203,8 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                                     SizedBox(width: 35),
                                     // DIFFICULTY LEVEL
                                     Container(
-                                      decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.all(Radius.circular(10))),
-                                      padding: EdgeInsets.fromLTRB(15, 12, 15, 12),
+                                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(10))),
+                                      padding: EdgeInsets.fromLTRB(10, 12, 10, 12),
                                       child: Row(
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         mainAxisAlignment: MainAxisAlignment.center,
