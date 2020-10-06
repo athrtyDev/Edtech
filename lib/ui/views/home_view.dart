@@ -65,19 +65,36 @@ class _HomeViewState extends State<HomeView> {
                       ),
                     ),
                   ),
-                  // ALL ACTIVITY TYPES
                   Padding(
                       padding: EdgeInsets.fromLTRB(20, 35, 20, 0),
-                      child: Text('Өөрийгөө нээх', style: TextStyle(fontSize: 22, color: Colors.blue, fontWeight: FontWeight.bold)),
+                      child: Row(
+                        children: [
+                          Icon(Icons.shutter_speed, size: 30, color: Color(0xff36c1c8)),
+                          SizedBox(width: 10),
+                          Flexible(
+                            child: Text('Урлан доторх даалгавруудыг биелүүлж, бусадтай хуваалцаарай.', style: TextStyle(fontSize: 19, color: Colors.black54, fontWeight: FontWeight.w300)),
+                          )
+                        ],
+                      )
+                  ),
+                  // ALL ACTIVITY TYPES
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(20, 55, 20, 0),
+                      child: Row(
+                        children: [
+                          Icon(Icons.bubble_chart, size: 30, color: Color(0xff36c1c8)),
+                          SizedBox(width: 10),
+                          Text('Өөрийгөө нээх', style: TextStyle(fontSize: 19, color: Colors.black54, fontWeight: FontWeight.w500)),
+                        ],
+                      )
                   ),
                   Padding(
-                    padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                    padding: EdgeInsets.fromLTRB(20, 15, 20, 0),
                     child: Row(
                       children: [
                         GestureDetector(
                           onTap: () {
-                            Navigator.pushNamed(context, '/activity',
-                                arguments: 'diy');
+                            Navigator.pushNamed(context, '/activity', arguments: 'diy');
                           },
                           child: Container(
                             height: 130,
@@ -85,8 +102,7 @@ class _HomeViewState extends State<HomeView> {
                             padding: EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15)),
+                              borderRadius: BorderRadius.all(Radius.circular(15)),
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.grey.withOpacity(0.5),
@@ -107,12 +123,12 @@ class _HomeViewState extends State<HomeView> {
                                       height: 85),
                                 ),
                                 Positioned(
-                                  top: 83,
-                                  left: 20,
+                                  top: 86,
+                                  left: 23,
                                   child: Text('Бүтээл',
                                       style: TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.deepOrange,
+                                          fontSize: 16,
+                                          color: Colors.black54,
                                           fontWeight: FontWeight.w500)),
                                 ),
                               ],
@@ -153,12 +169,12 @@ class _HomeViewState extends State<HomeView> {
                                       height: 100),
                                 ),
                                 Positioned(
-                                  top: 83,
-                                  left: 22,
+                                  top: 86,
+                                  left: 23,
                                   child: Text('Урлаг',
                                       style: TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.deepOrange,
+                                          fontSize: 16,
+                                          color: Colors.black54,
                                           fontWeight: FontWeight.w500)),
                                 ),
                               ],
@@ -199,12 +215,12 @@ class _HomeViewState extends State<HomeView> {
                                       height: 130),
                                 ),
                                 Positioned(
-                                  top: 83,
-                                  left: 17,
+                                  top: 86,
+                                  left: 19,
                                   child: Text('Бүжиг',
                                       style: TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.deepOrange,
+                                          fontSize: 16,
+                                          color: Colors.black54,
                                           fontWeight: FontWeight.w500)),
                                 ),
                               ],

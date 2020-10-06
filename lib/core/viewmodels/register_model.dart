@@ -21,7 +21,7 @@ class RegisterModel extends BaseModel {
       var uuid = Uuid();
       User user = new User();
       user.id = uuid.v4();
-      user.name = name;
+      user.name = name.toLowerCase()[0].toUpperCase() + name.toLowerCase().substring(1);
       user.password = password;
       user.age = int.tryParse(age);
       user.registeredDate = DateTime.now().toString();

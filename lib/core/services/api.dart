@@ -6,10 +6,12 @@ import 'package:education/core/classes/item.dart';
 import 'package:education/core/classes/like.dart';
 import 'package:education/core/classes/order.dart';
 import 'package:education/core/classes/post.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:education/core/classes/user.dart';
 import 'package:uuid/uuid.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_video_compress/flutter_video_compress.dart';
 
 class Api {
   static const endpoint = 'https://jsonplaceholder.typicode.com';
@@ -39,18 +41,21 @@ class Api {
       /*if(post.uploadMediaType == 'video') {
         print('File compress video starting... ' + DateTime.now().toString());
         final _flutterVideoCompress = FlutterVideoCompress();
-        final info = await _flutterVideoCompress.compressVideo(
+        final MediaInfo compressedVideoInfo = await _flutterVideoCompress.compressVideo(
           file.path,
-          quality: VideoQuality.DefaultQuality, // default(VideoQuality.DefaultQuality)
-          deleteOrigin: false, // default(false)
+          quality: VideoQuality.LowQuality,
+          deleteOrigin: false,
         );
-        file = info.file;
+        file = compressedVideoInfo.file;
+
+        final File thumbnailFile = await _flutterVideoCompress.getThumbnailWithFile(file.path, quality: 50);
+        Image _thumbnailFileImage = Image.file(thumbnailFile);
+
         print('File compress video success... ' + DateTime.now().toString());
       }*/
 
-
       // save media to storage
-      print('File upload starting... ' + DateTime.now().toString());
+      print('File upload starting222... ' + DateTime.now().toString());
       String postId = Uuid().v4();
       StorageUploadTask uploadTask = await FirebaseStorage.instance
           .ref()

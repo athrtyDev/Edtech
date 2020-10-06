@@ -35,7 +35,7 @@ class _ProfileViewState extends State<ProfileView> {
     return BaseView<ProfileModel>(
         onModelReady: (model) => model.loadPostsByUser(context),
         builder: (context, model, child) => Scaffold(
-                  backgroundColor: Colors.grey[300],
+                  backgroundColor: model.listUserAllPosts == null ? Colors.white : Colors.grey[300],
                   body: SafeArea(
                     child: model.state == ViewState.Busy
                         ? Container(child: Center(child: CircularProgressIndicator()))
@@ -57,8 +57,8 @@ class _ProfileViewState extends State<ProfileView> {
                                     //childAspectRatio: 1,
                                     shrinkWrap: true,
                                     scrollDirection: Axis.vertical,
-                                    crossAxisSpacing: 6.0,
-                                    mainAxisSpacing: 8.0,
+                                    crossAxisSpacing: 3.0,
+                                    mainAxisSpacing: 6.0,
                                     children: model.listUserAllPosts.map((Post post) {
                                       return Hero(
                                         tag: 'activity_' + post.postId,
@@ -133,8 +133,8 @@ class _ProfileViewState extends State<ProfileView> {
                                                         child: Row(
                                                           mainAxisAlignment: MainAxisAlignment.center,
                                                           children: [
-                                                            post.isUserLiked ? Image.asset('lib/ui/images/icon_love_liked.png', height: 23)
-                                                                : Image.asset('lib/ui/images/icon_love.png', height: 18),
+                                                            post.isUserLiked ? Image.asset('lib/ui/images/icon_love_liked.png', height: 17)
+                                                                : Image.asset('lib/ui/images/icon_love.png', height: 13),
                                                             SizedBox(width: 5),
                                                             Text(post.likeCount == null ? '0' : post.likeCount.toString(), style: TextStyle(color: Colors.black, fontSize: 14)),
                                                           ],
@@ -165,12 +165,12 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   double get minExtent => 50.0;
 
   @override
-  double get maxExtent => 135.0;
+  double get maxExtent => 120.0;
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      height: 130,
+      height: 115,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -179,44 +179,44 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
           children: [
             // NAME
             Positioned(
-              top: 13,
-              left: 40,
-              child: Icon(Icons.school, color: Colors.deepOrange.withOpacity(0.7), size: 35),
+              top: 15,
+              left: 30,
+              child: Icon(Icons.bubble_chart, color: Color(0xff36c1c8), size: 25),
             ),
             Positioned(
               top: 17,
-              left: 90,
-              child: Text('Сайн уу, ' + _loggedUser.name, style: TextStyle(fontSize: 25, color: Colors.deepOrange.withOpacity(0.7), fontWeight: FontWeight.bold)),
+              left: 60,
+              child: Text('Сайн уу, ' + _loggedUser.name, style: TextStyle(fontSize: 18, color: Colors.black45)),
             ),
             Positioned(
-              top: 65,
-              left: 40,
-              child: Text('Бүтээлүүд', style: TextStyle(color: Colors.deepOrange.withOpacity(0.7), fontWeight: FontWeight.bold, fontSize: 16)),
+              top: 60,
+              left: 30,
+              child: Text('Бүтээлүүд', style: TextStyle(color: Colors.black45, fontSize: 14)),
             ),
             Positioned(
-              top: 85,
-              left: 70,
-              child: Text(_loggedUser.postTotal.toString(), style: TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.bold, fontSize: 23)),
+              top: 80,
+              left: 57,
+              child: Text(_loggedUser.postTotal.toString(), style: TextStyle(color: Color(0xff36c1c8), fontWeight: FontWeight.bold, fontSize: 20)),
             ),
             Positioned(
-              top: 65,
+              top: 60,
               left: 170,
-              child: Text('Ур чадвар', style: TextStyle(color: Colors.deepOrange.withOpacity(0.7), fontWeight: FontWeight.bold, fontSize: 16)),
+              child: Text('Ур чадвар', style: TextStyle(color: Colors.black45, fontSize: 14)),
             ),
             Positioned(
-              top: 85,
+              top: 80,
               left: 185,
-              child: Text('+' + _loggedUser.skillTotal.toString(), style: TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.bold, fontSize: 23)),
+              child: Text('+' + _loggedUser.skillTotal.toString(), style: TextStyle(color: Color(0xff36c1c8), fontWeight: FontWeight.bold, fontSize: 20)),
             ),
             Positioned(
-              top: 65,
-              left: 310,
-              child: Text('Like', style: TextStyle(color: Colors.deepOrange.withOpacity(0.7), fontWeight: FontWeight.bold, fontSize: 16)),
+              top: 60,
+              left: 325,
+              child: Text('Like', style: TextStyle(color: Colors.black45, fontSize: 14)),
             ),
             Positioned(
-              top: 85,
-              left: 315,
-              child: Text(_loggedUser.likeTotal.toString(), style: TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.bold, fontSize: 23)),
+              top: 80,
+              left: 330,
+              child: Text(_loggedUser.likeTotal.toString(), style: TextStyle(color: Color(0xff36c1c8), fontWeight: FontWeight.bold, fontSize: 20)),
             ),
             // SKILLS
           ]),

@@ -34,7 +34,7 @@ class _GalleryViewState extends State<GalleryView> {
     return BaseView<GalleryModel>(
       onModelReady: (model) => model.loadPostsByUser(context),
       builder: (context, model, child) => Scaffold(
-        backgroundColor: Colors.grey[300],
+        backgroundColor: model.listAllPosts == null ? Colors.white : Colors.grey[300],
         body: SafeArea(
           child: model.state == ViewState.Busy
               ? Container(child: Center(child: CircularProgressIndicator()))
@@ -48,8 +48,8 @@ class _GalleryViewState extends State<GalleryView> {
                           //childAspectRatio: 1,
                           shrinkWrap: true,
                           scrollDirection: Axis.vertical,
-                          crossAxisSpacing: 6.0,
-                          mainAxisSpacing: 8.0,
+                          crossAxisSpacing: 3.0,
+                          mainAxisSpacing: 6.0,
                           children: model.listAllPosts.map((Post post) {
                             return Hero(
                               tag: 'activity_' + post.postId,
@@ -60,19 +60,11 @@ class _GalleryViewState extends State<GalleryView> {
                                     });
                                   },
                                   child: Stack(children: [
+                                    // IMAGE, VIDEO
                                     Container(
                                       color: Colors.white,
                                       child: Column(
                                         children: [
-                                          Padding(
-                                              padding: EdgeInsets.fromLTRB(5, 5, 0, 5),
-                                              child: Row(
-                                                children: [
-                                                  Icon(Icons.person, color: Colors.black45),
-                                                  SizedBox(width: 5),
-                                                  Text(post.userName, style: TextStyle(fontSize: 14, color: Colors.black45, fontWeight: FontWeight.w700)),
-                                                ],
-                                              )),
                                           Expanded(
                                               child: Container(
                                                   width: (MediaQuery.of(context).size.width - 6) / 2,
@@ -102,7 +94,12 @@ class _GalleryViewState extends State<GalleryView> {
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
                                               Container(
-                                                  decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.all(Radius.circular(20))),
+                                                  decoration: BoxDecoration(color:
+                                                    post.activity.activityType == 'diy'
+                                                    ? Colors.blue.withOpacity(0.7) : (post.activity.activityType == 'discover'
+                                                    ? Colors.orange.withOpacity(0.7) : (post.activity.activityType == 'dance'
+                                                    ? Colors.red.withOpacity(0.7) : Colors.blue.withOpacity(0.6))),
+                                                  borderRadius: BorderRadius.all(Radius.circular(20))),
                                                   margin: EdgeInsets.fromLTRB(5, 2, 5, 4),
                                                   padding: EdgeInsets.fromLTRB(4, 2, 4, 2),
                                                   //width: 40,
@@ -120,7 +117,26 @@ class _GalleryViewState extends State<GalleryView> {
                                         ],
                                       ),
                                     ),
-                                    // Gallery count round
+                                    // POSTED USER
+                                    Positioned(
+                                      top: 5,
+                                      right: 5,
+                                      child: Container(
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius: BorderRadius.all(Radius.circular(10))),
+                                          padding: EdgeInsets.fromLTRB(4, 2, 4, 2),
+                                          //width: 40,
+                                          height: 25,
+                                          child: Row(
+                                            children: [
+                                              Icon(Icons.person, color: Colors.black54, size: 15),
+                                              SizedBox(width: 3),
+                                              Text(post.userName, style: TextStyle(fontSize: 12, color: Colors.black54, fontWeight: FontWeight.w500)),
+                                            ],
+                                          ))
+                                    ),
+                                    // LIKE
                                     Positioned(
                                       right: 0,
                                       bottom: 0,
@@ -142,8 +158,8 @@ class _GalleryViewState extends State<GalleryView> {
                                               child: Row(
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
-                                              post.isUserLiked ? Image.asset('lib/ui/images/icon_love_liked.png', height: 23)
-                                              : Image.asset('lib/ui/images/icon_love.png', height: 18),
+                                              post.isUserLiked ? Image.asset('lib/ui/images/icon_love_liked.png', height: 17)
+                                              : Image.asset('lib/ui/images/icon_love.png', height: 13),
                                               SizedBox(width: 5),
                                               Text(post.likeCount == null ? '0' : post.likeCount.toString(), style: TextStyle(color: Colors.black, fontSize: 14)),
                                             ],

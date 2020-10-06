@@ -31,7 +31,7 @@ class _RegisterViewState extends State<RegisterView>{
                     setState(() {});
                   },
                   child: Scaffold(
-                      backgroundColor: Color(0xFFfc9c5b),
+                      backgroundColor: Colors.white,
                       body: Center(
                         child: SingleChildScrollView(
                           child: Column(
@@ -39,7 +39,7 @@ class _RegisterViewState extends State<RegisterView>{
                               AvatarGlow(
                                 endRadius: 90,
                                 duration: Duration(seconds: 1),
-                                glowColor: Colors.white24,
+                                glowColor: Color(0xff36c1c8),
                                 repeat: true,
                                 repeatPauseDuration: Duration(seconds: 1),
                                 startDelay: Duration(seconds: 1),
@@ -47,7 +47,7 @@ class _RegisterViewState extends State<RegisterView>{
                                     elevation: 8.0,
                                     shape: CircleBorder(),
                                     child: CircleAvatar(
-                                      backgroundColor: Colors.grey[100],
+                                      backgroundColor: Colors.transparent,
                                       child: Image.asset('lib/ui/images/splash.png', height: 100),
                                       radius: 50.0,
                                     )),
@@ -64,18 +64,19 @@ class _RegisterViewState extends State<RegisterView>{
                                   child: TextField(
                                     controller: _nameInput,
                                     keyboardType: TextInputType.text,
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(color: Colors.grey[600]),
                                     onTap: () {
                                       setState(() {});
                                     },
                                     decoration: InputDecoration(
-                                        border: OutlineInputBorder(borderSide: new BorderSide(color: Colors.white)),
-                                        focusedBorder: OutlineInputBorder(borderSide: new BorderSide(color: Colors.white)),
-                                        disabledBorder: OutlineInputBorder(borderSide: new BorderSide(color: Colors.white)),
-                                        enabledBorder: OutlineInputBorder(borderSide: new BorderSide(color: Colors.white)),
-                                        fillColor: Colors.white,
+                                        border: OutlineInputBorder(borderSide: new BorderSide(color: Colors.transparent)),
+                                        focusedBorder: OutlineInputBorder(borderSide: new BorderSide(color: Colors.transparent)),
+                                        disabledBorder: OutlineInputBorder(borderSide: new BorderSide(color: Colors.transparent)),
+                                        enabledBorder: OutlineInputBorder(borderSide: new BorderSide(color: Colors.transparent)),
+                                        fillColor: Colors.grey[200],
+                                        filled: true,
                                         hintText: "Нэр",
-                                        hintStyle: TextStyle(color: Colors.white, fontStyle: FontStyle.italic, fontSize: 15.0)),
+                                        hintStyle: TextStyle(color: Colors.grey[600], fontStyle: FontStyle.italic, fontSize: 15.0)),
                                   ),
                                 ),
                               ),
@@ -92,7 +93,7 @@ class _RegisterViewState extends State<RegisterView>{
                                   child: TextField(
                                     controller: _passwordInput,
                                     obscureText: true,
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(color: Colors.grey[600]),
                                     keyboardType: TextInputType.number,
                                     onTap: () {
                                       setState(() {});
@@ -102,8 +103,10 @@ class _RegisterViewState extends State<RegisterView>{
                                         focusedBorder: OutlineInputBorder(borderSide: new BorderSide(color: Colors.white)),
                                         disabledBorder: OutlineInputBorder(borderSide: new BorderSide(color: Colors.white)),
                                         enabledBorder: OutlineInputBorder(borderSide: new BorderSide(color: Colors.white)),
+                                        fillColor: Colors.grey[200],
+                                        filled: true,
                                         hintText: "Нууц үг",
-                                        hintStyle: TextStyle(color: Colors.white, fontStyle: FontStyle.italic, fontSize: 15.0)),
+                                        hintStyle: TextStyle(color: Colors.grey[600], fontStyle: FontStyle.italic, fontSize: 15.0)),
                                   ),
                                 ),
                               ),
@@ -119,7 +122,7 @@ class _RegisterViewState extends State<RegisterView>{
                                 child: Center(
                                   child: TextField(
                                     controller: _ageInput,
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(color: Colors.grey[600]),
                                     keyboardType: TextInputType.number,
                                     onTap: () {
                                       setState(() {});
@@ -129,8 +132,10 @@ class _RegisterViewState extends State<RegisterView>{
                                         focusedBorder: OutlineInputBorder(borderSide: new BorderSide(color: Colors.white)),
                                         disabledBorder: OutlineInputBorder(borderSide: new BorderSide(color: Colors.white)),
                                         enabledBorder: OutlineInputBorder(borderSide: new BorderSide(color: Colors.white)),
+                                        fillColor: Colors.grey[200],
+                                        filled: true,
                                         hintText: "Нас",
-                                        hintStyle: TextStyle(color: Colors.white, fontStyle: FontStyle.italic, fontSize: 15.0)),
+                                        hintStyle: TextStyle(color: Colors.grey[600], fontStyle: FontStyle.italic, fontSize: 15.0)),
                                   ),
                                 ),
                               ),
@@ -141,10 +146,10 @@ class _RegisterViewState extends State<RegisterView>{
                                 width: 300,
                                 child: model.state == ViewState.Busy ? Center(child: CircularProgressIndicator()) :
                                     RaisedButton(
-                                      textColor: Colors.deepOrange,
-                                      color: Colors.white,
-                                      disabledColor: Colors.grey,
-                                      disabledTextColor: Colors.white,
+                                      textColor: Colors.white,
+                                      color: Color(0xff36c1c8),
+                                      disabledColor: Color(0xff36c1c8),
+                                      disabledTextColor: Color(0xff36c1c8),
                                       elevation: 4.0,
                                       child: Text('БҮРТГҮҮЛЭХ'),
                                       onPressed: () async{
@@ -159,7 +164,7 @@ class _RegisterViewState extends State<RegisterView>{
                                             Flushbar(
                                               message: 'Нэр бүртгэлтэй байна. Өөр нэр сонгоно уу.',
                                               padding: EdgeInsets.all(25),
-                                              backgroundColor: Color(0xff36adc8),
+                                              backgroundColor: Color(0xff36c1c8),
                                               duration: Duration(seconds: 3),
                                             )..show(context);
                                           }
@@ -167,7 +172,7 @@ class _RegisterViewState extends State<RegisterView>{
                                           Flushbar(
                                             message: 'Мэдээллээ бүрэн бөглөнө үү.',
                                             padding: EdgeInsets.all(25),
-                                            backgroundColor: Color(0xff36adc8),
+                                            backgroundColor: Color(0xff36c1c8),
                                             duration: Duration(seconds: 3),
                                           )..show(context);
                                         }

@@ -8,6 +8,7 @@ import 'package:education/core/viewmodels/publish_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
 
+// ignore: must_be_immutable
 class PublishView extends StatefulWidget {
   Post post;
 

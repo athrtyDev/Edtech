@@ -12,6 +12,7 @@ class LoginModel extends BaseModel {
 
   Future<bool> login(String name, String password) async {
     setState(ViewState.Busy);
+    name = name.toLowerCase()[0].toUpperCase() + name.toLowerCase().substring(1);
     bool isSuccess = await _authenticationService.readCustomer(name, password);
     setState(ViewState.Idle);
     return isSuccess;

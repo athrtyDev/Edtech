@@ -57,24 +57,24 @@ class _PostDetailViewState extends State<PostDetailView> {
                 : ListView(children: <Widget>[
                     // NAME, INSTRUCTION
                     Container(
-                      height: 160,
+                      height: 150,
                       padding: EdgeInsets.fromLTRB(20, 80, 20, 0),
                       child: Row(
                               children: [
-                                Icon(Icons.school, color: Colors.white, size: 30),
-                                SizedBox(width: 15),
+                                Icon(Icons.fiber_smart_record, color: Colors.white, size: 25),
+                                SizedBox(width: 10),
                                 Text(widget.post.activity.name,
                                       style: TextStyle(
-                                          fontSize: 25,
+                                          fontSize: 18,
                                           color: Colors.white,
-                                          fontWeight: FontWeight.w700,
+                                          fontWeight: FontWeight.w600,
                                           letterSpacing: 1.3)),
                               ],
                             ),
                     ),
                     // Video instruction
                     Container(
-                      height: 450,
+                      height: 470,
                       child: Hero(
                           tag: 'diy_' + widget.post.activity.id,
                           child: widget.post.uploadMediaType == 'image'
@@ -163,10 +163,10 @@ class _PostDetailViewState extends State<PostDetailView> {
                           child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  widget.post.isUserLiked ? Image.asset('lib/ui/images/icon_love_liked.png', height: 31)
-                                      : Image.asset('lib/ui/images/icon_love.png', height: 25),
+                                  widget.post.isUserLiked ? Image.asset('lib/ui/images/icon_love_liked.png', height: 25)
+                                      : Image.asset('lib/ui/images/icon_love.png', height: 20),
                                   SizedBox(width: 5),
-                                  Text(widget.post.likeCount == null ? '0' : widget.post.likeCount.toString(), style: TextStyle(color: Colors.white, fontSize: 20)),
+                                  Text(widget.post.likeCount == null ? '0' : widget.post.likeCount.toString(), style: TextStyle(color: Colors.white, fontSize: 17)),
                                 ],
                               ),
                         )),
