@@ -6,12 +6,10 @@ import 'package:education/core/classes/item.dart';
 import 'package:education/core/classes/like.dart';
 import 'package:education/core/classes/order.dart';
 import 'package:education/core/classes/post.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:education/core/classes/user.dart';
 import 'package:uuid/uuid.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter_video_compress/flutter_video_compress.dart';
 
 class Api {
   static const endpoint = 'https://jsonplaceholder.typicode.com';

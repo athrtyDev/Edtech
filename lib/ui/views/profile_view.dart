@@ -45,11 +45,11 @@ class _ProfileViewState extends State<ProfileView> {
                               SliverPersistentHeader(
                                 delegate: _SliverAppBarDelegate(model.loggedUser),
                                 pinned: false,
-                                floating: true,
+                                floating: false,
                               ),
                               SliverFillRemaining(
                                 child: Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
                                   child: model.listUserAllPosts == null ? Center(child: Image.asset('lib/ui/images/no_post.png', height: 350)) :
                                   GridView.count(
                                     controller: scrollViewController,

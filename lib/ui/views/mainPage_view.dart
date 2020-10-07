@@ -68,13 +68,13 @@ class _MainPageViewState extends State<MainPageView> {
                           inactiveColor: Colors.grey[400],
                         ),
                         BottomNavyBarItem(
-                          title: Text('Gallery'),
+                          title: Text('Бүтээлүүд'),
                           icon: Icon(Icons.photo_library),
                           activeColor: Color(0xff36c1c8),
                           inactiveColor: Colors.grey[400],
                         ),
                         BottomNavyBarItem(
-                          title: Text('Profile'),
+                          title: Text('Миний'),
                           icon: Icon(Icons.person),
                           activeColor: Color(0xff36c1c8),
                           inactiveColor: Colors.grey[400],

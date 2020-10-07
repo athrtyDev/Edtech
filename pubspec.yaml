@@ -38,7 +38,6 @@ dependencies:
   flushbar: ^1.5.0
   bottom_navy_bar: ^5.4.0
   shared_preferences:
-  video_compress: ^2.0.0
   image_picker: ^0.6.7+4
   avatar_glow:
 

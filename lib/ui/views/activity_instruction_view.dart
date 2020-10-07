@@ -49,7 +49,7 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
         },
         child: SafeArea(
           child: Scaffold(
-              backgroundColor: Colors.transparent,
+              backgroundColor: Colors.white,
               body: model.state == ViewState.Busy
                   ? Container(child: Center(child: CircularProgressIndicator()))
                   : ListView(children: <Widget>[
@@ -64,27 +64,24 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                               padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                               child: Row(
                                 children: [
-                                  Icon(Icons.school, color: Colors.white, size: 30),
+                                  Icon(Icons.school, color: Color(0xff36c1c8), size: 20),
                                   SizedBox(width: 15),
                                   Container(
                                     width: 250,
                                     child: Text(widget.activity.name,
-                                        style: TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.w700, letterSpacing: 1.3)),
+                                        style: TextStyle(fontSize: 18, color: Color(0xff36c1c8), fontWeight: FontWeight.w700, letterSpacing: 1.3)),
                                   ),
                                 ],
                               ),
                             ),
-                            //Divider(height: 2, color: Colors.blue),
                             Padding(
                                 padding: EdgeInsets.fromLTRB(20, 10, 0, 15),
                                 child: Row(
                                   children: [
-                                    Icon(Icons.info, color: Colors.white, size: 30),
-                                    SizedBox(width: 15),
                                     Container(
-                                      width: 300,
+                                      width: 350,
                                       child: Text(widget.activity.instruction,
-                                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, letterSpacing: 1.7)),
+                                          style: TextStyle(color: Colors.black45, fontSize: 14, fontWeight: FontWeight.w700, letterSpacing: 1.7)),
                                     ),
                                   ],
                                 ))
@@ -92,11 +89,6 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                         ),
                       ),
                       // seperator
-                      /*Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 3,
-                        color: Colors.grey[200],
-                      ),*/
                       // Video instruction
                       Container(
                         height: 400,
@@ -157,12 +149,6 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                               ],
                             ))),
                       ),
-                      /*// seperator
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 3,
-                        color: Colors.grey[200],
-                      ),*/
                       // TYPE, DIFFICULTY
                       Container(
                         height: 120,
@@ -177,7 +163,7 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                                   children: [
                                     // TYPE, XP points
                                     Container(
-                                        decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.all(Radius.circular(10))),
+                                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(10))),
                                         padding: EdgeInsets.fromLTRB(15, 6, 20, 6),
                                         child: Container(
                                             child: Row(
@@ -189,7 +175,7 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                                             Column(
                                               children: [
                                                 Text(widget.activity.activityType == 'diy' ? 'Бүтээл' : (widget.activity.activityType == 'discover' ? 'Өөрийгөө нээ' : (widget.activity.activityType == 'dance' ? 'Бүжиг' : '')),
-                                                    style: TextStyle(color: Colors.black54)),
+                                                    style: TextStyle(color: Colors.black45)),
                                                 Container(
                                                   margin: EdgeInsets.fromLTRB(3, 5, 0, 0),
                                                   padding: EdgeInsets.fromLTRB(10, 4, 10, 4),
@@ -201,9 +187,9 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                                           ],
                                         ))),
                                     SizedBox(width: 35),
-                                    // DIFFICULTY LEVEL
+                                    /*// DIFFICULTY LEVEL
                                     Container(
-                                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(10))),
+                                      decoration: BoxDecoration(color: Colors.transparent, borderRadius: BorderRadius.all(Radius.circular(10))),
                                       padding: EdgeInsets.fromLTRB(10, 12, 10, 12),
                                       child: Row(
                                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -221,7 +207,7 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                                               style: TextStyle(color: Colors.blue, fontSize: 16, fontWeight: FontWeight.w600))
                                         ],
                                       ),
-                                    )
+                                    )*/
                                   ],
                                 ),
                               ),
@@ -236,14 +222,14 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                 padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
                 child: RaisedButton(
                   textColor: Colors.white,
-                  color: Colors.green.withOpacity(0.9),
+                  color: Color(0xff36c1c8),
                   elevation: 4.0,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.camera_alt, color: Colors.white, size: 35),
-                      SizedBox(width: 5),
-                      Text('Бүтээлээ оруулах', style: TextStyle(fontSize: 14, color: Colors.white)),
+                      Icon(Icons.camera_alt, color: Colors.white, size: 25),
+                      SizedBox(width: 8),
+                      Text('Бүтээлээ оруулах', style: TextStyle(fontSize: 16, color: Colors.white)),
                     ],
                   ),
                   onPressed: () {
