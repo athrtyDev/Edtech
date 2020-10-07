@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:education/core/enums/view_state.dart';
 import 'package:education/ui/views/base_view.dart';
 import 'package:flutter/foundation.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
@@ -64,10 +65,10 @@ class _PostDetailViewState extends State<PostDetailView> {
                                 Icon(Icons.fiber_smart_record, color: Colors.white, size: 25),
                                 SizedBox(width: 10),
                                 Text(widget.post.activity.name,
-                                      style: TextStyle(
+                                      style: GoogleFonts.kurale(
                                           fontSize: 18,
                                           color: Colors.white,
-                                          fontWeight: FontWeight.w600,
+                                          fontWeight: FontWeight.w500,
                                           letterSpacing: 1.3)),
                               ],
                             ),
@@ -166,7 +167,7 @@ class _PostDetailViewState extends State<PostDetailView> {
                                   widget.post.isUserLiked ? Image.asset('lib/ui/images/icon_love_liked.png', height: 25)
                                       : Image.asset('lib/ui/images/icon_love.png', height: 20),
                                   SizedBox(width: 5),
-                                  Text(widget.post.likeCount == null ? '0' : widget.post.likeCount.toString(), style: TextStyle(color: Colors.white, fontSize: 17)),
+                                  Text(widget.post.likeCount == null ? '0' : widget.post.likeCount.toString(), style: GoogleFonts.kurale(color: Colors.white, fontSize: 19)),
                                 ],
                               ),
                         )),

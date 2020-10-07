@@ -5,6 +5,7 @@ import 'package:education/core/enums/view_state.dart';
 import 'package:education/core/viewmodels/activity_home_model.dart';
 import 'package:education/ui/views/base_view.dart';
 import 'package:flutter/foundation.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ActivityHomeView extends StatefulWidget {
   String activityType;
@@ -59,7 +60,7 @@ class _ActivityHomeViewState extends State<ActivityHomeView> {
                                 child: Text(widget.activityType == 'diy' ? 'Бүтээлүүдийг даган биелүүлээрэй.'
                                     : (widget.activityType == 'discover' ? 'Өөрийгөө шинээр нээж хөгжүүлээрэй.'
                                       : (widget.activityType == 'dance' ? 'Бүжиглээд, хөгжилдөөд!' : 'Бүтээлүүдийг даган биелүүлээрэй.')),
-                                    style: TextStyle(fontSize: 18, color: Colors.black45)),
+                                    style: GoogleFonts.kurale(fontSize: 18, color: Colors.black)),
                               ),
                             ],
                           ),
@@ -104,7 +105,7 @@ class _ActivityHomeViewState extends State<ActivityHomeView> {
                                                     padding: EdgeInsets.fromLTRB(5, 2, 0, 2),
                                                     child: Container(
                                                         child: Text(activity.name,
-                                                            style: TextStyle(fontSize: 12, color: Colors.black54, fontWeight: FontWeight.w600))),
+                                                            style: GoogleFonts.kurale(fontSize: 12, color: Colors.black54, fontWeight: FontWeight.w500))),
                                                   )
                                                 ],
                                               ),
@@ -122,7 +123,7 @@ class _ActivityHomeViewState extends State<ActivityHomeView> {
                                                       //width: 40,
                                                       height: 25,
                                                       child: Center(child: Text(widget.activityType == 'diy' ? 'Бүтээл' : (widget.activityType == 'discover' ? 'Өөрийгөө нээ' : (widget.activityType == 'dance' ? 'Бүжиг' : '')),
-                                                          style: TextStyle(color: Colors.white, fontSize: 11)))),
+                                                          style: GoogleFonts.kurale(color: Colors.white, fontSize: 11)))),
                                                   Padding(
                                                     padding: EdgeInsets.fromLTRB(0, 0, 10, 3),
                                                     child: activity.difficulty == 'easy' ? Image.asset('lib/ui/images/icon_easy.png', height: 20)

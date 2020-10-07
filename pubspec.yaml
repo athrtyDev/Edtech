@@ -27,6 +27,8 @@ dependencies:
   provider: ^2.0.1
   get_it: 1.1.0
   http: ^0.12.0+2
+  flutter_launcher_icons: ^0.8.1
+  flutter_launcher_name: ^0.0.1
   flutter_screenutil: ^0.5.3
   flutter_range_slider: ^1.0.1
   carousel_pro: ^1.0.0
@@ -92,3 +94,11 @@ flutter:
   # see https://flutter.io/custom-fonts/#from-packages
 module:
   androidX: true
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "lib/ui/images/splash.png"
+
+flutter_launcher_name:
+  name: "Koala"

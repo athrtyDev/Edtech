@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:education/core/enums/view_state.dart';
 import 'package:education/ui/views/base_view.dart';
 import 'package:flutter/foundation.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
@@ -52,43 +53,43 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
               backgroundColor: Colors.white,
               body: model.state == ViewState.Busy
                   ? Container(child: Center(child: CircularProgressIndicator()))
-                  : ListView(children: <Widget>[
+                  : Column(children: <Widget>[
                       // NAME, INSTRUCTION
                       Container(
-                        height: 150,
+                        height: 70,
+                        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                        width: MediaQuery.of(context).size.width,
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.school, color: Color(0xff36c1c8), size: 20),
-                                  SizedBox(width: 15),
-                                  Container(
-                                    width: 250,
-                                    child: Text(widget.activity.name,
-                                        style: TextStyle(fontSize: 18, color: Color(0xff36c1c8), fontWeight: FontWeight.w700, letterSpacing: 1.3)),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                                padding: EdgeInsets.fromLTRB(20, 10, 0, 15),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: 350,
-                                      child: Text(widget.activity.instruction,
-                                          style: TextStyle(color: Colors.black45, fontSize: 14, fontWeight: FontWeight.w700, letterSpacing: 1.7)),
-                                    ),
-                                  ],
-                                ))
+                            Text(widget.activity.name,
+                                style: GoogleFonts.kurale(fontSize: 20, color: Color(0xff36c1c8), fontWeight: FontWeight.w700, letterSpacing: 1.5)),
                           ],
-                        ),
+                        )
+
                       ),
-                      // seperator
+                      Container(
+                        height: 5,
+                        color: Colors.grey[200],
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                          width: MediaQuery.of(context).size.width,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Даалгавар:',
+                                  style: GoogleFonts.kurale(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w600, letterSpacing: 1.5)),
+                              SizedBox(height: 5),
+                              Text(widget.activity.instruction,
+                                  style: GoogleFonts.kurale(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500, letterSpacing: 1.5)),
+                            ],
+                          )
+                        )
+                      ),
                       // Video instruction
                       Container(
                         height: 400,
@@ -150,68 +151,67 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                             ))),
                       ),
                       // TYPE, DIFFICULTY
-                      Container(
-                        height: 120,
+                      Expanded(
+                        flex: 1,
                         child: Container(
-                          child: Column(
-                            children: [
-                              // DIY INFO
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    // TYPE, XP points
-                                    Container(
-                                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(10))),
-                                        padding: EdgeInsets.fromLTRB(15, 6, 20, 6),
-                                        child: Container(
-                                            child: Row(
+                          //height: 120,
+                          child: Container(
+                            child: Column(
+                              children: [
+                                // DIY INFO
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      // TYPE, XP points
+                                      Container(
+                                          decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.all(Radius.circular(10))),
+                                          padding: EdgeInsets.fromLTRB(5, 10, 7, 10),
+                                          child: Container(
+                                              child: Row(
+                                            children: [
+                                              Image.asset("lib/ui/images/icon_do_it.png", height: 25),
+                                              Column(
+                                                children: [
+                                                  /*Text(widget.activity.activityType == 'diy' ? 'Бүтээл' : (widget.activity.activityType == 'discover' ? 'Өөрийгөө нээ' : (widget.activity.activityType == 'dance' ? 'Бүжиг' : '')),
+                                                      style: GoogleFonts.kurale(color: Colors.black45)),*/
+                                                  Container(
+                                                    padding: EdgeInsets.fromLTRB(5, 4, 0, 4),
+                                                    decoration: BoxDecoration(color: Colors.transparent, borderRadius: BorderRadius.all(Radius.circular(10))),
+                                                    child: Text('+' + widget.activity.skill.toString() + ' оноо', style: GoogleFonts.kurale(color: Colors.blue, fontSize: 14, fontWeight: FontWeight.w600)),
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          ))),
+                                      SizedBox(width: 25),
+                                      // DIFFICULTY LEVEL
+                                      Container(
+                                        decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.all(Radius.circular(10))),
+                                        padding: EdgeInsets.fromLTRB(5, 10, 7, 10),
+                                        child: Row(
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             Padding(
-                                              padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
-                                              child: Image.asset("lib/ui/images/icon_do_it.png", height: 25),
+                                              padding: EdgeInsets.fromLTRB(0, 0, 5, 3),
+                                              child: widget.activity.difficulty == 'easy' ? Image.asset('lib/ui/images/icon_easy.png', height: 25)
+                                                  : (widget.activity.difficulty == 'medium' ? Image.asset('lib/ui/images/icon_medium.png', height: 25)
+                                                  : (widget.activity.difficulty == 'hard' ? Image.asset('lib/ui/images/icon_hard.png', height: 25) : Text(''))),
                                             ),
-                                            Column(
-                                              children: [
-                                                Text(widget.activity.activityType == 'diy' ? 'Бүтээл' : (widget.activity.activityType == 'discover' ? 'Өөрийгөө нээ' : (widget.activity.activityType == 'dance' ? 'Бүжиг' : '')),
-                                                    style: TextStyle(color: Colors.black45)),
-                                                Container(
-                                                  margin: EdgeInsets.fromLTRB(3, 5, 0, 0),
-                                                  padding: EdgeInsets.fromLTRB(10, 4, 10, 4),
-                                                  decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.all(Radius.circular(10))),
-                                                  child: Text('+' + widget.activity.skill.toString() + ' оноо', style: TextStyle(color: Colors.white, fontSize: 14)),
-                                                ),
-                                              ],
-                                            )
+                                            Text(widget.activity.difficulty == 'easy' ? 'Амархан'
+                                                : (widget.activity.difficulty == 'medium' ? 'Дунд зэрэг'
+                                                : (widget.activity.difficulty == 'hard' ? 'Хэцүү' : Text(''))),
+                                                style: GoogleFonts.kurale(color: Colors.blue, fontSize: 14, fontWeight: FontWeight.w600))
                                           ],
-                                        ))),
-                                    SizedBox(width: 35),
-                                    /*// DIFFICULTY LEVEL
-                                    Container(
-                                      decoration: BoxDecoration(color: Colors.transparent, borderRadius: BorderRadius.all(Radius.circular(10))),
-                                      padding: EdgeInsets.fromLTRB(10, 12, 10, 12),
-                                      child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.fromLTRB(0, 0, 10, 3),
-                                            child: widget.activity.difficulty == 'easy' ? Image.asset('lib/ui/images/icon_easy.png', height: 30)
-                                                : (widget.activity.difficulty == 'medium' ? Image.asset('lib/ui/images/icon_medium.png', height: 30)
-                                                : (widget.activity.difficulty == 'hard' ? Image.asset('lib/ui/images/icon_hard.png', height: 30) : Text(''))),
-                                          ),
-                                          Text(widget.activity.difficulty == 'easy' ? 'Амархан'
-                                              : (widget.activity.difficulty == 'medium' ? 'Дунд зэрэг'
-                                              : (widget.activity.difficulty == 'hard' ? 'Хэцүү' : Text(''))),
-                                              style: TextStyle(color: Colors.blue, fontSize: 16, fontWeight: FontWeight.w600))
-                                        ],
-                                      ),
-                                    )*/
-                                  ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -227,9 +227,9 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.camera_alt, color: Colors.white, size: 25),
+                      Icon(Icons.camera_alt, color: Colors.white, size: 23),
                       SizedBox(width: 8),
-                      Text('Бүтээлээ оруулах', style: TextStyle(fontSize: 16, color: Colors.white)),
+                      Text('Бүтээлээ оруулах', style: GoogleFonts.kurale(fontSize: 16, color: Colors.white)),
                     ],
                   ),
                   onPressed: () {

@@ -4,6 +4,7 @@ import 'package:education/core/viewmodels/register_model.dart';
 import 'package:education/ui/views/base_view.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterView extends StatefulWidget {
@@ -64,7 +65,7 @@ class _RegisterViewState extends State<RegisterView>{
                                   child: TextField(
                                     controller: _nameInput,
                                     keyboardType: TextInputType.text,
-                                    style: TextStyle(color: Colors.grey[600]),
+                                    style: GoogleFonts.kurale(color: Colors.grey[600]),
                                     onTap: () {
                                       setState(() {});
                                     },
@@ -76,7 +77,7 @@ class _RegisterViewState extends State<RegisterView>{
                                         fillColor: Colors.grey[200],
                                         filled: true,
                                         hintText: "Нэр",
-                                        hintStyle: TextStyle(color: Colors.grey[600], fontStyle: FontStyle.italic, fontSize: 15.0)),
+                                        hintStyle: GoogleFonts.kurale(color: Colors.grey[600], fontStyle: FontStyle.italic, fontSize: 16.0)),
                                   ),
                                 ),
                               ),
@@ -93,7 +94,7 @@ class _RegisterViewState extends State<RegisterView>{
                                   child: TextField(
                                     controller: _passwordInput,
                                     obscureText: true,
-                                    style: TextStyle(color: Colors.grey[600]),
+                                    style: GoogleFonts.kurale(color: Colors.grey[600]),
                                     keyboardType: TextInputType.number,
                                     onTap: () {
                                       setState(() {});
@@ -106,7 +107,7 @@ class _RegisterViewState extends State<RegisterView>{
                                         fillColor: Colors.grey[200],
                                         filled: true,
                                         hintText: "Нууц үг",
-                                        hintStyle: TextStyle(color: Colors.grey[600], fontStyle: FontStyle.italic, fontSize: 15.0)),
+                                        hintStyle: GoogleFonts.kurale(color: Colors.grey[600], fontStyle: FontStyle.italic, fontSize: 16.0)),
                                   ),
                                 ),
                               ),
@@ -122,7 +123,7 @@ class _RegisterViewState extends State<RegisterView>{
                                 child: Center(
                                   child: TextField(
                                     controller: _ageInput,
-                                    style: TextStyle(color: Colors.grey[600]),
+                                    style: GoogleFonts.kurale(color: Colors.grey[600]),
                                     keyboardType: TextInputType.number,
                                     onTap: () {
                                       setState(() {});
@@ -135,7 +136,7 @@ class _RegisterViewState extends State<RegisterView>{
                                         fillColor: Colors.grey[200],
                                         filled: true,
                                         hintText: "Нас",
-                                        hintStyle: TextStyle(color: Colors.grey[600], fontStyle: FontStyle.italic, fontSize: 15.0)),
+                                        hintStyle: GoogleFonts.kurale(color: Colors.grey[600], fontStyle: FontStyle.italic, fontSize: 16.0)),
                                   ),
                                 ),
                               ),
@@ -151,7 +152,7 @@ class _RegisterViewState extends State<RegisterView>{
                                       disabledColor: Color(0xff36c1c8),
                                       disabledTextColor: Color(0xff36c1c8),
                                       elevation: 4.0,
-                                      child: Text('БҮРТГҮҮЛЭХ'),
+                                      child: Text('БҮРТГҮҮЛЭХ', style: GoogleFonts.kurale()),
                                       onPressed: () async{
                                         if (_nameInput.text != '' && _passwordInput.text != '' && _ageInput.text != '') {
                                           if(await model.registerUser(_nameInput.text, _passwordInput.text, _ageInput.text)) {

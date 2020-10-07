@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:education/ui/views/base_view.dart';
 import 'package:flutter/foundation.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MainPageView extends StatefulWidget {
   MainPageView({Key key}) : super(key: key);
@@ -62,19 +63,19 @@ class _MainPageViewState extends State<MainPageView> {
                       },
                       items: <BottomNavyBarItem>[
                         BottomNavyBarItem(
-                          title: Text('Нүүр'),
+                          title: Text('Нүүр', style: GoogleFonts.kurale()),
                           icon: Icon(Icons.home),
                           activeColor: Color(0xff36c1c8),
                           inactiveColor: Colors.grey[400],
                         ),
                         BottomNavyBarItem(
-                          title: Text('Бүтээлүүд'),
+                          title: Text('Бүтээлүүд', style: GoogleFonts.kurale()),
                           icon: Icon(Icons.photo_library),
                           activeColor: Color(0xff36c1c8),
                           inactiveColor: Colors.grey[400],
                         ),
                         BottomNavyBarItem(
-                          title: Text('Миний'),
+                          title: Text('Миний', style: GoogleFonts.kurale()),
                           icon: Icon(Icons.person),
                           activeColor: Color(0xff36c1c8),
                           inactiveColor: Colors.grey[400],

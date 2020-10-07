@@ -5,6 +5,7 @@ import 'package:education/core/enums/view_state.dart';
 import 'package:education/ui/views/base_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:education/core/viewmodels/profile_model.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ProfileView extends StatefulWidget {
   ProfileView({Key key}) : super(key: key);
@@ -91,7 +92,7 @@ class _ProfileViewState extends State<ProfileView> {
                                                           padding: EdgeInsets.fromLTRB(5, 2, 0, 2),
                                                           child: Container(
                                                               child: Text(post.activity.name + ' ' ,
-                                                                  style: TextStyle(fontSize: 12, color: Colors.black54, fontWeight: FontWeight.w600))),
+                                                                  style: GoogleFonts.kurale(fontSize: 12, color: Colors.black54, fontWeight: FontWeight.w500))),
                                                         )
                                                       ],
                                                     ),
@@ -105,7 +106,7 @@ class _ProfileViewState extends State<ProfileView> {
                                                             //width: 40,
                                                             height: 25,
                                                             child: Center(child: Text(post.activity.activityType == 'diy' ? 'Бүтээл' : (post.activity.activityType == 'discover' ? 'Өөрийгөө нээ' : (post.activity.activityType == 'dance' ? 'Бүжиг' : '')),
-                                                                style: TextStyle(color: Colors.white, fontSize: 11)))),
+                                                                style: GoogleFonts.kurale(color: Colors.white, fontSize: 11)))),
                                                       ],
                                                     ),
                                                   ],
@@ -136,7 +137,7 @@ class _ProfileViewState extends State<ProfileView> {
                                                             post.isUserLiked ? Image.asset('lib/ui/images/icon_love_liked.png', height: 17)
                                                                 : Image.asset('lib/ui/images/icon_love.png', height: 13),
                                                             SizedBox(width: 5),
-                                                            Text(post.likeCount == null ? '0' : post.likeCount.toString(), style: TextStyle(color: Colors.black, fontSize: 14)),
+                                                            Text(post.likeCount == null ? '0' : post.likeCount.toString(), style: GoogleFonts.kurale(color: Colors.black, fontSize: 16)),
                                                           ],
                                                         )),
                                                   ),
@@ -186,37 +187,37 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
             Positioned(
               top: 17,
               left: 60,
-              child: Text('Сайн уу, ' + _loggedUser.name, style: TextStyle(fontSize: 18, color: Colors.black45)),
+              child: Text('Сайн уу, ' + _loggedUser.name, style: GoogleFonts.kurale(fontSize: 18, color: Colors.black)),
             ),
             Positioned(
-              top: 60,
+              top: 55,
               left: 30,
-              child: Text('Бүтээлүүд', style: TextStyle(color: Colors.black45, fontSize: 14)),
+              child: Text('Бүтээлүүд', style: GoogleFonts.kurale(color: Colors.black, fontSize: 16)),
             ),
             Positioned(
-              top: 80,
-              left: 57,
-              child: Text(_loggedUser.postTotal.toString(), style: TextStyle(color: Color(0xff36c1c8), fontWeight: FontWeight.bold, fontSize: 20)),
+              top: 75,
+              left: 63,
+              child: Text(_loggedUser.postTotal.toString(), style: GoogleFonts.kurale(color: Color(0xff36c1c8), fontWeight: FontWeight.bold, fontSize: 24)),
             ),
             Positioned(
-              top: 60,
+              top: 55,
               left: 170,
-              child: Text('Ур чадвар', style: TextStyle(color: Colors.black45, fontSize: 14)),
+              child: Text('Ур чадвар', style: GoogleFonts.kurale(color: Colors.black, fontSize: 16)),
             ),
             Positioned(
-              top: 80,
-              left: 185,
-              child: Text('+' + _loggedUser.skillTotal.toString(), style: TextStyle(color: Color(0xff36c1c8), fontWeight: FontWeight.bold, fontSize: 20)),
+              top: 75,
+              left: 190,
+              child: Text('+' + _loggedUser.skillTotal.toString(), style: GoogleFonts.kurale(color: Color(0xff36c1c8), fontWeight: FontWeight.bold, fontSize: 24)),
             ),
             Positioned(
-              top: 60,
+              top: 55,
               left: 325,
-              child: Text('Like', style: TextStyle(color: Colors.black45, fontSize: 14)),
+              child: Text('Like', style: GoogleFonts.kurale(color: Colors.black, fontSize: 16)),
             ),
             Positioned(
-              top: 80,
-              left: 330,
-              child: Text(_loggedUser.likeTotal.toString(), style: TextStyle(color: Color(0xff36c1c8), fontWeight: FontWeight.bold, fontSize: 20)),
+              top: 75,
+              left: 333,
+              child: Text(_loggedUser.likeTotal.toString(), style: GoogleFonts.kurale(color: Color(0xff36c1c8), fontWeight: FontWeight.bold, fontSize: 24)),
             ),
             // SKILLS
           ]),

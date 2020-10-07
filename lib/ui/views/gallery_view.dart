@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:education/core/enums/view_state.dart';
 import 'package:education/ui/views/base_view.dart';
 import 'package:flutter/foundation.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class GalleryView extends StatefulWidget {
   GalleryView({Key key}) : super(key: key);
@@ -49,7 +50,7 @@ class _GalleryViewState extends State<GalleryView> {
                         Icon(Icons.bubble_chart, color: Color(0xff36c1c8), size: 23),
                         SizedBox(width: 10),
                         Flexible(
-                          child: Text('Бидний уран бүтээлүүд', style: TextStyle(fontSize: 18, color: Colors.black45)),
+                          child: Text('Бидний уран бүтээлүүд', style: GoogleFonts.kurale(fontSize: 19, color: Colors.black)),
                         ),
                       ],
                     ),
@@ -103,7 +104,7 @@ class _GalleryViewState extends State<GalleryView> {
                                                     padding: EdgeInsets.fromLTRB(5, 2, 0, 2),
                                                     child: Container(
                                                         child: Text(post.activity.name,
-                                                            style: TextStyle(fontSize: 12, color: Colors.black54, fontWeight: FontWeight.w600))),
+                                                            style: GoogleFonts.kurale(fontSize: 12, color: Colors.black54, fontWeight: FontWeight.w500))),
                                                   )
                                                 ],
                                               ),
@@ -128,7 +129,7 @@ class _GalleryViewState extends State<GalleryView> {
                                                                   : (post.activity.activityType == 'discover'
                                                                       ? 'Өөрийгөө нээ'
                                                                       : (post.activity.activityType == 'dance' ? 'Бүжиг' : '')),
-                                                              style: TextStyle(color: Colors.white, fontSize: 11)))),
+                                                              style: GoogleFonts.kurale(color: Colors.white, fontSize: 11)))),
                                                 ],
                                               ),
                                             ],
@@ -149,7 +150,7 @@ class _GalleryViewState extends State<GalleryView> {
                                                 children: [
                                                   Icon(Icons.person, color: Colors.black54, size: 15),
                                                   SizedBox(width: 3),
-                                                  Text(post.userName, style: TextStyle(fontSize: 12, color: Colors.black54, fontWeight: FontWeight.w500)),
+                                                  Text(post.userName, style: GoogleFonts.kurale(fontSize: 12, color: Colors.black54, fontWeight: FontWeight.w500)),
                                                 ],
                                               ))
                                         ),
@@ -178,7 +179,7 @@ class _GalleryViewState extends State<GalleryView> {
                                                   post.isUserLiked ? Image.asset('lib/ui/images/icon_love_liked.png', height: 17)
                                                   : Image.asset('lib/ui/images/icon_love.png', height: 13),
                                                   SizedBox(width: 4),
-                                                  Text(post.likeCount == null ? '0' : post.likeCount.toString(), style: TextStyle(color: Colors.black54, fontSize: 14)),
+                                                  Text(post.likeCount == null ? '0' : post.likeCount.toString(), style: GoogleFonts.kurale(color: Colors.black54, fontSize: 16)),
                                                 ],
                                               )),
                                             ),

@@ -5,6 +5,7 @@ import 'package:education/core/enums/view_state.dart';
 import 'package:education/ui/views/base_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:education/core/viewmodels/publish_model.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
 
@@ -57,7 +58,7 @@ class _PublishViewState extends State<PublishView> with SingleTickerProviderStat
             }
           },
           child: Scaffold(
-            backgroundColor: Colors.transparent,
+            backgroundColor: Colors.white,
             body: Stack(children: <Widget>[
                     // Media
                     Center(
@@ -124,7 +125,16 @@ class _PublishViewState extends State<PublishView> with SingleTickerProviderStat
                         child: Container(
                           width: MediaQuery.of(context).size.width,
                           child: model.state == ViewState.Busy ?
-                              Center(child: CircularProgressIndicator())
+                              Center(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      CircularProgressIndicator(),
+                                      SizedBox(width: 10),
+                                      Text("Бүтээлийг нь хуулж байна... Одоохон дууслаа.", style: GoogleFonts.kurale(fontSize: 14, color: Color(0xff36c1c8))),
+                                    ],
+                                  )
+                              )
                               :
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -141,8 +151,6 @@ class _PublishViewState extends State<PublishView> with SingleTickerProviderStat
                                 onTap: () async {
                                   await model.uploadFile(widget.post, selectedFile);
                                   Navigator.of(context).pushNamedAndRemoveUntil('/mainPage', (Route<dynamic> route) => false);
-                                  //widget.post.uploadingFile = selectedFile;
-                                  //Navigator.of(context).pushNamedAndRemoveUntil('/mainPage', (Route<dynamic> route) => false, arguments: widget.post);
                                 },
                               ),
                             ],

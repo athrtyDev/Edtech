@@ -3,6 +3,7 @@ import 'package:education/core/enums/view_state.dart';
 import 'package:education/ui/views/base_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:education/core/viewmodels/home_model.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class HomeView extends StatefulWidget {
   HomeView({Key key}) : super(key: key);
@@ -38,7 +39,7 @@ class _HomeViewState extends State<HomeView> {
           child: model.state == ViewState.Busy
               ? Container(child: Center(child: CircularProgressIndicator()))
               : ListView(children: <Widget>[
-                  /*Text('Өнөөдрийн сорил', style: TextStyle(fontSize: 22, color: Colors.blue, fontWeight: FontWeight.bold)),
+                  /*Text('Өнөөдрийн сорил', style: GoogleFonts.kurale(fontSize: 22, color: Colors.blue, fontWeight: FontWeight.bold)),
                         SizedBox(height: 15),
                         // CHALLENGE
                         Container(
@@ -72,7 +73,7 @@ class _HomeViewState extends State<HomeView> {
                           Icon(Icons.shutter_speed, size: 30, color: Color(0xff36c1c8)),
                           SizedBox(width: 10),
                           Flexible(
-                            child: Text('Урлан доторх даалгавруудыг биелүүлж, бусадтай хуваалцаарай.', style: TextStyle(fontSize: 17, color: Colors.black54, fontWeight: FontWeight.w300)),
+                            child: Text('Урлан доторх даалгавруудыг биелүүлж, бусадтай хуваалцаарай.', style: GoogleFonts.kurale(fontSize: 16, color: Colors.black54, fontWeight: FontWeight.w300)),
                           )
                         ],
                       )
@@ -84,7 +85,7 @@ class _HomeViewState extends State<HomeView> {
                         children: [
                           Icon(Icons.bubble_chart, size: 30, color: Color(0xff36c1c8)),
                           SizedBox(width: 10),
-                          Text('Урлангуудаас сонгоорой', style: TextStyle(fontSize: 19, color: Colors.black54, fontWeight: FontWeight.w500)),
+                          Text('Урлангуудаас сонгоорой', style: GoogleFonts.kurale(fontSize: 20, color: Colors.black, fontWeight: FontWeight.w500)),
                         ],
                       )
                   ),
@@ -126,7 +127,7 @@ class _HomeViewState extends State<HomeView> {
                                   top: 86,
                                   left: 23,
                                   child: Text('Бүтээл',
-                                      style: TextStyle(
+                                      style: GoogleFonts.kurale(
                                           fontSize: 16,
                                           color: Colors.black54,
                                           fontWeight: FontWeight.w500)),
@@ -172,7 +173,7 @@ class _HomeViewState extends State<HomeView> {
                                   top: 86,
                                   left: 23,
                                   child: Text('Урлаг',
-                                      style: TextStyle(
+                                      style: GoogleFonts.kurale(
                                           fontSize: 16,
                                           color: Colors.black54,
                                           fontWeight: FontWeight.w500)),
@@ -218,7 +219,7 @@ class _HomeViewState extends State<HomeView> {
                                   top: 86,
                                   left: 19,
                                   child: Text('Бүжиг',
-                                      style: TextStyle(
+                                      style: GoogleFonts.kurale(
                                           fontSize: 16,
                                           color: Colors.black54,
                                           fontWeight: FontWeight.w500)),
@@ -233,7 +234,7 @@ class _HomeViewState extends State<HomeView> {
                   /*
                         // ОНЦЛОХ
                         SizedBox(height: 45),
-                        Text('Онцлох', style: TextStyle(fontSize: 22, color: Colors.blue, fontWeight: FontWeight.bold)),
+                        Text('Онцлох', style: GoogleFonts.kurale(fontSize: 22, color: Colors.blue, fontWeight: FontWeight.bold)),
                         SizedBox(height: 10),
                         Container(
                           height: 200,

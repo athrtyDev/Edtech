@@ -4,6 +4,7 @@ import 'package:education/core/viewmodels/login_model.dart';
 import 'package:education/ui/views/base_view.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginView extends StatefulWidget {
@@ -54,9 +55,10 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                                       radius: 50.0,
                                     )),
                               ),
-                              _focusNameInput.hasFocus || _focusPasswordInput.hasFocus ? Container() : Text("Сайн уу,", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35.0, color: Color(0xff36c1c8))),
+                              _focusNameInput.hasFocus || _focusPasswordInput.hasFocus ? Container() : Text("Сайн уу,", style: GoogleFonts.kurale(fontWeight: FontWeight.bold, fontSize: 35.0, color: Color(0xff36c1c8), letterSpacing: 1)),
                               _focusNameInput.hasFocus || _focusPasswordInput.hasFocus ? Container() : SizedBox(height: 10),
-                              _focusNameInput.hasFocus || _focusPasswordInput.hasFocus ? Container() : Text("Бүтээлч хүүхдүүдийн групп", style: TextStyle(fontSize: 20.0, color: Color(0xff36c1c8))),
+                              _focusNameInput.hasFocus || _focusPasswordInput.hasFocus ? Container() :
+                              Text("Бүтээлч хүүхдүүдийн нэгдэл", style: GoogleFonts.kurale(fontSize: 20, color: Color(0xff36c1c8), letterSpacing: 0.8)),
                               _focusNameInput.hasFocus || _focusPasswordInput.hasFocus ? Container() : SizedBox(height: 50),
                               Container(
                                 height: 60,
@@ -70,7 +72,7 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                                     controller: _nameInput,
                                     focusNode: _focusNameInput,
                                     keyboardType: TextInputType.text,
-                                    style: TextStyle(color: Colors.grey[600]),
+                                    style: GoogleFonts.kurale(color: Colors.grey[600]),
                                     onTap: () {
                                       setState(() {});
                                     },
@@ -82,7 +84,7 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                                         fillColor: Colors.grey[200],
                                         filled: true,
                                         hintText: "Нэр",
-                                        hintStyle: TextStyle(color: Colors.grey[600], fontStyle: FontStyle.italic, fontSize: 15.0)),
+                                        hintStyle: GoogleFonts.kurale(color: Colors.grey[600], fontStyle: FontStyle.italic, fontSize: 15.0)),
                                   ),
                                 ),
                               ),
@@ -100,7 +102,7 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                                     focusNode: _focusPasswordInput,
                                     obscureText: true,
                                     keyboardType: TextInputType.number,
-                                    style: TextStyle(color: Colors.grey[600]),
+                                    style: GoogleFonts.kurale(color: Colors.grey[600]),
                                     onTap: () {
                                       setState(() {});
                                     },
@@ -112,7 +114,7 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                                         fillColor: Colors.grey[200],
                                         filled: true,
                                         hintText: "Нууц үг",
-                                        hintStyle: TextStyle(color: Colors.grey[600], fontStyle: FontStyle.italic, fontSize: 15.0)),
+                                        hintStyle: GoogleFonts.kurale(color: Colors.grey[600], fontStyle: FontStyle.italic, fontSize: 15.0)),
                                   ),
                                 ),
                               ),
@@ -127,7 +129,7 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                                     disabledColor: Color(0xff36c1c8),
                                     disabledTextColor: Color(0xff36c1c8),
                                     elevation: 4.0,
-                                    child: Text('НЭВТРЭХ'),
+                                    child: Text('НЭВТРЭХ', style: GoogleFonts.kurale(letterSpacing: 1)),
                                     onPressed: () async{
                                       if (_nameInput.text != '' && _passwordInput.text != '') {
                                         if(await model.login(_nameInput.text, _passwordInput.text)) {
@@ -172,14 +174,14 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                                         width: 100,
                                         height: 30,
                                         color: Colors.transparent,
-                                        child: Text('Бүртгүүлэх', style: TextStyle(color: Colors.grey[600], fontSize: 16, decoration: TextDecoration.underline)),
+                                        child: Text('Бүртгүүлэх', style: GoogleFonts.kurale(color: Colors.grey[600], fontSize: 16, decoration: TextDecoration.underline, letterSpacing: 1)),
                                       ),
                                     ),
                                     Container(
-                                      width: 130,
+                                      width: 150,
                                       height: 30,
                                       color: Colors.transparent,
-                                      child: Text('Нууц үг мартсан', style: TextStyle(color: Colors.grey[600], fontSize: 16, decoration: TextDecoration.underline)),
+                                      child: Text('Нууц үг мартсан', style: GoogleFonts.kurale(color: Colors.grey[600], fontSize: 16, decoration: TextDecoration.underline, letterSpacing: 1)),
                                     ),
                                   ],
                                 ),
