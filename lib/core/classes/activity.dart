@@ -10,11 +10,13 @@ class Activity {
   int postCount;            // posts from other kids
   String mediaUrl;          // get form storage
   String coverImageUrl;     // get form storage
+  String mediaType;
   // tuslah
   String activityType;      // diy, discover, dance
   var rng = new Random();
 
-  Activity({this.id, this.name, this.instruction, this.skill, this.difficulty, this.postCount, this.coverImageUrl, this.mediaUrl});
+  Activity({this.id, this.name, this.instruction, this.skill, this.difficulty, this.postCount, this.coverImageUrl,
+    this.mediaUrl, this.mediaType});
 
   Activity.fromJson(Map<String, dynamic> json) {
     id = json['id'] ?? null;
@@ -23,6 +25,7 @@ class Activity {
     age = json['age'] != null ? int.tryParse(json['age'].toString()) : null;
     skill = json['skill'] != null ? int.tryParse(json['skill'].toString()) : null;
     difficulty = json['difficulty'] ?? '';
+    mediaType = json['mediaType'] ?? '';
     postCount = json['postCount'] != null ? int.tryParse(json['postCount'].toString()) : null;
     mediaUrl = json['mediaUrl'] ?? null;
     coverImageUrl = json['coverImageUrl'] ?? null;
@@ -35,6 +38,7 @@ class Activity {
     data['instruction'] = this.instruction;
     data['skill'] = this.skill;
     data['age'] = this.age;
+    data['mediaType'] = this.mediaType;
     data['difficulty'] = this.difficulty;
     data['postCount'] = this.postCount;
     data['mediaUrl'] = this.mediaUrl;

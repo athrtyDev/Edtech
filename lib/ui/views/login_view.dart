@@ -56,9 +56,8 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                                     )),
                               ),
                               _focusNameInput.hasFocus || _focusPasswordInput.hasFocus ? Container() : Text("Сайн уу,", style: GoogleFonts.kurale(fontWeight: FontWeight.bold, fontSize: 35.0, color: Color(0xff36c1c8), letterSpacing: 1)),
-                              _focusNameInput.hasFocus || _focusPasswordInput.hasFocus ? Container() : SizedBox(height: 10),
                               _focusNameInput.hasFocus || _focusPasswordInput.hasFocus ? Container() :
-                              Text("Бүтээлч хүүхдүүдийн нэгдэл", style: GoogleFonts.kurale(fontSize: 20, color: Color(0xff36c1c8), letterSpacing: 0.8)),
+                              Text("Бүтээлч хүүхдүүдийн нэгдэл", style: GoogleFonts.kurale(fontSize: 25, color: Color(0xff36c1c8), letterSpacing: 0.8)),
                               _focusNameInput.hasFocus || _focusPasswordInput.hasFocus ? Container() : SizedBox(height: 50),
                               Container(
                                 height: 60,
@@ -174,14 +173,14 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                                         width: 100,
                                         height: 30,
                                         color: Colors.transparent,
-                                        child: Text('Бүртгүүлэх', style: GoogleFonts.kurale(color: Colors.grey[600], fontSize: 16, decoration: TextDecoration.underline, letterSpacing: 1)),
+                                        child: Text('Бүртгүүлэх', style: GoogleFonts.kurale(color: Colors.grey[600], fontSize: 17, decoration: TextDecoration.underline, letterSpacing: 1)),
                                       ),
                                     ),
                                     Container(
                                       width: 150,
                                       height: 30,
                                       color: Colors.transparent,
-                                      child: Text('Нууц үг мартсан', style: GoogleFonts.kurale(color: Colors.grey[600], fontSize: 16, decoration: TextDecoration.underline, letterSpacing: 1)),
+                                      child: Text('Нууц үг мартсан', style: GoogleFonts.kurale(color: Colors.grey[600], fontSize: 17, decoration: TextDecoration.underline, letterSpacing: 1)),
                                     ),
                                   ],
                                 ),

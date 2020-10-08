@@ -94,9 +94,9 @@ class _GalleryViewState extends State<GalleryView> {
                                                               ? Image.network(post.coverDownloadUrl, fit: BoxFit.cover)
                                                               : Center(
                                                                   child: Icon(
-                                                                  Icons.broken_image,
+                                                                  Icons.ondemand_video,
                                                                   size: 70,
-                                                                  color: Colors.grey,
+                                                                  color: Color(0xff36c1c8),
                                                                 ))))),
                                               Row(
                                                 children: [

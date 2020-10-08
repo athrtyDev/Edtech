@@ -34,7 +34,8 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
 
   @override
   void dispose() {
-    videoController.dispose();
+    if(widget.activity.mediaType == 'video')
+      videoController.dispose();
     super.dispose();
   }
 
@@ -43,7 +44,7 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
     return BaseView<ActivityInstructionModel>(
       builder: (context, model, child) => WillPopScope(
         onWillPop: () {
-          if (videoController.value.isPlaying) {
+          if (widget.activity.mediaType == 'video' && videoController.value.isPlaying) {
             videoController.pause();
           }
           return new Future.value(true);
@@ -54,7 +55,7 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
               body: model.state == ViewState.Busy
                   ? Container(child: Center(child: CircularProgressIndicator()))
                   : Column(children: <Widget>[
-                      // NAME, INSTRUCTION
+                      // NAME
                       Container(
                         height: 70,
                         padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -73,6 +74,7 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                         height: 5,
                         color: Colors.grey[200],
                       ),
+                      // ZAAWAR
                       Expanded(
                         flex: 1,
                         child: Container(
@@ -96,59 +98,60 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                         child: Hero(
                             tag: 'diy_' + widget.activity.id,
                             child: Container(
-                                child: Column(
-                              children: [
+                                child: widget.activity.mediaType == 'video' ?
                                 // Video instruction
                                 Expanded(
-                                    child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      if (videoController.value.isPlaying)
-                                        videoController.pause();
-                                      else
-                                        videoController.play();
-                                    });
-                                  },
-                                  child: Container(
-                                      padding: EdgeInsets.all(4),
-                                      decoration: BoxDecoration(
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.blue[100].withOpacity(0.2),
-                                            spreadRadius: 2,
-                                            blurRadius: 5,
-                                            offset: Offset(3, 3), // changes position of shadow
-                                          ),
-                                        ],
-                                      ),
-                                      child: Stack(
-                                        children: [
-                                          FutureBuilder(
-                                            future: initializeVideoPlayer,
-                                            builder: (context, snapshot) {
-                                              if (snapshot.connectionState == ConnectionState.done) {
-                                                return VideoPlayer(videoController);
-                                              } else {
-                                                return Center(
-                                                  child: Image.asset('lib/ui/images/loading.gif'),
-                                                );
-                                              }
-                                            },
-                                          ),
-                                          // Play button
-                                          videoController == null || videoController.value.isPlaying
-                                              ? Text('')
-                                              : Center(
-                                                  child: Icon(
-                                                  Icons.play_circle_filled,
-                                                  color: Colors.white,
-                                                  size: 60,
-                                                )),
-                                        ],
-                                      )),
-                                )),
-                              ],
-                            ))),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        if (videoController.value.isPlaying)
+                                          videoController.pause();
+                                        else
+                                          videoController.play();
+                                      });
+                                    },
+                                    child: Container(
+                                        padding: EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.blue[100].withOpacity(0.2),
+                                              spreadRadius: 2,
+                                              blurRadius: 5,
+                                              offset: Offset(3, 3), // changes position of shadow
+                                            ),
+                                          ],
+                                        ),
+                                        child: Stack(
+                                          children: [
+                                            FutureBuilder(
+                                              future: initializeVideoPlayer,
+                                              builder: (context, snapshot) {
+                                                if (snapshot.connectionState == ConnectionState.done) {
+                                                  return VideoPlayer(videoController);
+                                                } else {
+                                                  return Center(
+                                                    child: Image.asset('lib/ui/images/loading.gif'),
+                                                  );
+                                                }
+                                              },
+                                            ),
+                                            // Play button
+                                            videoController == null || videoController.value.isPlaying
+                                                ? Text('')
+                                                : Center(
+                                                    child: Icon(
+                                                    Icons.play_circle_filled,
+                                                    color: Colors.white,
+                                                    size: 60,
+                                                  )),
+                                          ],
+                                        )),
+                                  )
+                                )
+                                :
+                                Image.network(widget.activity.mediaUrl, fit: BoxFit.fill)
+                              )),
                       ),
                       // TYPE, DIFFICULTY
                       Expanded(
@@ -316,14 +319,14 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
 
   void getDiyInstruction() async {
     try {
-      //StorageReference reference = FirebaseStorage.instance.ref().child('activity_diy/' + widget.activity.id + '/intro.mp4');
-      //widget.activity.introVideoStr = await reference.getDownloadURL();
-      setState(() {
-        videoController = VideoPlayerController.network(widget.activity.mediaUrl);
-        initializeVideoPlayer = videoController.initialize();
-        videoController.setLooping(true);
-        videoController.setVolume(4.0);
-      });
+      if(widget.activity.mediaType == 'video') {
+        setState(() {
+          videoController = VideoPlayerController.network(widget.activity.mediaUrl);
+          initializeVideoPlayer = videoController.initialize();
+          videoController.setLooping(true);
+          videoController.setVolume(4.0);
+        });
+      }
     } catch (ex) {
       print('error on loadInstructions: ' + ex.toString());
     }

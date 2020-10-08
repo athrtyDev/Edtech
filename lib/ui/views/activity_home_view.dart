@@ -97,7 +97,7 @@ class _ActivityHomeViewState extends State<ActivityHomeView> {
                                                       width: (MediaQuery.of(context).size.width - 6) / 2,
                                                       child: activity.coverImageUrl == null
                                                           ? Center(child: Image.asset('lib/ui/images/loading.gif'))
-                                                          : Image.network(activity.coverImageUrl, fit: BoxFit.cover)
+                                                          : Image.network(activity.coverImageUrl, fit: BoxFit.fill)
                                                   )),
                                               Row(
                                                 children: [
