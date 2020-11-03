@@ -182,6 +182,4 @@ class Api {
       snapshot.documents.first.reference.delete();
     });
   }
-
-
 }

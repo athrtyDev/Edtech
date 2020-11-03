@@ -1,7 +1,9 @@
 import 'package:education/core/classes/activity.dart';
 import 'package:education/core/classes/post.dart';
 import 'package:education/core/classes/user.dart';
+import 'package:education/core/services/api.dart';
 import 'package:education/core/viewmodels/activity_instruction_model.dart';
+import 'package:education/locator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:education/core/enums/view_state.dart';
@@ -25,11 +27,16 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
 
   VideoPlayerController videoController;
   Future<void> initializeVideoPlayer;
+  List<Post> relatedPosts;
+  final Api _api = locator<Api>();
+  ScrollController scrollViewController;
 
   @override
   void initState() {
     super.initState();
+    scrollViewController = ScrollController();
     getDiyInstruction();
+    getPosts();
   }
 
   @override
@@ -37,6 +44,7 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
     if(widget.activity.mediaType == 'video')
       videoController.dispose();
     super.dispose();
+    scrollViewController.dispose();
   }
 
   @override
@@ -54,30 +62,30 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
               backgroundColor: Colors.white,
               body: model.state == ViewState.Busy
                   ? Container(child: Center(child: CircularProgressIndicator()))
-                  : Column(children: <Widget>[
-                      // NAME
-                      Container(
-                        height: 70,
-                        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                        width: MediaQuery.of(context).size.width,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(widget.activity.name,
-                                style: GoogleFonts.kurale(fontSize: 20, color: Color(0xff36c1c8), fontWeight: FontWeight.w700, letterSpacing: 1.5)),
-                          ],
-                        )
+                  : SingleChildScrollView(
+                      child: Column(children: <Widget>[
+                        // NAME
+                        Container(
+                          height: 70,
+                          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                          width: MediaQuery.of(context).size.width,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(widget.activity.name,
+                                  style: GoogleFonts.kurale(fontSize: 20, color: Color(0xff36c1c8), fontWeight: FontWeight.w700, letterSpacing: 1.5)),
+                            ],
+                          )
 
-                      ),
-                      Container(
-                        height: 5,
-                        color: Colors.grey[200],
-                      ),
-                      // ZAAWAR
-                      Expanded(
-                        flex: 1,
-                        child: Container(
+                        ),
+                        Container(
+                          height: 5,
+                          color: Colors.grey[200],
+                        ),
+                        // INSTRUCTION
+                        Container(
+                          height: 130,
                           padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                           width: MediaQuery.of(context).size.width,
                           child: Column(
@@ -90,18 +98,15 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                                   style: GoogleFonts.kurale(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500, letterSpacing: 1.5)),
                             ],
                           )
-                        )
-                      ),
-                      // Video instruction
-                      Container(
-                        height: 400,
-                        child: Hero(
-                            tag: 'diy_' + widget.activity.id,
-                            child: Container(
-                                child: widget.activity.mediaType == 'video' ?
+                        ),
+                        // Video instruction
+                        Container(
+                          height: 400,
+                          child: Hero(
+                              tag: 'diy_' + widget.activity.id,
+                              child: widget.activity.mediaType == 'video' ?
                                 // Video instruction
-                                Expanded(
-                                  child: GestureDetector(
+                                GestureDetector(
                                     onTap: () {
                                       setState(() {
                                         if (videoController.value.isPlaying)
@@ -148,16 +153,13 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                                           ],
                                         )),
                                   )
-                                )
-                                :
-                                Image.network(widget.activity.mediaUrl, fit: BoxFit.fill)
-                              )),
-                      ),
-                      // TYPE, DIFFICULTY
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          //height: 120,
+                                  :
+                                  Image.network(widget.activity.mediaUrl, fit: BoxFit.fill)
+                                ),
+                        ),
+                        // TYPE, DIFFICULTY
+                        Container(
+                          height: 80,
                           child: Container(
                             child: Column(
                               children: [
@@ -217,9 +219,91 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                             ),
                           ),
                         ),
-                      ),
-                      // Bottom navigation
-                    ]),
+                        relatedPosts == null ? Container() :
+                        Container(
+                          height: 5,
+                          color: Colors.grey[200],
+                        ),
+                        // Related posts
+                        relatedPosts == null ? Container() :
+                        Container(
+                          padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                          alignment: Alignment.centerLeft,
+                          child: Text('Бусад хүүхдийн бүтээлүүд',
+                              style: GoogleFonts.kurale(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w600, letterSpacing: 1.5)),
+                        ),
+                        relatedPosts == null ? Container() :
+                        Container(
+                          height: 230,
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.all(4),
+                          child: GridView.count(
+                            controller: scrollViewController,
+                            crossAxisCount: 1,
+                            //childAspectRatio: 1,
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            mainAxisSpacing: 5.0,
+                            children: relatedPosts.map((Post post) {
+                              return Hero(
+                                tag: 'activity_' + post.postId,
+                                child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        Navigator.pushNamed(context, '/post_detail', arguments: post).then((value) => setState(() {}));
+                                      });
+                                    },
+                                    child: Stack(children: [
+                                      // IMAGE, VIDEO
+                                      Container(
+                                        color: Colors.white,
+                                        child: Column(
+                                          children: [
+                                            Expanded(
+                                                child: Container(
+                                                    width: 230,
+                                                    child: post.uploadMediaType == 'image'
+                                                        ? (post.mediaDownloadUrl != null
+                                                        ? Image.network(post.mediaDownloadUrl, fit: BoxFit.cover)
+                                                        : Center(child: Icon(Icons.error, size: 20)))
+                                                        : (post.coverDownloadUrl != null
+                                                        ? Image.network(post.coverDownloadUrl, fit: BoxFit.cover)
+                                                        : Center(
+                                                        child: Icon(
+                                                          Icons.ondemand_video,
+                                                          size: 70,
+                                                          color: Color(0xff36c1c8),
+                                                        ))))),
+                                          ],
+                                        ),
+                                      ),
+                                      // POSTED USER
+                                      Positioned(
+                                          top: 5,
+                                          right: 5,
+                                          child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius: BorderRadius.all(Radius.circular(10))),
+                                              padding: EdgeInsets.fromLTRB(4, 2, 4, 2),
+                                              //width: 40,
+                                              height: 25,
+                                              child: Row(
+                                                children: [
+                                                  Icon(Icons.person, color: Colors.black54, size: 15),
+                                                  SizedBox(width: 3),
+                                                  Text(post.userName, style: GoogleFonts.kurale(fontSize: 12, color: Colors.black54, fontWeight: FontWeight.w500)),
+                                                ],
+                                              ))
+                                      ),
+                                    ])),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                        // Bottom navigation
+                      ]),
+                    ),
               bottomNavigationBar: Container(
                 height: 80,
                 padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
@@ -331,6 +415,19 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
       }
     } catch (ex) {
       print('error on loadInstructions: ' + ex.toString());
+    }
+  }
+
+  void getPosts() async{
+    try {
+      print('11111111');
+      relatedPosts = await _api.getPostByActivity(widget.activity);
+      print('22222222');
+      setState(() {
+        print('aaaaaaa: ' + (relatedPosts==null ? '0' : relatedPosts.length.toString()));
+      });
+    } catch (ex) {
+      print('error on getPost for selected activity: ' + ex.toString());
     }
   }
 }

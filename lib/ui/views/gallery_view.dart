@@ -141,18 +141,28 @@ class _GalleryViewState extends State<GalleryView> {
                                           right: 5,
                                           child: Container(
                                               decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius: BorderRadius.all(Radius.circular(10))),
-                                              padding: EdgeInsets.fromLTRB(4, 2, 4, 2),
+                                                  color: Colors.transparent,
+                                                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                  border: Border.all(color: Colors.pink.withOpacity(0.7)),
+                                              ),
+                                              padding: EdgeInsets.all(2),
                                               //width: 40,
                                               height: 25,
-                                              child: Row(
-                                                children: [
-                                                  Icon(Icons.person, color: Colors.black54, size: 15),
-                                                  SizedBox(width: 3),
-                                                  Text(post.userName, style: GoogleFonts.kurale(fontSize: 12, color: Colors.black54, fontWeight: FontWeight.w500)),
-                                                ],
-                                              ))
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                                                ),
+                                                padding: EdgeInsets.fromLTRB(4, 2, 4, 2),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(Icons.person, color: Colors.black54, size: 15),
+                                                    SizedBox(width: 3),
+                                                    Text(post.userName, style: GoogleFonts.kurale(fontSize: 12, color: Colors.black54, fontWeight: FontWeight.w500)),
+                                                  ],
+                                                ),
+                                              ),
+                                          ),
                                         ),
                                         // LIKE
                                         Positioned(
