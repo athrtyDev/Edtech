@@ -41,6 +41,7 @@ dependencies:
   bottom_navy_bar: ^5.4.0
   shared_preferences:
   image_picker: ^0.6.7+4
+  video_compress: ^2.1.0
   avatar_glow:
 
 

@@ -325,6 +325,8 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
           initializeVideoPlayer = videoController.initialize();
           videoController.setLooping(true);
           videoController.setVolume(4.0);
+          if(widget.activity.autoPlay)
+            videoController.play();
         });
       }
     } catch (ex) {

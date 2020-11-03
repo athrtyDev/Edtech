@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:education/core/classes/user.dart';
 import 'package:uuid/uuid.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:video_compress/video_compress.dart';
 
 class Api {
   static const endpoint = 'https://jsonplaceholder.typicode.com';
@@ -36,31 +37,44 @@ class Api {
   Future<bool> savePost(Post post, File file) async{
     try {
       // compress media
-      /*if(post.uploadMediaType == 'video') {
+      File thumbnailFile;
+      if(post.uploadMediaType == 'video') {
         print('File compress video starting... ' + DateTime.now().toString());
-        final _flutterVideoCompress = FlutterVideoCompress();
-        final MediaInfo compressedVideoInfo = await _flutterVideoCompress.compressVideo(
+        //await VideoCompress.setLogLevel(0);
+        MediaInfo mediaInfo = await VideoCompress.compressVideo(
           file.path,
-          quality: VideoQuality.LowQuality,
-          deleteOrigin: false,
+          quality: VideoQuality.MediumQuality,
+          deleteOrigin: true,
+          includeAudio: true,
         );
-        file = compressedVideoInfo.file;
+        print('pathhhhhhhhhhhhhhhhhhhh: ' + mediaInfo.path);
+        file = mediaInfo.file;
 
-        final File thumbnailFile = await _flutterVideoCompress.getThumbnailWithFile(file.path, quality: 50);
-        Image _thumbnailFileImage = Image.file(thumbnailFile);
+        // Thumbnail image
+        thumbnailFile = await VideoCompress.getFileThumbnail(
+            mediaInfo.path,
+            quality: 30, // default(100)
+            position: -1 // default(-1)
+        );
 
         print('File compress video success... ' + DateTime.now().toString());
-      }*/
+      }
 
       // save media to storage
       print('File upload starting222... ' + DateTime.now().toString());
       String postId = Uuid().v4();
-      StorageUploadTask uploadTask = await FirebaseStorage.instance
+      StorageUploadTask fileUploadTask = await FirebaseStorage.instance
           .ref()
-          .child("post/" + post.user.name + '_' + post.user.id +"/" + post.activity.activityType + "_" + post.activity.id + "_" + postId)
+          .child("post/" + post.user.name + '_' + post.user.id +"/" + post.activity.activityType + "_" + post.activity.id + "_" + postId + '_media')
           .putFile(file, StorageMetadata(contentType: post.uploadMediaType == 'image' ? 'image/jpeg' : 'video/mp4'));
+      String downloadUrl = await (await fileUploadTask.onComplete).ref.getDownloadURL();
 
-      String downloadUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
+      // save thumbnail image
+      StorageUploadTask thumbnailUploadTask = await FirebaseStorage.instance
+          .ref()
+          .child("post/" + post.user.name + '_' + post.user.id +"/" + post.activity.activityType + "_" + post.activity.id + "_" + postId + '_cover')
+          .putFile(thumbnailFile, StorageMetadata(contentType: 'image/jpeg'));
+      String coverDownloadUrl = await (await thumbnailUploadTask.onComplete).ref.getDownloadURL();
       print('File upload success! ' + DateTime.now().toString());
 
       // prepare post data
@@ -76,6 +90,7 @@ class Api {
       postJson['skillPoints'] = post.activity.skill;
       postJson['likeCount'] = 0;
       postJson['mediaDownloadUrl'] = downloadUrl;
+      postJson['coverDownloadUrl'] = coverDownloadUrl;
       postJson['postDate'] = DateTime.now();
 
       // order -> batch

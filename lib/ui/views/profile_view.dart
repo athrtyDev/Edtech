@@ -100,7 +100,12 @@ class _ProfileViewState extends State<ProfileView> {
                                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                       children: [
                                                         Container(
-                                                            decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.all(Radius.circular(20))),
+                                                            decoration: BoxDecoration(color:
+                                                            post.activity.activityType == 'diy'
+                                                                ? Colors.blue.withOpacity(0.7) : (post.activity.activityType == 'discover'
+                                                                ? Colors.orange.withOpacity(0.7) : (post.activity.activityType == 'dance'
+                                                                ? Colors.red.withOpacity(0.7) : Colors.blue.withOpacity(0.6))),
+                                                                borderRadius: BorderRadius.all(Radius.circular(20))),
                                                             margin: EdgeInsets.fromLTRB(5, 2, 5, 4),
                                                             padding: EdgeInsets.fromLTRB(4, 2, 4, 2),
                                                             //width: 40,

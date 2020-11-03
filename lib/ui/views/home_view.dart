@@ -1,9 +1,11 @@
+import 'package:education/core/classes/user.dart';
 import 'package:flutter/material.dart';
 import 'package:education/core/enums/view_state.dart';
 import 'package:education/ui/views/base_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:education/core/viewmodels/home_model.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class HomeView extends StatefulWidget {
   HomeView({Key key}) : super(key: key);
@@ -67,13 +69,24 @@ class _HomeViewState extends State<HomeView> {
                     ),
                   ),
                   Padding(
-                      padding: EdgeInsets.fromLTRB(20, 35, 20, 0),
+                      padding: EdgeInsets.fromLTRB(20, 35, 5, 0),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Icon(Icons.shutter_speed, size: 30, color: Color(0xff36c1c8)),
                           SizedBox(width: 10),
                           Flexible(
-                            child: Text('Урлан доторх даалгавруудыг биелүүлж, бусадтай хуваалцаарай.', style: GoogleFonts.kurale(fontSize: 16, color: Colors.black54, fontWeight: FontWeight.w300)),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Сайн уу ' + Provider.of<User>(context).name + ' !', style: GoogleFonts.kurale(fontSize: 19, color: Colors.black54, fontWeight: FontWeight.w600)),
+                                //Text(Provider.of<User>(context).name, style: GoogleFonts.kurale(fontSize: 19, color: Colors.black54, fontWeight: FontWeight.w600)),
+                                Text('Даалгавруудыг биелүүлж, бусадтай хуваалцаарай.', style: GoogleFonts.kurale(fontSize: 16, color: Colors.black54, fontWeight: FontWeight.w300)),
+                              ],
+                            )
+
                           )
                         ],
                       )
@@ -85,7 +98,7 @@ class _HomeViewState extends State<HomeView> {
                         children: [
                           Icon(Icons.bubble_chart, size: 30, color: Color(0xff36c1c8)),
                           SizedBox(width: 10),
-                          Text('Урлангуудаас сонгоорой', style: GoogleFonts.kurale(fontSize: 20, color: Colors.black, fontWeight: FontWeight.w500)),
+                          Text('Даалгавруудаас сонгоорой', style: GoogleFonts.kurale(fontSize: 20, color: Colors.black, fontWeight: FontWeight.w500)),
                         ],
                       )
                   ),
