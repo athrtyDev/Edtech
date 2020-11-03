@@ -114,6 +114,19 @@ class Api {
     }
   }
 
+  Future<List<Post>> getAllPost() async {
+    QuerySnapshot postSnapshot = await Firestore.instance
+        .collection('Post')
+        .orderBy('postDate', descending: true)
+        .getDocuments();
+    if(postSnapshot.documents.isEmpty) {
+      return null;
+    }
+    else {
+      return postSnapshot.documents.map((post) => new Post.fromJson(post.data)).toList();
+    }
+  }
+
   Future<List<Post>> getPostByUser(User user) async {
     QuerySnapshot postSnapshot = await Firestore.instance
         .collection('Post')
@@ -128,9 +141,10 @@ class Api {
     }
   }
 
-  Future<List<Post>> getAllPost() async {
+  Future<List<Post>> getPostByActivity(Activity activity) async {
     QuerySnapshot postSnapshot = await Firestore.instance
         .collection('Post')
+        .where('activityId', isEqualTo: activity.id)
         .orderBy('postDate', descending: true)
         .getDocuments();
     if(postSnapshot.documents.isEmpty) {
@@ -169,63 +183,5 @@ class Api {
     });
   }
 
-  Future<List<Order>> getCurrentOrders(int futureDays) async {
-    DateTime now = DateTime.now();
-    String startDay, endDay;
-    startDay = now.toString().substring(0,10);
-    endDay = now.add(Duration(days: futureDays)).toString();
-
-    QuerySnapshot itemSnapshot = await Firestore.instance
-        .collection('Order')
-        .orderBy('order_day')
-        .startAt([startDay])
-        .endAt([endDay + '\uf8ff'])
-        .getDocuments();
-
-    if(itemSnapshot.documents.isEmpty)
-      return null;
-    else
-      return itemSnapshot.documents.map((item) => new Order.fromJson(item.data, 'currentOrders')).toList();
-  }
-
-
-  Future<bool> saveOrder(Order order) async{
-    try {
-      // prepare order data
-      Map<String, dynamic> orderMap = null;
-      String orderId = Uuid().v1();
-      orderMap['id'] = orderId;
-
-      // order -> batch
-      var db = Firestore.instance;
-      DocumentReference orderReference = db.collection("Order").document();
-      WriteBatch batch = db.batch();
-      batch.setData(orderReference, orderMap);
-
-      // orderItemList -> batch
-      List<Item> listItem = order.listItem;
-      for (var item in listItem) {
-        var itemMap = item.toJson();
-        itemMap['order_id'] = orderId;
-        print('itemmmmmmmmmmmmmmm: ' + item.name);
-        DocumentReference itemReference = db.collection("OrderItem").document();
-        batch.setData(itemReference, itemMap);
-      }
-
-      // execute batch
-      print('1 before batch commit');
-      await batch.commit().then((value) {
-        print('2 Done?');
-      }).catchError((error) {
-        print('errory: ' + error);
-      });
-      print("3 after apiiiiiiiiiiii return:");
-      return true;
-    }
-    catch(e) {
-      print("error on save order: " + e);
-      return false;
-    }
-  }
 
 }
