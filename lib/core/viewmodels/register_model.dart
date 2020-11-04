@@ -12,6 +12,7 @@ class RegisterModel extends BaseModel {
   Future<User> registerUser(String name, String password, String age) async {
     setState(ViewState.Busy);
     // Check user name exists
+    name = name.toLowerCase()[0].toUpperCase() + name.toLowerCase().substring(1);
     bool isExist = await _authenticationService.checkUserNameExists(name);
     if(isExist) {
       setState(ViewState.Idle);
