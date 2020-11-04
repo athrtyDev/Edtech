@@ -1,4 +1,5 @@
 import 'package:education/core/classes/activity.dart';
+import 'package:education/core/classes/like.dart';
 import 'package:education/core/classes/post.dart';
 import 'package:education/core/classes/user.dart';
 import 'package:education/core/services/api.dart';
@@ -36,7 +37,7 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
     super.initState();
     scrollViewController = ScrollController();
     getDiyInstruction();
-    getPosts();
+
   }
 
   @override
@@ -50,7 +51,8 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
   @override
   Widget build(BuildContext context) {
     return BaseView<ActivityInstructionModel>(
-      builder: (context, model, child) => WillPopScope(
+      onModelReady: (model) => getPosts(context),
+        builder: (context, model, child) => WillPopScope(
         onWillPop: () {
           if (widget.activity.mediaType == 'video' && videoController.value.isPlaying) {
             videoController.pause();
@@ -66,7 +68,7 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                       child: Column(children: <Widget>[
                         // NAME
                         Container(
-                          height: 70,
+                          height: 65,
                           padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                           width: MediaQuery.of(context).size.width,
                           child: Column(
@@ -85,7 +87,7 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                         ),
                         // INSTRUCTION
                         Container(
-                          height: 130,
+                          height: 120,
                           padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                           width: MediaQuery.of(context).size.width,
                           child: Column(
@@ -101,7 +103,7 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                         ),
                         // Video instruction
                         Container(
-                          height: 400,
+                          height: 390,
                           child: Hero(
                               tag: 'diy_' + widget.activity.id,
                               child: widget.activity.mediaType == 'video' ?
@@ -159,13 +161,13 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                         ),
                         // TYPE, DIFFICULTY
                         Container(
-                          height: 80,
+                          height: 72,
                           child: Container(
                             child: Column(
                               children: [
                                 // DIY INFO
                                 Padding(
-                                  padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
+                                  padding: EdgeInsets.fromLTRB(20, 7, 20, 7),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
@@ -227,7 +229,7 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                         // Related posts
                         relatedPosts == null ? Container() :
                         Container(
-                          padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                          padding: EdgeInsets.fromLTRB(20, 7, 20, 7),
                           alignment: Alignment.centerLeft,
                           child: Text('Бусад хүүхдийн бүтээлүүд',
                               style: GoogleFonts.kurale(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w600, letterSpacing: 1.5)),
@@ -282,19 +284,29 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                                           top: 5,
                                           right: 5,
                                           child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.transparent,
+                                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                                              border: Border.all(color: Colors.pink.withOpacity(0.7)),
+                                            ),
+                                            padding: EdgeInsets.all(2),
+                                            //width: 40,
+                                            height: 25,
+                                            child: Container(
                                               decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius: BorderRadius.all(Radius.circular(10))),
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.all(Radius.circular(8)),
+                                              ),
                                               padding: EdgeInsets.fromLTRB(4, 2, 4, 2),
-                                              //width: 40,
-                                              height: 25,
                                               child: Row(
                                                 children: [
                                                   Icon(Icons.person, color: Colors.black54, size: 15),
                                                   SizedBox(width: 3),
                                                   Text(post.userName, style: GoogleFonts.kurale(fontSize: 12, color: Colors.black54, fontWeight: FontWeight.w500)),
                                                 ],
-                                              ))
+                                              ),
+                                            ),
+                                          )
                                       ),
                                     ])),
                               );
@@ -305,7 +317,7 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                       ]),
                     ),
               bottomNavigationBar: Container(
-                height: 80,
+                height: 75,
                 padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
                 child: RaisedButton(
                   textColor: Colors.white,
@@ -418,13 +430,31 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
     }
   }
 
-  void getPosts() async{
+  void getPosts(BuildContext context) async{
     try {
-      print('11111111');
+      User loggedUser = Provider.of<User>(context);
       relatedPosts = await _api.getPostByActivity(widget.activity);
-      print('22222222');
+      List<Like> allLikes = await _api.getAllLikes();
+
       setState(() {
-        print('aaaaaaa: ' + (relatedPosts==null ? '0' : relatedPosts.length.toString()));
+        if(relatedPosts != null && allLikes != null) {
+          for (Like like in allLikes) {
+            for (Post post in relatedPosts) {
+              // Count every post's like
+              if(like.postId == post.postId) {
+                if(post.likeCount == null)
+                  post.likeCount = 0;
+                post.likeCount++;
+              }
+              // Check if logged user liked the post
+              if(post.isUserLiked == null)
+                post.isUserLiked = false;
+              if(like.postId == post.postId && like.likedUserId == loggedUser.id) {
+                post.isUserLiked = true;
+              }
+            }
+          }
+        }
       });
     } catch (ex) {
       print('error on getPost for selected activity: ' + ex.toString());

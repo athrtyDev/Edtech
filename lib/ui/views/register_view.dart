@@ -1,4 +1,5 @@
 import 'package:avatar_glow/avatar_glow.dart';
+import 'package:education/core/classes/user.dart';
 import 'package:education/core/enums/view_state.dart';
 import 'package:education/core/viewmodels/register_model.dart';
 import 'package:education/ui/views/base_view.dart';
@@ -155,10 +156,14 @@ class _RegisterViewState extends State<RegisterView>{
                                       child: Text('БҮРТГҮҮЛЭХ', style: GoogleFonts.kurale()),
                                       onPressed: () async{
                                         if (_nameInput.text != '' && _passwordInput.text != '' && _ageInput.text != '') {
-                                          if(await model.registerUser(_nameInput.text, _passwordInput.text, _ageInput.text)) {
+                                          User user = await model.registerUser(_nameInput.text, _passwordInput.text, _ageInput.text);
+                                          if(user != null) {
                                             // Register success
                                             SharedPreferences prefs = await SharedPreferences.getInstance();
-                                            prefs.setString('username', _nameInput.text);
+                                            prefs.setString('id', user.id);
+                                            prefs.setString('username', user.name);
+                                            prefs.setInt('age', user.age);
+                                            prefs.setString('registeredDate', user.registeredDate);
                                             Navigator.pushNamed(context, '/mainPage', arguments: null);
                                           } else {
                                             // Register fail. Username exists

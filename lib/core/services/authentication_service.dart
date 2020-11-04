@@ -12,7 +12,7 @@ class AuthenticationService {
     userController.add(user);
   }
 
-  Future<bool> readCustomer(String name, String password) async {
+  Future<User> readCustomer(String name, String password) async {
     QuerySnapshot customerSnapshot = await Firestore.instance
         .collection('User')
         .where('name', isEqualTo: name)
@@ -20,11 +20,12 @@ class AuthenticationService {
         .getDocuments();
 
     if(customerSnapshot.documents.isEmpty) {
-      return false;
+      return null;
     }
     else {
-      userController.add(User.fromJson(customerSnapshot.documents[0].data));
-      return true;
+      User user = User.fromJson(customerSnapshot.documents[0].data);
+      userController.add(user);
+      return user;
     }
   }
 

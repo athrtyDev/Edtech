@@ -4,22 +4,15 @@ import 'package:education/core/services/authentication_service.dart';
 import 'package:education/locator.dart';
 import 'package:education/ui/router.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async{
   setupLocator();
   WidgetsFlutterBinding.ensureInitialized();
-  SharedPreferences.setMockInitialValues({});
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  String username = prefs.getString('username');
-  username = null;
-  print('Username exist? ' + (username ?? 'null'));
-  runApp(MyApp(username));
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  MyApp(this.username);
-  final String username;
+  MyApp();
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +22,7 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           title: 'Education',
           theme: ThemeData(),
-          initialRoute: (this.username == null ? '/login' : 'mainPage'),
+          initialRoute: ('/login'),
           debugShowCheckedModeBanner: false,
           onGenerateRoute: Router.generateRoute,
         ));

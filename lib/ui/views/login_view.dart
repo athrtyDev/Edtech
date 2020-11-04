@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:avatar_glow/avatar_glow.dart';
+import 'package:education/core/classes/user.dart';
 import 'package:education/core/enums/view_state.dart';
 import 'package:education/core/viewmodels/login_model.dart';
 import 'package:education/ui/views/base_view.dart';
@@ -17,6 +20,25 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
   final TextEditingController _passwordInput = TextEditingController();
   FocusNode _focusNameInput = new FocusNode();
   FocusNode _focusPasswordInput = new FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    checkIsLoggedIn();
+  }
+
+  Future<Null> checkIsLoggedIn() async {
+    SharedPreferences.setMockInitialValues({});
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString('username');
+    print('Username exist? ' + (username ?? 'null'));
+    if(username != null) {
+      User user = new User(id: prefs.getString('id'), name: prefs.getString('username'), age: prefs.getInt('age'), registeredDate: prefs.getString('registeredDate'));
+      StreamController<User> userController = StreamController<User>();
+      userController.add(user);
+      Navigator.pushNamed(context, '/mainPage', arguments: null);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -131,10 +153,14 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                                     child: Text('НЭВТРЭХ', style: GoogleFonts.kurale(letterSpacing: 1)),
                                     onPressed: () async{
                                       if (_nameInput.text != '' && _passwordInput.text != '') {
-                                        if(await model.login(_nameInput.text, _passwordInput.text)) {
+                                        User user = await model.login(_nameInput.text, _passwordInput.text);
+                                        if(user != null) {
                                           FocusScope.of(context).unfocus();
                                           SharedPreferences prefs = await SharedPreferences.getInstance();
-                                          prefs.setString('username', _nameInput.text);
+                                          prefs.setString('username', user.name);
+                                          prefs.setString('id', user.name);
+                                          prefs.setInt('age', user.age);
+                                          prefs.setString('registeredDate', user.registeredDate);
                                           Navigator.pushNamed(context, '/mainPage', arguments: null);
                                         } else {
                                           Flushbar(

@@ -43,19 +43,44 @@ class _MainPageViewState extends State<MainPageView> {
               onWillPop: onWillPop,
               child: SafeArea(
                 child: Scaffold(
-                    backgroundColor: Colors.white,
-                    body: PageView(
-                      controller: _pageController,
-                      onPageChanged: (index) {
-                        setState(() => _currentIndex = index);
-                      },
-                      children: <Widget>[
-                        HomeView(),
-                        GalleryView(),
-                        ProfileView(),
-                      ],
-                    ),
-                    bottomNavigationBar: BottomNavyBar(
+                  backgroundColor: Colors.white,
+                  body: PageView(
+                    controller: _pageController,
+                    onPageChanged: (index) {
+                      setState(() => _currentIndex = index);
+                    },
+                    children: <Widget>[
+                      HomeView(),
+                      GalleryView(),
+                      ProfileView(),
+                    ],
+                  ),
+                  bottomNavigationBar: BottomNavigationBar(
+                    items: <BottomNavigationBarItem>[
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.home),
+                        title: Text('Нүүр', style: GoogleFonts.kurale()),
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.photo_library),
+                        title: Text('Бүтээлүүд', style: GoogleFonts.kurale()),
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.person),
+                        title: Text('Миний', style: GoogleFonts.kurale()),
+                      ),
+                    ],
+                    selectedItemColor: Color(0xff36c1c8),
+                    unselectedItemColor: Colors.grey[400],
+                    currentIndex: _currentIndex,
+                    onTap: (index) {
+                      setState(() => _currentIndex = index);
+                      _pageController.jumpToPage(index);
+                    },
+                    selectedFontSize: 13.0,
+                    unselectedFontSize: 13.0,
+                  ),
+                  /*BottomNavyBar(
                       selectedIndex: _currentIndex,
                       onItemSelected: (index) {
                         setState(() => _currentIndex = index);
@@ -81,14 +106,16 @@ class _MainPageViewState extends State<MainPageView> {
                           inactiveColor: Colors.grey[400],
                         ),
                       ],
-                    )),
+                    )*/
+                ),
               ),
             ));
   }
 
   Future<bool> onWillPop() {
     DateTime now = DateTime.now();
-    if (currentBackPressTime != null && now.difference(currentBackPressTime) < Duration(seconds: 1)) {
+    if (currentBackPressTime != null &&
+        now.difference(currentBackPressTime) < Duration(seconds: 1)) {
       currentBackPressTime = now;
       SystemNavigator.pop();
       return Future.value(false);

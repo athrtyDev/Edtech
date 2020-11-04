@@ -9,13 +9,13 @@ class RegisterModel extends BaseModel {
   final AuthenticationService _authenticationService = locator<AuthenticationService>();
   String errorMessage;
 
-  Future<bool> registerUser(String name, String password, String age) async {
+  Future<User> registerUser(String name, String password, String age) async {
     setState(ViewState.Busy);
     // Check user name exists
     bool isExist = await _authenticationService.checkUserNameExists(name);
     if(isExist) {
       setState(ViewState.Idle);
-      return false;
+      return null;
     } else {
       // Register user
       var uuid = Uuid();
@@ -30,7 +30,7 @@ class RegisterModel extends BaseModel {
       user.skillTotal = 0;
       await _authenticationService.registerKid(user);
       setState(ViewState.Idle);
-      return true;
+      return user;
     }
   }
 }
