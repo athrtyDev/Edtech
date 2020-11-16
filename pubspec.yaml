@@ -99,7 +99,7 @@ module:
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "lib/ui/images/splash.png"
+  image_path: "lib/ui/images/logo.png"
 
 flutter_launcher_name:
-  name: "Koala"
+  name: "Silly House"

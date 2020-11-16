@@ -111,7 +111,7 @@ class _HomeViewState extends State<HomeView> {
                             Navigator.pushNamed(context, '/activity', arguments: 'diy');
                           },
                           child: Container(
-                            height: 130,
+                            height: 140,
                             width: (width - 30 - 20) / 3,
                             padding: EdgeInsets.all(10),
                             decoration: BoxDecoration(
@@ -131,17 +131,17 @@ class _HomeViewState extends State<HomeView> {
                               children: [
                                 Positioned(
                                   top: -1,
-                                  left: 8,
+                                  left: 5,
                                   child: Image.asset(
                                       'lib/ui/images/home_game.png',
-                                      height: 85),
+                                      height: 90),
                                 ),
                                 Positioned(
-                                  top: 86,
-                                  left: 23,
+                                  top: 92,
+                                  left: 26,
                                   child: Text('Бүтээл',
                                       style: GoogleFonts.kurale(
-                                          fontSize: 16,
+                                          fontSize: 15,
                                           color: Colors.black54,
                                           fontWeight: FontWeight.w500)),
                                 ),
@@ -156,7 +156,7 @@ class _HomeViewState extends State<HomeView> {
                                 arguments: 'discover');
                           },
                           child: Container(
-                            height: 130,
+                            height: 140,
                             width: (width - 60 - 30) / 3,
                             padding: EdgeInsets.all(10),
                             decoration: BoxDecoration(
@@ -184,10 +184,19 @@ class _HomeViewState extends State<HomeView> {
                                 ),
                                 Positioned(
                                   top: 86,
-                                  left: 23,
-                                  child: Text('Урлаг',
+                                  left: 11,
+                                  child: Text('Өөрийгөө',
                                       style: GoogleFonts.kurale(
-                                          fontSize: 16,
+                                          fontSize: 15,
+                                          color: Colors.black54,
+                                          fontWeight: FontWeight.w500)),
+                                ),
+                                Positioned(
+                                  top: 100,
+                                  left: 30,
+                                  child: Text('нээ',
+                                      style: GoogleFonts.kurale(
+                                          fontSize: 15,
                                           color: Colors.black54,
                                           fontWeight: FontWeight.w500)),
                                 ),
@@ -202,7 +211,7 @@ class _HomeViewState extends State<HomeView> {
                                 arguments: 'dance');
                           },
                           child: Container(
-                            height: 130,
+                            height: 140,
                             width: (width - 60 - 30) / 3,
                             padding: EdgeInsets.all(10),
                             decoration: BoxDecoration(
@@ -229,11 +238,11 @@ class _HomeViewState extends State<HomeView> {
                                       height: 130),
                                 ),
                                 Positioned(
-                                  top: 86,
-                                  left: 19,
+                                  top: 92,
+                                  left: 22,
                                   child: Text('Бүжиг',
                                       style: GoogleFonts.kurale(
-                                          fontSize: 16,
+                                          fontSize: 15,
                                           color: Colors.black54,
                                           fontWeight: FontWeight.w500)),
                                 ),

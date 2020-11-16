@@ -50,7 +50,7 @@ class _RegisterViewState extends State<RegisterView>{
                                     shape: CircleBorder(),
                                     child: CircleAvatar(
                                       backgroundColor: Colors.transparent,
-                                      child: Image.asset('lib/ui/images/splash.png', height: 100),
+                                      child: Image.asset('lib/ui/images/logo.png', height: 80),
                                       radius: 50.0,
                                     )),
                               ),

@@ -38,16 +38,17 @@ class Api {
     try {
       // compress media
       File thumbnailFile;
+      String coverDownloadUrl = '';
+      String postId = Uuid().v4();
       if(post.uploadMediaType == 'video') {
+        // Compress video
         print('File compress video starting... ' + DateTime.now().toString());
-        //await VideoCompress.setLogLevel(0);
         MediaInfo mediaInfo = await VideoCompress.compressVideo(
           file.path,
           quality: VideoQuality.MediumQuality,
           deleteOrigin: true,
           includeAudio: true,
         );
-        print('pathhhhhhhhhhhhhhhhhhhh: ' + mediaInfo.path);
         file = mediaInfo.file;
 
         // Thumbnail image
@@ -57,25 +58,24 @@ class Api {
             position: -1 // default(-1)
         );
 
+        // save thumbnail image
+        StorageUploadTask thumbnailUploadTask = await FirebaseStorage.instance
+            .ref()
+            .child("post/" + post.user.name + '_' + post.user.id +"/" + post.activity.activityType + "_" + post.activity.id + "_" + postId + '_cover')
+            .putFile(thumbnailFile, StorageMetadata(contentType: 'image/jpeg'));
+        coverDownloadUrl = await (await thumbnailUploadTask.onComplete).ref.getDownloadURL();
+        print('File upload success! ' + DateTime.now().toString());
+
         print('File compress video success... ' + DateTime.now().toString());
       }
 
       // save media to storage
       print('File upload starting222... ' + DateTime.now().toString());
-      String postId = Uuid().v4();
       StorageUploadTask fileUploadTask = await FirebaseStorage.instance
           .ref()
           .child("post/" + post.user.name + '_' + post.user.id +"/" + post.activity.activityType + "_" + post.activity.id + "_" + postId + '_media')
           .putFile(file, StorageMetadata(contentType: post.uploadMediaType == 'image' ? 'image/jpeg' : 'video/mp4'));
       String downloadUrl = await (await fileUploadTask.onComplete).ref.getDownloadURL();
-
-      // save thumbnail image
-      StorageUploadTask thumbnailUploadTask = await FirebaseStorage.instance
-          .ref()
-          .child("post/" + post.user.name + '_' + post.user.id +"/" + post.activity.activityType + "_" + post.activity.id + "_" + postId + '_cover')
-          .putFile(thumbnailFile, StorageMetadata(contentType: 'image/jpeg'));
-      String coverDownloadUrl = await (await thumbnailUploadTask.onComplete).ref.getDownloadURL();
-      print('File upload success! ' + DateTime.now().toString());
 
       // prepare post data
       Map<String, dynamic> postJson = new Map();

@@ -1,4 +1,4 @@
-package com.example.education;
+package com.education.sillyhouse;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

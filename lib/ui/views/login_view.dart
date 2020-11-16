@@ -73,13 +73,13 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                                     shape: CircleBorder(),
                                     child: CircleAvatar(
                                       backgroundColor: Colors.transparent,
-                                      child: Image.asset('lib/ui/images/splash.png', height: 100),
+                                      child: Image.asset('lib/ui/images/logo.png', height: 80),
                                       radius: 50.0,
                                     )),
                               ),
-                              _focusNameInput.hasFocus || _focusPasswordInput.hasFocus ? Container() : Text("Сайн уу,", style: GoogleFonts.kurale(fontWeight: FontWeight.bold, fontSize: 35.0, color: Color(0xff36c1c8), letterSpacing: 1)),
+                              _focusNameInput.hasFocus || _focusPasswordInput.hasFocus ? Container() : Text("Silly House", style: GoogleFonts.kurale(fontWeight: FontWeight.bold, fontSize: 25.0, color: Color(0xff36c1c8), letterSpacing: 1)),
                               _focusNameInput.hasFocus || _focusPasswordInput.hasFocus ? Container() :
-                              Text("Бүтээлч хүүхдүүдийн нэгдэл", style: GoogleFonts.kurale(fontSize: 25, color: Color(0xff36c1c8), letterSpacing: 0.8)),
+                              Text("Бүтээлч хүүхдүүдийн нэгдэл", style: GoogleFonts.kurale(fontSize: 17, color: Color(0xff36c1c8), letterSpacing: 0.8)),
                               _focusNameInput.hasFocus || _focusPasswordInput.hasFocus ? Container() : SizedBox(height: 50),
                               Container(
                                 height: 60,
@@ -199,14 +199,14 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                                         width: 100,
                                         height: 30,
                                         color: Colors.transparent,
-                                        child: Text('Бүртгүүлэх', style: GoogleFonts.kurale(color: Colors.grey[600], fontSize: 17, decoration: TextDecoration.underline, letterSpacing: 1)),
+                                        child: Text('Бүртгүүлэх', style: GoogleFonts.kurale(color: Colors.grey[600], fontSize: 15, decoration: TextDecoration.underline, letterSpacing: 1)),
                                       ),
                                     ),
                                     Container(
                                       width: 150,
                                       height: 30,
                                       color: Colors.transparent,
-                                      child: Text('Нууц үг мартсан', style: GoogleFonts.kurale(color: Colors.grey[600], fontSize: 17, decoration: TextDecoration.underline, letterSpacing: 1)),
+                                      child: Text('Нууц үг мартсан', style: GoogleFonts.kurale(color: Colors.grey[600], fontSize: 15, decoration: TextDecoration.underline, letterSpacing: 1)),
                                     ),
                                   ],
                                 ),
