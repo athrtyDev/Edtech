@@ -1,16 +1,22 @@
+import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dio/dio.dart';
 import 'package:education/core/classes/activity.dart';
 import 'package:education/core/classes/like.dart';
+import 'package:education/core/classes/media.dart';
 import 'package:education/core/classes/post.dart';
 import 'package:education/core/classes/user.dart';
 import 'package:education/core/services/api.dart';
+import 'package:education/core/services/tool.dart';
 import 'package:education/core/viewmodels/activity_instruction_model.dart';
 import 'package:education/locator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:education/core/enums/view_state.dart';
 import 'package:education/ui/views/base_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
@@ -26,24 +32,29 @@ class ActivityInstructionView extends StatefulWidget {
 class _ActivityInstructionViewState extends State<ActivityInstructionView> {
   _ActivityInstructionViewState({Key key});
 
-  VideoPlayerController videoController;
-  Future<void> initializeVideoPlayer;
   List<Post> relatedPosts;
   final Api _api = locator<Api>();
   ScrollController scrollViewController;
+  CarouselSlider carouselSlider;
+  int _carouselIndex = 0;
+  bool mediaDownloadingState = true;
+  bool postDownloadingState = true;
 
   @override
   void initState() {
     super.initState();
     scrollViewController = ScrollController();
     getDiyInstruction();
-
   }
 
   @override
   void dispose() {
-    if(widget.activity.mediaType == 'video')
-      videoController.dispose();
+    if(widget.activity.listMedia != null && widget.activity.listMedia.isNotEmpty) {
+      for(Media media in widget.activity.listMedia) {
+        if(media.type == 'video')
+          media.videoController.dispose();
+      }
+    }
     super.dispose();
     scrollViewController.dispose();
   }
@@ -54,15 +65,18 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
       onModelReady: (model) => getPosts(context),
         builder: (context, model, child) => WillPopScope(
         onWillPop: () {
-          if (widget.activity.mediaType == 'video' && videoController.value.isPlaying) {
-            videoController.pause();
+          if(widget.activity.listMedia != null && widget.activity.listMedia.isNotEmpty) {
+            for(Media media in widget.activity.listMedia) {
+              if(media.type == 'video' && media.videoController.value.isPlaying)
+                media.videoController.pause();
+            }
           }
           return new Future.value(true);
         },
         child: SafeArea(
           child: Scaffold(
               backgroundColor: Colors.white,
-              body: model.state == ViewState.Busy
+              body: mediaDownloadingState
                   ? Container(child: Center(child: CircularProgressIndicator()))
                   : SingleChildScrollView(
                       child: Column(children: <Widget>[
@@ -101,66 +115,117 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                             ],
                           )
                         ),
-                        // Video instruction
+                        // MEDIA
+                        /*//VimeoPlayer(id: '484150659', autoPlay: false),
                         Container(
-                          height: 390,
-                          child: Hero(
-                              tag: 'diy_' + widget.activity.id,
-                              child: widget.activity.mediaType == 'video' ?
-                                // Video instruction
-                                GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        if (videoController.value.isPlaying)
-                                          videoController.pause();
-                                        else
-                                          videoController.play();
-                                      });
+                          height: 400,
+                          child: YouVimPlayer('vimeo','484150659'),
+                        ),*/
+                        Container(
+                          height: widget.activity.listMedia.length == 1 ? 400 : 370,
+                          width: MediaQuery.of(context).size.width,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              // progress circles
+                              widget.activity.listMedia.length == 1 ? Container() :
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: List.generate(widget.activity.listMedia.length,(index){
+                                  return Container(
+                                    width: 10.0,
+                                    height: 10.0,
+                                    margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: _carouselIndex == index ? Colors.green : Colors.grey[400],
+                                    ),
+                                  );
+                                }),
+                              ),
+                              widget.activity.listMedia.length == 1 ? Container() :
+                              SizedBox(
+                                height: 10,
+                              ),
+                              /*FittedBox(
+                                fit: BoxFit.fill,
+                                child: VimeoPlayer(id: '484150659', autoPlay: false),
+                              ),*/
+
+                              carouselSlider = CarouselSlider(
+                                height: widget.activity.listMedia.length == 1 ? 400 : 330,
+                                initialPage: 0,
+                                enlargeCenterPage: true,
+                                autoPlay: false,
+                                reverse: false,
+                                enableInfiniteScroll: false,
+                                autoPlayInterval: Duration(seconds: 2),
+                                autoPlayAnimationDuration: Duration(milliseconds: 2000),
+                                pauseAutoPlayOnTouch: Duration(seconds: 10),
+                                scrollDirection: widget.activity.listMedia.length == 1 ? Axis.vertical : Axis.horizontal,
+                                onPageChanged: (index) {
+                                  setState(() {
+                                    _carouselIndex = index;
+                                    if(widget.activity.listMedia != null && widget.activity.listMedia.isNotEmpty) {
+                                      for(Media media in widget.activity.listMedia) {
+                                        if(media.type == 'video' && media.videoController.value.isPlaying)
+                                          media.videoController.pause();
+                                      }
+                                    }
+                                  });
+                                },
+                                items: widget.activity.listMedia.map((media) {
+                                  return Builder(
+                                    builder: (BuildContext mediaContext) {
+                                      return Container(
+                                        width: MediaQuery.of(context).size.width,
+                                        margin: EdgeInsets.symmetric(horizontal: 10.0),
+                                        child:
+                                        media.type == 'video' ?
+                                        // VIDEO
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              if (media.videoController.value.isPlaying)
+                                                media.videoController.pause();
+                                              else
+                                                media.videoController.play();
+                                            });
+                                          },
+                                          child: Stack(
+                                            children: [
+                                              VideoPlayer(media.videoController),
+                                              // Play button
+                                              media.videoController == null || media.videoController.value.isPlaying
+                                                  ? Text('')
+                                                  : Center(
+                                                      child: Icon(Icons.play_circle_filled, color: Colors.white, size: 60),
+                                                    ),
+                                            ],
+                                          ),
+                                        )
+                                        :
+                                        // IMAGE
+                                        media.cachePath == null ?
+                                          CachedNetworkImage(
+                                            imageUrl: media.url,
+                                            fit: BoxFit.fill,
+                                            errorWidget: (context, url, error) => Icon(Icons.error),
+                                          )
+                                        :
+                                          Image.file(File(media.cachePath), fit: BoxFit.fill)
+                                      );
                                     },
-                                    child: Container(
-                                        padding: EdgeInsets.all(4),
-                                        decoration: BoxDecoration(
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.blue[100].withOpacity(0.2),
-                                              spreadRadius: 2,
-                                              blurRadius: 5,
-                                              offset: Offset(3, 3), // changes position of shadow
-                                            ),
-                                          ],
-                                        ),
-                                        child: Stack(
-                                          children: [
-                                            FutureBuilder(
-                                              future: initializeVideoPlayer,
-                                              builder: (context, snapshot) {
-                                                if (snapshot.connectionState == ConnectionState.done) {
-                                                  return VideoPlayer(videoController);
-                                                } else {
-                                                  return Center(
-                                                    child: Image.asset('lib/ui/images/loading.gif'),
-                                                  );
-                                                }
-                                              },
-                                            ),
-                                            // Play button
-                                            videoController == null || videoController.value.isPlaying
-                                                ? Text('')
-                                                : Center(
-                                                    child: Icon(
-                                                    Icons.play_circle_filled,
-                                                    color: Colors.white,
-                                                    size: 60,
-                                                  )),
-                                          ],
-                                        )),
-                                  )
-                                  :
-                                  Image.network(widget.activity.mediaUrl, fit: BoxFit.fill)
-                                ),
+                                  );
+                                }).toList(),
+                              ),
+                            ],
+                          ),
                         ),
                         // TYPE, DIFFICULTY
                         Container(
+                          margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
                           height: 72,
                           child: Container(
                             child: Column(
@@ -247,9 +312,7 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                             scrollDirection: Axis.horizontal,
                             mainAxisSpacing: 5.0,
                             children: relatedPosts.map((Post post) {
-                              return Hero(
-                                tag: 'activity_' + post.postId,
-                                child: GestureDetector(
+                              return GestureDetector(
                                     onTap: () {
                                       setState(() {
                                         Navigator.pushNamed(context, '/post_detail', arguments: post).then((value) => setState(() {}));
@@ -308,8 +371,7 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                                             ),
                                           )
                                       ),
-                                    ])),
-                              );
+                                    ]));
                             }).toList(),
                           ),
                         ),
@@ -332,79 +394,19 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                     ],
                   ),
                   onPressed: () {
-                    showDialog(
-                      context: context,
-                      barrierDismissible: true,
-                      builder: (_) => AlertDialog(
-                        elevation: 24,
-                        insetPadding: EdgeInsets.all(0),
-                        contentPadding: EdgeInsets.fromLTRB(0, 15, 0, 15),
-                        actionsPadding: EdgeInsets.all(0),
-                        buttonPadding: EdgeInsets.all(0),
-                        titlePadding: EdgeInsets.all(0),
-                        backgroundColor: Colors.grey[300],
-                        content: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Post post = new Post();
-                                post.uploadMediaType = 'image';
-                                post.activity = widget.activity;
-                                post.user = Provider.of<User>(context);
-                                Navigator.pushNamed(context, '/publish', arguments: post);
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                                  color: Colors.green.withOpacity(0.9),
-                                ),
-                                width: 110,
-                                height: 60,
-                                child: Center(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.photo, color: Colors.white, size: 35),
-                                      SizedBox(width: 5),
-                                      Text('Зураг', style: TextStyle(color: Colors.white)),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 15),
-                            GestureDetector(
-                              onTap: () {
-                                Post post = new Post();
-                                post.uploadMediaType = 'video';
-                                post.activity = widget.activity;
-                                post.user = Provider.of<User>(context);
-                                Navigator.pushNamed(context, '/publish', arguments: post);
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                                  color: Colors.orange.withOpacity(0.9),
-                                ),
-                                width: 110,
-                                height: 60,
-                                child: Center(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.videocam, color: Colors.white, size: 35),
-                                      SizedBox(width: 5),
-                                      Text('Бичлэг', style: TextStyle(color: Colors.white)),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
+                    if(widget.activity.listMedia != null && widget.activity.listMedia.isNotEmpty) {
+                      for(Media media in widget.activity.listMedia) {
+                        if(media.type == 'video' && media.videoController.value.isPlaying)
+                          media.videoController.pause();
+                      }
+                    }
+
+                    Post post = new Post();
+                    //post.uploadMediaType = 'image';
+                    post.activity = widget.activity;
+                    post.user = Provider.of<User>(context);
+                    post.pickedMedia = null;
+                    Navigator.pushNamed(context, '/publish', arguments: post);
                   },
                 ),
               )),
@@ -415,16 +417,46 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
 
   void getDiyInstruction() async {
     try {
-      if(widget.activity.mediaType == 'video') {
-        setState(() {
-          videoController = VideoPlayerController.network(widget.activity.mediaUrl);
-          initializeVideoPlayer = videoController.initialize();
-          videoController.setLooping(true);
-          videoController.setVolume(4.0);
-          if(widget.activity.autoPlay)
-            videoController.play();
-        });
+      setState(() {
+        mediaDownloadingState = true;
+      });
+      var appDir = await getApplicationDocumentsDirectory();
+      String fullPath = appDir.path + "/boo2.mp4'";
+      if(widget.activity.listMedia != null && widget.activity.listMedia.isNotEmpty) {
+        int mediaCount = 0;
+        int videoCount = 0;
+        var cacheDir = await getExternalCacheDirectories();
+        String cachePath = cacheDir.first.path;
+        var dio = Dio();
+        for(Media media in widget.activity.listMedia) {
+          // save to cache
+          mediaCount++;
+          media.cachePath = await Tool.cacheMedia(widget.activity, media, mediaCount, cachePath, dio);
+
+          // IF video => initialize player
+          if (media.type == 'video') {
+            setState(() {
+              videoCount++;
+              //VideoPlayerController videoController = VideoPlayerController.network(media.url);
+              VideoPlayerController videoController;
+              if(media.cachePath == null)
+                videoController = VideoPlayerController.network(media.url);
+              else
+                videoController = VideoPlayerController.file(File(media.cachePath));
+              media.videoController = videoController;
+              Future<void> initializeVideoPlayer = videoController.initialize();
+              media.initializeVideoPlayer = initializeVideoPlayer;
+              media.videoController.setLooping(true);
+              media.videoController.setVolume(4.0);
+              if (videoCount == 1 && widget.activity.autoPlay)
+                media.videoController.play();
+            });
+          }
+        }
       }
+      setState(() {
+        mediaDownloadingState = false;
+      });
     } catch (ex) {
       print('error on loadInstructions: ' + ex.toString());
     }

@@ -9,6 +9,10 @@ class AuthenticationService {
     var result = await Firestore.instance
         .collection('User')
         .add(user.toJson());
+    //userController.add(user);
+  }
+
+  void addRegisteredUserInfoToStream(User user) {
     userController.add(user);
   }
 
@@ -24,7 +28,7 @@ class AuthenticationService {
     }
     else {
       User user = User.fromJson(customerSnapshot.documents[0].data);
-      userController.add(user);
+      //userController.add(user);
       return user;
     }
   }

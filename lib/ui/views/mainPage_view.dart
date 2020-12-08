@@ -1,5 +1,7 @@
-import 'package:bottom_navy_bar/bottom_navy_bar.dart';
+import 'package:education/core/classes/user.dart';
+import 'package:education/core/services/authentication_service.dart';
 import 'package:education/core/viewmodels/main_page_model.dart';
+import 'package:education/locator.dart';
 import 'package:education/ui/views/gallery_view.dart';
 import 'package:education/ui/views/home_view.dart';
 import 'package:education/ui/views/profile_view.dart';
@@ -8,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:education/ui/views/base_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MainPageView extends StatefulWidget {
   MainPageView({Key key}) : super(key: key);
@@ -23,6 +26,7 @@ class _MainPageViewState extends State<MainPageView> {
   void initState() {
     super.initState();
     _pageController = PageController();
+    getRegisteredUserInfo();
   }
 
   @override
@@ -46,6 +50,7 @@ class _MainPageViewState extends State<MainPageView> {
                   backgroundColor: Colors.white,
                   body: PageView(
                     controller: _pageController,
+                    physics: NeverScrollableScrollPhysics(),
                     onPageChanged: (index) {
                       setState(() => _currentIndex = index);
                     },
@@ -112,15 +117,31 @@ class _MainPageViewState extends State<MainPageView> {
             ));
   }
 
-  Future<bool> onWillPop() {
-    DateTime now = DateTime.now();
-    if (currentBackPressTime != null &&
-        now.difference(currentBackPressTime) < Duration(seconds: 1)) {
-      currentBackPressTime = now;
-      SystemNavigator.pop();
-      return Future.value(false);
+  Future<void> getRegisteredUserInfo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString('username');
+    print('Username exist on mainPage? ' + (username ?? 'null'));
+    if(username != null) {
+      setState(() {
+        User user = new User(id: prefs.getString('id'), name: prefs.getString('username'), age: prefs.getInt('age'), registeredDate: prefs.getString('registeredDate'), type: prefs.getString('type'));
+        final AuthenticationService _authenticationService = locator<AuthenticationService>();
+        _authenticationService.addRegisteredUserInfoToStream(user);
+      });
     }
-    currentBackPressTime = now;
+  }
+
+  Future<bool> onWillPop() {
+    if(_currentIndex != 0) {
+      setState(() => _currentIndex = 0);
+      _pageController.jumpToPage(0);
+    } else {
+      DateTime now = DateTime.now();
+      if (currentBackPressTime != null && now.difference(currentBackPressTime) < Duration(seconds: 1)) {
+        currentBackPressTime = now;
+        SystemNavigator.pop();
+      }
+      currentBackPressTime = now;
+    }
     return Future.value(false);
   }
 }

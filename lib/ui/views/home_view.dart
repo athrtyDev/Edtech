@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:education/core/classes/user.dart';
 import 'package:flutter/material.dart';
 import 'package:education/core/enums/view_state.dart';
@@ -33,304 +34,273 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
     return BaseView<HomeModel>(
-      onModelReady: (model) => model.initHomeView(),
+      onModelReady: (model) => model.initHomeView(context),
       builder: (context, model, child) => Scaffold(
         body: SafeArea(
-          child: model.state == ViewState.Busy
-              ? Container(child: Center(child: CircularProgressIndicator()))
-              : ListView(children: <Widget>[
-                  /*Text('Өнөөдрийн сорил', style: GoogleFonts.kurale(fontSize: 22, color: Colors.blue, fontWeight: FontWeight.bold)),
-                        SizedBox(height: 15),
-                        // CHALLENGE
-                        Container(
-                          height: 120,
-                          padding: EdgeInsets.all(20),
+            child: model.state == ViewState.Busy
+                ? Container(child: Center(child: CircularProgressIndicator()))
+                : Stack(
+                    children: [
+                      Positioned(
+                        top: 0,
+                        left: 0,
+                        child: Container(
+                          height: 270,
+                          width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(15)),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 5,
-                                  blurRadius: 7,
-                                  offset: Offset(5, 5), // changes position of shadow
-                                ),
-                              ],
-                              image: DecorationImage(image: AssetImage("lib/ui/images/tmp_challenge.jpg"), fit: BoxFit.fitWidth)),
-                        ),*/
-                  Container(
-                    height: 300,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage("lib/ui/images/home_header.png"),
-                        fit: BoxFit.cover,
+                            color: Color(0xff36c1c8),
+                            borderRadius: BorderRadius.only(bottomLeft: Radius.elliptical(60, 25), bottomRight: Radius.elliptical(60, 25)),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  Padding(
-                      padding: EdgeInsets.fromLTRB(20, 35, 5, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Icon(Icons.shutter_speed, size: 30, color: Color(0xff36c1c8)),
-                          SizedBox(width: 10),
-                          Flexible(
-                            child: Column(
+                      ListView(children: <Widget>[
+                        // GREETING
+                        Padding(
+                            padding: EdgeInsets.fromLTRB(20, 35, 5, 10),
+                            child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Сайн уу ' + Provider.of<User>(context).name + ' !', style: GoogleFonts.kurale(fontSize: 19, color: Colors.black54, fontWeight: FontWeight.w600)),
-                                //Text(Provider.of<User>(context).name, style: GoogleFonts.kurale(fontSize: 19, color: Colors.black54, fontWeight: FontWeight.w600)),
-                                Text('Даалгавруудыг биелүүлж, бусадтай хуваалцаарай.', style: GoogleFonts.kurale(fontSize: 16, color: Colors.black54, fontWeight: FontWeight.w300)),
+                                Icon(Icons.bubble_chart, size: 30, color: Colors.white),
+                                SizedBox(width: 10),
+                                Flexible(
+                                    child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text('Сайн уу ',
+                                            style: GoogleFonts.kurale(
+                                                fontSize: 20, color: Colors.white, fontWeight: FontWeight.w600, letterSpacing: 1.1)),
+                                        Text(Provider.of<User>(context).name + ' !',
+                                            style: GoogleFonts.kurale(
+                                                fontSize: 20, color: Colors.white, fontWeight: FontWeight.w800, letterSpacing: 1.1)),
+                                      ],
+                                    ),
+                                    SizedBox(height: 5),
+                                    Text(model.interfaceDynamic.homeGreeting ?? 'Даалгавруудыг биелүүлж, бусадтай хуваалцаарай.',
+                                        style: GoogleFonts.kurale(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w300)),
+                                  ],
+                                ))
                               ],
-                            )
-
-                          )
-                        ],
-                      )
-                  ),
-                  // ALL ACTIVITY TYPES
-                  Padding(
-                      padding: EdgeInsets.fromLTRB(20, 55, 20, 0),
-                      child: Row(
-                        children: [
-                          Icon(Icons.bubble_chart, size: 30, color: Color(0xff36c1c8)),
-                          SizedBox(width: 10),
-                          Text('Даалгавруудаас сонгоорой', style: GoogleFonts.kurale(fontSize: 20, color: Colors.black, fontWeight: FontWeight.w500)),
-                        ],
-                      )
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 15, 20, 0),
-                    child: Row(
-                      children: [
+                            )),
+                        // TODAY'S POSTER
                         GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(context, '/activity', arguments: 'diy');
+                          onTap: () async {
+                            /*print('aaaaaaaaaaaaa');
+                        var appDir = await getExternalCacheDirectories();
+                        String fullPath = appDir.first.path + "/boo3.mp4'";
+                        print('full path ${fullPath}');
+                        var dio = Dio();
+                        final imgUrl = "https://firebasestorage.googleapis.com/v0/b/education-69b9a.appspot.com/o/activity_diy%2F7%2Fintro.mp4?alt=media&token=3da7caf3-6140-479b-930f-d0ddd9002754";
+                        Tool.download(dio, imgUrl, fullPath);
+                        print('bbbbbbbbbbbbb');*/
                           },
                           child: Container(
-                            height: 140,
-                            width: (width - 30 - 20) / 3,
-                            padding: EdgeInsets.all(10),
+                            height: 180,
+                            margin: EdgeInsets.all(20),
                             decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.all(Radius.circular(15)),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 5,
-                                  blurRadius: 7,
-                                  offset: Offset(
-                                      3, 3), // changes position of shadow
-                                ),
-                              ],
+                              borderRadius: new BorderRadius.all(Radius.circular(40)),
                             ),
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  top: -1,
-                                  left: 5,
-                                  child: Image.asset(
-                                      'lib/ui/images/home_game.png',
-                                      height: 90),
-                                ),
-                                Positioned(
-                                  top: 92,
-                                  left: 26,
-                                  child: Text('Бүтээл',
-                                      style: GoogleFonts.kurale(
-                                          fontSize: 15,
-                                          color: Colors.black54,
-                                          fontWeight: FontWeight.w500)),
-                                ),
-                              ],
+                            child: FittedBox(
+                              fit: BoxFit.fill,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(40),
+                                child: model.interfaceDynamic.homePosterUrl == null
+                                    ? Image.asset("lib/ui/images/home_header2.png")
+                                    : CachedNetworkImage(
+                                        imageUrl: model.interfaceDynamic.homePosterUrl,
+                                        errorWidget: (context, url, error) => Icon(Icons.error),
+                                      ),
+                              ),
                             ),
                           ),
                         ),
-                        SizedBox(width: 15),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(context, '/activity',
-                                arguments: 'discover');
-                          },
-                          child: Container(
-                            height: 140,
-                            width: (width - 60 - 30) / 3,
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15)),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 5,
-                                  blurRadius: 7,
-                                  offset: Offset(
-                                      3, 3), // changes position of shadow
-                                ),
-                              ],
-                            ),
-                            child: Stack(
+                        // ALL ACTIVITY TYPES
+                        Padding(
+                            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                            child: Column(
                               children: [
-                                Positioned(
-                                  top: -8,
-                                  left: -23,
-                                  child: Image.asset(
-                                      'lib/ui/images/home_discover.png',
-                                      height: 100),
+                                Row(
+                                  children: [
+                                    Icon(Icons.bubble_chart, size: 30, color: Color(0xff36c1c8)),
+                                    SizedBox(width: 10),
+                                    Text(model.interfaceDynamic.homeActivityInfo ?? 'Даалгавруудаас сонгоорой',
+                                        style: GoogleFonts.kurale(fontSize: 20, color: Colors.black, fontWeight: FontWeight.w500)),
+                                  ],
                                 ),
-                                Positioned(
-                                  top: 86,
-                                  left: 11,
-                                  child: Text('Өөрийгөө',
-                                      style: GoogleFonts.kurale(
-                                          fontSize: 15,
-                                          color: Colors.black54,
-                                          fontWeight: FontWeight.w500)),
-                                ),
-                                Positioned(
-                                  top: 100,
-                                  left: 30,
-                                  child: Text('нээ',
-                                      style: GoogleFonts.kurale(
-                                          fontSize: 15,
-                                          color: Colors.black54,
-                                          fontWeight: FontWeight.w500)),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 15),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(context, '/activity',
-                                arguments: 'dance');
-                          },
-                          child: Container(
-                            height: 140,
-                            width: (width - 60 - 30) / 3,
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15)),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 5,
-                                  blurRadius: 7,
-                                  offset: Offset(
-                                      3, 3), // changes position of shadow
-                                ),
-                              ],
-                            ),
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  top: -20,
-                                  left: -35,
-                                  child: Image.asset(
-                                      'lib/ui/images/home_dance.png',
-                                      height: 130),
-                                ),
-                                Positioned(
-                                  top: 92,
-                                  left: 22,
-                                  child: Text('Бүжиг',
-                                      style: GoogleFonts.kurale(
-                                          fontSize: 15,
-                                          color: Colors.black54,
-                                          fontWeight: FontWeight.w500)),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  /*
-                        // ОНЦЛОХ
-                        SizedBox(height: 45),
-                        Text('Онцлох', style: GoogleFonts.kurale(fontSize: 22, color: Colors.blue, fontWeight: FontWeight.bold)),
-                        SizedBox(height: 10),
-                        Container(
-                          height: 200,
-                          child: model.state == ViewState.Busy ? Center(child: CircularProgressIndicator()) :
-                          GridView.count(
-                            controller: scrollViewController,
-                            crossAxisCount: 1,
-                            shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            crossAxisSpacing: 6.0,
-                            mainAxisSpacing: 8.0,
-                            children: model.allActivity.map((Activity activity) {
-                              return GestureDetector(
+                                SizedBox(height: 10),
+                                // ACTIVITY DIY
+                                GestureDetector(
                                   onTap: () {
-                                    setState(() {
-                                      Navigator.pushNamed(context, '/activity_instruction', arguments: activity);
-                                    });
+                                    Navigator.pushNamed(context, '/activity', arguments: 'diy');
                                   },
-                                  child: Stack(children: [
-                                    Container(
-                                      color: Colors.white,
-                                      child: Column(
-                                        children: [
-                                          Expanded(
-                                              child: Container(
-                                                  width: (MediaQuery.of(context).size.width) / 2,
-                                                  child: activity.coverImage == null
-                                                      ? Center(child: Image.asset('lib/ui/images/loading.gif'))
-                                                      : Image.memory(activity.coverImage, fit: BoxFit.cover))),
-                                          Row(
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.fromLTRB(5, 2, 0, 2),
-                                                child: Container(
-                                                    child: Text(activity.name,
-                                                        style: TextStyle(fontSize: 12, color: Colors.black54, fontWeight: FontWeight.w600))),
-                                              )
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Container(
-                                                  decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.all(Radius.circular(20))),
-                                                  margin: EdgeInsets.fromLTRB(5, 2, 5, 4),
-                                                  padding: EdgeInsets.fromLTRB(4, 2, 4, 2),
-                                                  //width: 40,
-                                                  height: 25,
-                                                  child: Center(child: Text('Уран зураг', style: TextStyle(color: Colors.white, fontSize: 11)))),
-                                              Padding(
-                                                padding: EdgeInsets.fromLTRB(0, 0, 10, 3),
-                                                child: Image.asset('lib/ui/images/icon_medium.png', height: 20),
-                                              )
-                                            ],
-                                          ),
+                                  child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                                        boxShadow: [
+                                          BoxShadow(
+                                              color: Colors.deepOrange.withOpacity(0.2), spreadRadius: 0.4, blurRadius: 9, offset: Offset(5, 5)),
                                         ],
                                       ),
-                                    ),
-                                    // Gallery count round
-                                    Positioned(
-                                      right: 5,
-                                      top: 5,
-                                      child: Container(
-                                          decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.all(Radius.circular(20))),
-                                          width: 35,
-                                          height: 20,
-                                          child: Center(child: Text('143', style: TextStyle(color: Colors.deepOrange, fontSize: 11)))),
-                                    ),
-                                  ]));
-                            }).toList(),
-                          ),
-                        ),*/
-                ]),
-        ),
+                                      height: 90,
+                                      padding: EdgeInsets.all(0),
+                                      child: Row(
+                                        //crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            height: 90,
+                                            width: 100,
+                                            child: FittedBox(
+                                              fit: BoxFit.fill,
+                                              child: model.interfaceDynamic.homeDiyUrl == null
+                                                  ? Image.asset('lib/ui/images/home_game.png', height: 90)
+                                                  : ClipRRect(
+                                                      borderRadius: BorderRadius.circular(15),
+                                                      child: CachedNetworkImage(
+                                                        imageUrl: model.interfaceDynamic.homeDiyUrl,
+                                                        errorWidget: (context, url, error) => Icon(Icons.error),
+                                                        height: 90,
+                                                      ),
+                                                      //Image.network(model.interfaceDynamic.homeDiyUrl, height: 90),
+                                                    ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 20),
+                                          Flexible(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                SizedBox(height: 3),
+                                                Text('Бүтээл', style: GoogleFonts.kurale(color: Colors.black87, fontSize: 16)),
+                                                SizedBox(height: 3),
+                                                Text('Хичээлүүдийг даган биелүүлж гайхалтай бүтээлтэй болоорой!',
+                                                    style: GoogleFonts.kurale(fontSize: 12, color: Colors.black54)),
+                                              ],
+                                            ),
+                                          ),
+                                          Icon(Icons.keyboard_arrow_right, size: 40, color: Color(0xff36c1c8)),
+                                        ],
+                                      )),
+                                ),
+                                SizedBox(height: 15),
+                                // ACTIVITY DISCOVER
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(context, '/activity', arguments: 'discover');
+                                  },
+                                  child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                                        boxShadow: [
+                                          BoxShadow(
+                                              color: Colors.deepOrange.withOpacity(0.2), spreadRadius: 0.4, blurRadius: 9, offset: Offset(5, 5)),
+                                        ],
+                                      ),
+                                      height: 90,
+                                      padding: EdgeInsets.all(0),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            height: 90,
+                                            width: 100,
+                                            child: FittedBox(
+                                              fit: BoxFit.fill,
+                                              child: model.interfaceDynamic.homeDiscoverUrl == null
+                                                  ? Image.asset('lib/ui/images/home_discover.png', height: 90)
+                                                  : ClipRRect(
+                                                      borderRadius: BorderRadius.circular(15),
+                                                      child: CachedNetworkImage(
+                                                        imageUrl: model.interfaceDynamic.homeDiscoverUrl,
+                                                        errorWidget: (context, url, error) => Icon(Icons.error),
+                                                        height: 90,
+                                                      ),
+                                                    ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 20),
+                                          Flexible(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                SizedBox(height: 3),
+                                                Text('Өөрийгөө нээ', style: GoogleFonts.kurale(color: Colors.black87, fontSize: 16)),
+                                                SizedBox(height: 3),
+                                                Text('Нуугдмал авьяасуудаа нээж илрүүлээрэй!',
+                                                    style: GoogleFonts.kurale(fontSize: 12, color: Colors.black54)),
+                                              ],
+                                            ),
+                                          ),
+                                          Icon(Icons.keyboard_arrow_right, size: 40, color: Color(0xff36c1c8)),
+                                        ],
+                                      )),
+                                ),
+                                SizedBox(height: 15),
+                                // ACTIVITY DANCE
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(context, '/activity', arguments: 'dance');
+                                  },
+                                  child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                                        boxShadow: [
+                                          BoxShadow(
+                                              color: Colors.deepOrange.withOpacity(0.2), spreadRadius: 0.4, blurRadius: 9, offset: Offset(5, 5)),
+                                        ],
+                                      ),
+                                      height: 90,
+                                      padding: EdgeInsets.all(0),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            height: 90,
+                                            width: 100,
+                                            child: FittedBox(
+                                              fit: BoxFit.fill,
+                                              child: model.interfaceDynamic.homeDanceUrl == null
+                                                  ? Image.asset('lib/ui/images/home_dance.png', height: 90)
+                                                  : ClipRRect(
+                                                      borderRadius: BorderRadius.circular(15),
+                                                      child: CachedNetworkImage(
+                                                        imageUrl: model.interfaceDynamic.homeDanceUrl,
+                                                        errorWidget: (context, url, error) => Icon(Icons.error),
+                                                        height: 90,
+                                                      ),
+                                                    ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 20),
+                                          Flexible(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                SizedBox(height: 3),
+                                                Text('Бүжиг', style: GoogleFonts.kurale(color: Colors.black87, fontSize: 16)),
+                                                SizedBox(height: 3),
+                                                Text('Шинэ хөдөлгөөн сурж, өөрийнхөө эрч хүчээ нэмээрэй!',
+                                                    style: GoogleFonts.kurale(fontSize: 12, color: Colors.black54)),
+                                              ],
+                                            ),
+                                          ),
+                                          Icon(Icons.keyboard_arrow_right, size: 40, color: Color(0xff36c1c8)),
+                                        ],
+                                      )),
+                                ),
+                              ],
+                            )),
+                      ]),
+                    ],
+                  ),
+          ),
       ),
     );
   }

@@ -164,6 +164,7 @@ class _RegisterViewState extends State<RegisterView>{
                                             prefs.setString('username', user.name);
                                             prefs.setInt('age', user.age);
                                             prefs.setString('registeredDate', user.registeredDate);
+                                            prefs.setString('type', user.type);
                                             Navigator.pushNamed(context, '/mainPage', arguments: null);
                                           } else {
                                             // Register fail. Username exists

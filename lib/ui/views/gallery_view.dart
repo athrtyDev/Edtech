@@ -1,5 +1,7 @@
 import 'package:education/core/classes/post.dart';
 import 'package:education/core/viewmodels/gallery_model.dart';
+import 'package:education/ui/widgets/gallery_post_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:education/core/enums/view_state.dart';
 import 'package:education/ui/views/base_view.dart';
@@ -17,17 +19,30 @@ class _GalleryViewState extends State<GalleryView> {
   _GalleryViewState({Key key});
 
   ScrollController scrollViewController;
+  ScrollController topScrollViewController;
+  PageController _pageController;
+  int _selectedPageTab;
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
     scrollViewController = ScrollController();
+    /*scrollViewController.addListener(() {
+      if (scrollViewController.position.maxScrollExtent == scrollViewController.offset)
+        loadMorePosts();
+    });*/
+    topScrollViewController = ScrollController();
+    _pageController = PageController();
+    _selectedPageTab = 0;
   }
 
   @override
   void dispose() {
     super.dispose();
-    scrollViewController.dispose();
+    if (scrollViewController != null) scrollViewController.dispose();
+    if (topScrollViewController != null) topScrollViewController.dispose();
+    if (_pageController != null) _pageController.dispose();
   }
 
   @override
@@ -35,176 +50,183 @@ class _GalleryViewState extends State<GalleryView> {
     return BaseView<GalleryModel>(
       onModelReady: (model) => model.loadPostsByUser(context),
       builder: (context, model, child) => Scaffold(
-        backgroundColor: model.listAllPosts == null ? Colors.white : Colors.grey[300],
+        backgroundColor: Colors.white,
         body: SafeArea(
-          child: model.state == ViewState.Busy
-              ? Container(child: Center(child: CircularProgressIndicator()))
-              : Column(
-                  children: [
-                  Container(
-                    height: 60,
-                    color: Colors.white,
-                    padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                    child: Row(
-                      children: [
-                        Icon(Icons.bubble_chart, color: Color(0xff36c1c8), size: 23),
-                        SizedBox(width: 10),
-                        Flexible(
-                          child: Text('Бидний уран бүтээлүүд', style: GoogleFonts.kurale(fontSize: 19, color: Colors.black)),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                      child: model.listAllPosts == null
-                          ? Center(child: Image.asset('lib/ui/images/no_post.png', height: 350))
-                          : GridView.count(
-                              controller: scrollViewController,
-                              crossAxisCount: 2,
-                              //childAspectRatio: 1,
-                              shrinkWrap: true,
-                              scrollDirection: Axis.vertical,
-                              crossAxisSpacing: 3.0,
-                              mainAxisSpacing: 6.0,
-                              children: model.listAllPosts.map((Post post) {
-                                return Hero(
-                                  tag: 'activity_' + post.postId,
-                                  child: GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          Navigator.pushNamed(context, '/post_detail', arguments: post).then((value) => setState(() {}));
-                                        });
-                                      },
-                                      child: Stack(children: [
-                                        // IMAGE, VIDEO
-                                        Container(
-                                          color: Colors.white,
-                                          child: Column(
-                                            children: [
-                                              Expanded(
-                                                  child: Container(
-                                                      width: (MediaQuery.of(context).size.width - 6) / 2,
-                                                      child: post.uploadMediaType == 'image'
-                                                          ? (post.mediaDownloadUrl != null
-                                                              ? Image.network(post.mediaDownloadUrl, fit: BoxFit.cover)
-                                                              : Center(child: Icon(Icons.error, size: 20)))
-                                                          : (post.coverDownloadUrl != null
-                                                              ? Image.network(post.coverDownloadUrl, fit: BoxFit.cover)
-                                                              : Center(
-                                                                  child: Icon(
-                                                                  Icons.ondemand_video,
-                                                                  size: 70,
-                                                                  color: Color(0xff36c1c8),
-                                                                ))))),
-                                              Row(
-                                                children: [
-                                                  Padding(
-                                                    padding: EdgeInsets.fromLTRB(5, 2, 0, 2),
-                                                    child: Container(
-                                                        child: Text(post.activity.name,
-                                                            style: GoogleFonts.kurale(fontSize: 12, color: Colors.black54, fontWeight: FontWeight.w500))),
-                                                  )
-                                                ],
-                                              ),
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  Container(
-                                                      decoration: BoxDecoration(color:
-                                                        post.activity.activityType == 'diy'
-                                                        ? Colors.blue.withOpacity(0.7) : (post.activity.activityType == 'discover'
-                                                        ? Colors.orange.withOpacity(0.7) : (post.activity.activityType == 'dance'
-                                                        ? Colors.red.withOpacity(0.7) : Colors.blue.withOpacity(0.6))),
-                                                      borderRadius: BorderRadius.all(Radius.circular(20))),
-                                                      margin: EdgeInsets.fromLTRB(5, 2, 5, 4),
-                                                      padding: EdgeInsets.fromLTRB(4, 2, 4, 2),
-                                                      //width: 40,
-                                                      height: 25,
-                                                      child: Center(
-                                                          child: Text(
-                                                              post.activity.activityType == 'diy'
-                                                                  ? 'Бүтээл'
-                                                                  : (post.activity.activityType == 'discover'
-                                                                      ? 'Өөрийгөө нээ'
-                                                                      : (post.activity.activityType == 'dance' ? 'Бүжиг' : '')),
-                                                              style: GoogleFonts.kurale(color: Colors.white, fontSize: 11)))),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        // POSTED USER
-                                        Positioned(
-                                          top: 5,
-                                          right: 5,
-                                          child: Container(
-                                              decoration: BoxDecoration(
-                                                  color: Colors.transparent,
-                                                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                                                  border: Border.all(color: Colors.pink.withOpacity(0.7)),
-                                              ),
-                                              padding: EdgeInsets.all(2),
-                                              //width: 40,
-                                              height: 25,
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius: BorderRadius.all(Radius.circular(8)),
-                                                ),
-                                                padding: EdgeInsets.fromLTRB(4, 2, 4, 2),
-                                                child: Row(
-                                                  children: [
-                                                    Icon(Icons.person, color: Colors.black54, size: 15),
-                                                    SizedBox(width: 3),
-                                                    Text(post.userName, style: GoogleFonts.kurale(fontSize: 12, color: Colors.black54, fontWeight: FontWeight.w500)),
-                                                  ],
-                                                ),
-                                              ),
-                                          ),
-                                        ),
-                                        // LIKE
-                                        Positioned(
-                                          right: 0,
-                                          bottom: 0,
-                                          child: GestureDetector(
-                                            onTap: () {
-                                                if(post.isUserLiked) {
-                                                  model.dislikePost(post);
-                                                } else {
-                                                  model.likePost(post);
-                                                }
-                                            },
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(20)),
-                                              ),
-                                              width: 57,
-                                              height: 48,
-                                              child: Center(
-                                                  child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  post.isUserLiked ? Image.asset('lib/ui/images/icon_love_liked.png', height: 17)
-                                                  : Image.asset('lib/ui/images/icon_love.png', height: 13),
-                                                  SizedBox(width: 4),
-                                                  Text(post.likeCount == null ? '0' : post.likeCount.toString(), style: GoogleFonts.kurale(color: Colors.black54, fontSize: 16)),
-                                                ],
-                                              )),
-                                            ),
-                                          ),
-                                        ),
-                                      ])),
-                                );
-                              }).toList(),
+          child: Column(
+                children: [
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _pageController.jumpToPage(0);
+                          });
+                        },
+                        child: Container(
+                          padding: _selectedPageTab == 0 ? EdgeInsets.fromLTRB(10, 5, 5, 5) : EdgeInsets.fromLTRB(12, 8, 7, 8),
+                          width: MediaQuery.of(context).size.width/2,
+                          height: 60,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: _selectedPageTab == 0 ? Color(0xff36c1c8) : Colors.white,
+                              borderRadius: BorderRadius.all(Radius.circular(5)),
+                              border: Border.all(color: Color(0xff36c1c8).withOpacity(0.7)),
+                              /*boxShadow: [
+                                BoxShadow(color: Colors.deepOrange.withOpacity(0.4), spreadRadius: 0.4, blurRadius: 9, offset: Offset(5, 5)),
+                              ],*/
                             ),
-                    ),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(width: 4),
+                                  Icon(Icons.star, size: 25, color: _selectedPageTab == 0 ? Colors.white : Colors.grey[400]),
+                                  SizedBox(width: 7),
+                                  Text('Шилдэг бүтээлүүд', style:
+                                  _selectedPageTab == 0 ? GoogleFonts.kurale(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w700)
+                                      : GoogleFonts.kurale(fontSize: 14, color: Colors.grey[400], fontWeight: FontWeight.w500)
+                                  ),
+                                ],
+                              )
+                            ),
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _pageController.jumpToPage(1);
+                          });
+                        },
+                        child: Container(
+                          padding: _selectedPageTab == 1 ? EdgeInsets.fromLTRB(10, 5, 5, 5) : EdgeInsets.fromLTRB(12, 8, 7, 8),
+                          width: MediaQuery.of(context).size.width/2,
+                          height: 60,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: _selectedPageTab == 1 ? Color(0xff36c1c8) : Colors.white,
+                              borderRadius: BorderRadius.all(Radius.circular(5)),
+                              border: Border.all(color: Color(0xff36c1c8).withOpacity(0.7)),
+                              /*boxShadow: [
+                                BoxShadow(color: Colors.deepOrange.withOpacity(0.4), spreadRadius: 0.4, blurRadius: 9, offset: Offset(5, 5)),
+                              ],*/
+                            ),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(width: 4),
+                                  Icon(Icons.dashboard, size: 25, color: _selectedPageTab == 1 ? Colors.white : Colors.grey[400]),
+                                  SizedBox(width: 7),
+                                  Text('Бүх бүтээлүүд', style:
+                                  _selectedPageTab == 1 ? GoogleFonts.kurale(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w700)
+                                      : GoogleFonts.kurale(fontSize: 14, color: Colors.grey[400], fontWeight: FontWeight.w500)
+                                  ),
+                                ],
+                              )
+                            ),
+                          ),
+                        )
+                      ),
+                    ],
                   ),
-              ]
-          ),
+                  Divider(color: Colors.grey[300], thickness: 5),
+                  // GALLERY LIST
+                  Expanded(
+                    child: PageView(
+                        controller: _pageController,
+                        onPageChanged: (index) {
+                          setState(() => _selectedPageTab = index);
+                        },
+                        children: <Widget>[
+                          // TOP POSTS GALLERY
+                          ListView(
+                            children: [
+                              Container(
+                                height: 170,
+                                //color: Colors.green,
+                                width: MediaQuery.of(context).size.width,
+                                child: FittedBox(
+                                  fit: BoxFit.fill,
+                                  child: Image.asset('lib/ui/images/gallery_header.png'),
+                                ),
+                              ),
+                              model.state == ViewState.Busy ? Container(height: 400, child: Center(child: CircularProgressIndicator())) :
+                              model.listTopPosts == null ? Center(child: Image.asset('lib/ui/images/no_post.png', height: 350)) :
+                              GridView.count(
+                                controller: topScrollViewController,
+                                crossAxisCount: 2,
+                                shrinkWrap: true,
+                                scrollDirection: Axis.vertical,
+                                crossAxisSpacing: 6,
+                                mainAxisSpacing: 6,
+                                children: model.listTopPosts.map((Post post) {
+                                  return Hero(
+                                    tag: 'activity_' + post.postId,
+                                    child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            Navigator.pushNamed(context, '/post_detail', arguments: post).then((value) => setState(() {}));
+                                          });
+                                        },
+                                        child: GalleryPostWidget(post: post)),
+                                  );
+                                }).toList(),
+                              ),
+                            ],
+                          ),
+                          // ALL POSTS GALLERY
+                          model.state == ViewState.Busy ? Container(height: 400, child: Center(child: CircularProgressIndicator())) :
+                          model.listOtherPosts == null ? Center(child: Image.asset('lib/ui/images/no_post.png', height: 350)) :
+                          GridView.count(
+                            controller: scrollViewController,
+                            crossAxisCount: 2,
+                            //childAspectRatio: 1,
+                            shrinkWrap: true,
+                            scrollDirection: Axis.vertical,
+                            crossAxisSpacing: 6,
+                            mainAxisSpacing: 6,
+                            children: model.listOtherPosts.map((Post post) {
+                              return Hero(
+                                tag: 'activity_' + post.postId,
+                                child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        Navigator.pushNamed(context, '/post_detail', arguments: post).then((value) => setState(() {}));
+                                      });
+                                    },
+                                    child: GalleryPostWidget(post: post)),
+                              );
+                            }).toList(),
+                          ),
+                        ],
+                      ),
+                  ),
+                ]),
         ),
       ),
     );
+  }
+
+  loadMorePosts() async {
+    if (!isLoading) {
+      setState(() => isLoading = true);
+      print('loooooooooooooooooooooading...');
+      /*if (datas.length >= 79) {
+        await Future.delayed(Duration(seconds: 3));
+        setState(() => isLoading = false);
+        await makeAnimation();
+        scaffoldKey.currentState?.showSnackBar(
+          SnackBar(
+            content: Text('Get max data!'),
+          ),
+        );
+        return;
+      }*/
+      /*final newDatas = await fetchDatas(datas.length + 1, datas.length + 21);
+      datas.addAll(newDatas);*/
+      isLoading = false;
+      setState(() {});
+    }
   }
 }

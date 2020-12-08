@@ -7,6 +7,7 @@ import 'package:education/ui/views/post_detail_view.dart';
 import 'package:education/ui/views/profile_view.dart';
 import 'package:education/ui/views/publish_view.dart';
 import 'package:education/ui/views/register_view.dart';
+import 'package:education/ui/views/update_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:education/ui/views/mainPage_view.dart';
@@ -38,6 +39,8 @@ class Router {
         return MaterialPageRoute(builder: (_) => ProfileView());
       case '/gallery':
         return MaterialPageRoute(builder: (_) => GalleryView());
+      case '/update':
+        return MaterialPageRoute(builder: (_) => UpdateView());
       default:
         return MaterialPageRoute(builder: (_) => Scaffold(
           body: Center(child: Text('No route defined for ${settings.name}')),

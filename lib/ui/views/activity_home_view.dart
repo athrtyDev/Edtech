@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:education/core/classes/activity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -48,6 +51,7 @@ class _ActivityHomeViewState extends State<ActivityHomeView> {
                   ? Container(child: Center(child: CircularProgressIndicator()))
                   : Column(
                       children: [
+                        // Header
                         Container(
                           height: 60,
                           color: Colors.white,
@@ -65,6 +69,7 @@ class _ActivityHomeViewState extends State<ActivityHomeView> {
                             ],
                           ),
                         ),
+                        // Gallery list
                         Expanded(
                           child: Padding(
                             padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
@@ -75,29 +80,47 @@ class _ActivityHomeViewState extends State<ActivityHomeView> {
                               //childAspectRatio: 1,
                               shrinkWrap: true,
                               scrollDirection: Axis.vertical,
-                              crossAxisSpacing: 6.0,
-                              mainAxisSpacing: 3.0,
+                              crossAxisSpacing: 6,
+                              mainAxisSpacing: 6,
                               children: model.allActivity.map((Activity activity) {
                                 return Hero(
                                   tag: 'activity_' + activity.id,
                                   child: GestureDetector(
                                       onTap: () {
                                         setState(() {
-                                          activity.activityType = widget.activityType;
                                           Navigator.pushNamed(context, '/activity_instruction', arguments: activity);
                                         });
                                       },
                                       child: Stack(children: [
                                         Container(
-                                          color: Colors.white,
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius: new BorderRadius.all(Radius.circular(13)),
+                                          ),
                                           child: Column(
                                             children: [
                                               Expanded(
                                                   child: Container(
                                                       width: (MediaQuery.of(context).size.width - 6) / 2,
-                                                      child: activity.coverImageUrl == null
-                                                          ? Center(child: Image.asset('lib/ui/images/loading.gif'))
-                                                          : Image.network(activity.coverImageUrl, fit: BoxFit.fill)
+                                                      child: activity.cachePathCoverImg != null ?
+                                                        (ClipRRect(
+                                                          borderRadius: BorderRadius.only(topLeft: Radius.circular(13), topRight: Radius.circular(13)),
+                                                          child: Image.file(File(activity.cachePathCoverImg), fit: BoxFit.fill),
+                                                        ))
+                                                        :
+                                                        (activity.coverImageUrl == null
+                                                            ? Center(child: Image.asset('lib/ui/images/loading.gif'))
+                                                            : ClipRRect(
+                                                                borderRadius: BorderRadius.only(topLeft: Radius.circular(13), topRight: Radius.circular(13)),
+                                                                child: CachedNetworkImage(
+                                                                  imageUrl: activity.coverImageUrl,
+                                                                  fit: BoxFit.cover,
+                                                                  errorWidget: (context, url, error) => Icon(Icons.error),
+                                                                ),
+                                                                // Image.network(activity.coverImageUrl, fit: BoxFit.fill),
+                                                              ))
+
+
                                                   )),
                                               Row(
                                                 children: [

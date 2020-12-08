@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:education/core/classes/Interface_dynamic.dart';
 import 'package:education/core/classes/activity.dart';
-import 'package:education/core/classes/item.dart';
 import 'package:education/core/classes/like.dart';
-import 'package:education/core/classes/order.dart';
+import 'package:education/core/classes/comment.dart';
 import 'package:education/core/classes/post.dart';
 import 'package:http/http.dart' as http;
 import 'package:education/core/classes/user.dart';
@@ -23,9 +23,24 @@ class Api {
     return User.fromJson(json.decode(response.body));
   }
 
+  Future<InterfaceDynamic> getInterfaceDynamic() async {
+    QuerySnapshot snapshot = await Firestore.instance
+        .collection('Interface_dynamic')
+        .getDocuments();
+
+    if(snapshot.documents.isEmpty) {
+      return null;
+    }
+    else {
+      InterfaceDynamic dynamic = InterfaceDynamic.fromJson(snapshot.documents[0].data);
+      return dynamic;
+    }
+  }
+
   Future<List<Activity>> getAllActivity(String activityType) async {
     QuerySnapshot itemSnapshot = await Firestore.instance
         .collection('Activity_' + activityType)
+        .where('skill', isGreaterThan: 0)
         .getDocuments();
 
     if(itemSnapshot.documents.isEmpty)
@@ -90,7 +105,7 @@ class Api {
       postJson['skillPoints'] = post.activity.skill;
       postJson['likeCount'] = 0;
       postJson['mediaDownloadUrl'] = downloadUrl;
-      postJson['coverDownloadUrl'] = coverDownloadUrl;
+      postJson['coverDownloadUrl'] = post.uploadMediaType == 'video' ? coverDownloadUrl : downloadUrl;
       postJson['postDate'] = DateTime.now();
 
       // order -> batch
@@ -144,6 +159,7 @@ class Api {
   Future<List<Post>> getPostByActivity(Activity activity) async {
     QuerySnapshot postSnapshot = await Firestore.instance
         .collection('Post')
+        .where('activityType', isEqualTo: activity.activityType)
         .where('activityId', isEqualTo: activity.id)
         .orderBy('postDate', descending: true)
         .getDocuments();
@@ -153,6 +169,33 @@ class Api {
     else {
       return postSnapshot.documents.map((post) => new Post.fromJson(post.data)).toList();
     }
+  }
+
+  Future<List<Comment>> getListComment(String postId) async {
+    QuerySnapshot postSnapshot;
+    if(postId == null || postId == '') {
+      postSnapshot = await Firestore.instance
+          .collection('Comment')
+          .getDocuments();
+    } else {
+      postSnapshot = await Firestore.instance
+          .collection('Comment')
+          .where('postId', isEqualTo: postId)
+          .orderBy('date', descending: true)
+          .getDocuments();
+    }
+
+    if(postSnapshot.documents.isEmpty) {
+      return null;
+    }
+    else {
+      return postSnapshot.documents.map((comment) => new Comment.fromJson(comment.data)).toList();
+    }
+  }
+
+  Future<void> postComment(Comment newComment) async {
+    final CollectionReference ref = Firestore.instance.collection('Comment');
+    ref.document().setData(newComment.toJson());
   }
 
   Future<List<Like>> getAllLikes() async {

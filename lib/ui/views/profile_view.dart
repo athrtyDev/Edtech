@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:education/core/classes/post.dart';
 import 'package:education/core/classes/user.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:education/ui/views/base_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:education/core/viewmodels/profile_model.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileView extends StatefulWidget {
   ProfileView({Key key}) : super(key: key);
@@ -58,8 +60,8 @@ class _ProfileViewState extends State<ProfileView> {
                                     //childAspectRatio: 1,
                                     shrinkWrap: true,
                                     scrollDirection: Axis.vertical,
-                                    crossAxisSpacing: 3.0,
-                                    mainAxisSpacing: 6.0,
+                                    crossAxisSpacing: 6,
+                                    mainAxisSpacing: 6,
                                     children: model.listUserAllPosts.map((Post post) {
                                       return Hero(
                                         tag: 'activity_' + post.postId,
@@ -71,20 +73,25 @@ class _ProfileViewState extends State<ProfileView> {
                                             },
                                             child: Stack(children: [
                                               Container(
-                                                color: Colors.white,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius: new BorderRadius.all(Radius.circular(13)),
+                                                ),
                                                 child: Column(
                                                   children: [
                                                     Expanded(
                                                         child: Container(
                                                             width: (MediaQuery.of(context).size.width - 6) / 2,
-                                                            child: post.uploadMediaType == 'image'
-                                                                ? (post.mediaDownloadUrl != null
-                                                                ? Image.network(post.mediaDownloadUrl, fit: BoxFit.cover)
-                                                                : Center(child: Icon(Icons.error, size: 20))
-                                                            )
-                                                                : (post.coverDownloadUrl != null
-                                                                ? Image.network(post.coverDownloadUrl, fit: BoxFit.cover)
-                                                                : Center(child: Icon(Icons.broken_image, size: 70, color: Colors.grey,)))
+                                                            child: post.coverDownloadUrl != null
+                                                                ? ClipRRect(
+                                                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(13), topRight: Radius.circular(13)),
+                                                                    child: CachedNetworkImage(
+                                                                      imageUrl: post.coverDownloadUrl,
+                                                                      fit: BoxFit.cover,
+                                                                      errorWidget: (context, url, error) => Icon(Icons.error),
+                                                                    ),
+                                                                  )
+                                                                : Center(child: Icon(Icons.broken_image, size: 70, color: Colors.grey,))
                                                         )),
                                                     Row(
                                                       children: [
@@ -192,7 +199,14 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
             Positioned(
               top: 17,
               left: 60,
-              child: Text('Сайн уу, ' + _loggedUser.name, style: GoogleFonts.kurale(fontSize: 18, color: Colors.black)),
+              child: GestureDetector(
+                onTap: () async{
+                  SharedPreferences preferences = await SharedPreferences.getInstance();
+                  await preferences.clear();
+                  print('SharedPreferences cleared');
+                },
+                child: Text('Сайн уу, ' + _loggedUser.name, style: GoogleFonts.kurale(fontSize: 18, color: Colors.black)),
+              )
             ),
             Positioned(
               top: 55,

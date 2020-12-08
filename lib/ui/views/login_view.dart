@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:education/core/classes/user.dart';
 import 'package:education/core/enums/view_state.dart';
@@ -24,20 +23,6 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
   @override
   void initState() {
     super.initState();
-    checkIsLoggedIn();
-  }
-
-  Future<Null> checkIsLoggedIn() async {
-    SharedPreferences.setMockInitialValues({});
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String username = prefs.getString('username');
-    print('Username exist? ' + (username ?? 'null'));
-    if(username != null) {
-      User user = new User(id: prefs.getString('id'), name: prefs.getString('username'), age: prefs.getInt('age'), registeredDate: prefs.getString('registeredDate'));
-      StreamController<User> userController = StreamController<User>();
-      userController.add(user);
-      Navigator.pushNamed(context, '/mainPage', arguments: null);
-    }
   }
 
   @override
@@ -158,9 +143,10 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                                           FocusScope.of(context).unfocus();
                                           SharedPreferences prefs = await SharedPreferences.getInstance();
                                           prefs.setString('username', user.name);
-                                          prefs.setString('id', user.name);
+                                          prefs.setString('id', user.id);
                                           prefs.setInt('age', user.age);
                                           prefs.setString('registeredDate', user.registeredDate);
+                                          prefs.setString('type', user.type);
                                           Navigator.pushNamed(context, '/mainPage', arguments: null);
                                         } else {
                                           Flushbar(
@@ -179,8 +165,6 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                                           duration: Duration(seconds: 3),
                                         )..show(context);
                                       }
-
-
                                     },
                                   ),
                               ),
