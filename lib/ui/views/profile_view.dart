@@ -178,12 +178,12 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   double get minExtent => 50.0;
 
   @override
-  double get maxExtent => 120.0;
+  double get maxExtent => 130.0;
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      height: 115,
+      height: 125,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -209,36 +209,79 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
               )
             ),
             Positioned(
-              top: 55,
+              top: 65,
               left: 30,
               child: Text('Бүтээлүүд', style: GoogleFonts.kurale(color: Colors.black, fontSize: 16)),
             ),
             Positioned(
-              top: 75,
+              top: 85,
               left: 63,
               child: Text(_loggedUser.postTotal.toString(), style: GoogleFonts.kurale(color: Color(0xff36c1c8), fontWeight: FontWeight.bold, fontSize: 24)),
             ),
             Positioned(
-              top: 55,
+              top: 65,
               left: 170,
               child: Text('Ур чадвар', style: GoogleFonts.kurale(color: Colors.black, fontSize: 16)),
             ),
             Positioned(
-              top: 75,
+              top: 85,
               left: 190,
               child: Text('+' + _loggedUser.skillTotal.toString(), style: GoogleFonts.kurale(color: Color(0xff36c1c8), fontWeight: FontWeight.bold, fontSize: 24)),
             ),
             Positioned(
-              top: 55,
+              top: 65,
               left: 325,
               child: Text('Like', style: GoogleFonts.kurale(color: Colors.black, fontSize: 16)),
             ),
             Positioned(
-              top: 75,
+              top: 85,
               left: 333,
               child: Text(_loggedUser.likeTotal.toString(), style: GoogleFonts.kurale(color: Color(0xff36c1c8), fontWeight: FontWeight.bold, fontSize: 24)),
             ),
-            // SKILLS
+            // LOGOUT
+            Positioned(
+                top: 17,
+                right: 47,
+                child: Builder(
+                  builder: (context) => GestureDetector(
+                    child: Container(
+                      height: 40,
+                      width: 50,
+                      color: Colors.transparent,
+                      child: Icon(Icons.menu, color: Color(0xff36c1c8), size: 30,),
+                    ),
+                    onTap: () {
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (BuildContext bc) {
+                            return Container(
+                              height: 70,
+                              color: Colors.white,
+                              child: Padding(
+                                padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                                child: Column(
+                                  children: [
+                                    ListTile(
+                                      leading: Icon(Icons.exit_to_app, color: Colors.black),
+                                      title: Text('Гарах', style: GoogleFonts.kurale(fontSize: 18, color: Colors.black)),
+                                      onTap: () async{
+                                        //Navigator.pop(context);
+                                        //SharedPreferences preferences = await SharedPreferences.getInstance();
+                                        //await preferences.clear();
+                                        //Navigator.of(context).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
+                                        Navigator.pushNamed(context, '/login');
+                                      },
+                                    ),
+                                    //Divider(color: Colors.grey[300], height: 1, thickness: 2),
+                                  ],
+                                ),
+                              ),
+                            );
+                          });
+                    },
+                  ),
+                ),
+            ),
           ]),
     );
   }

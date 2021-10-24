@@ -1,5 +1,11 @@
+import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:education/core/classes/activity.dart';
+import 'package:education/core/classes/post.dart';
 import 'package:education/core/classes/user.dart';
+import 'package:education/ui/views/post_detail_view.dart';
+import 'package:education/ui/widgets/gallery_post_minimal_widget.dart';
+import 'package:education/ui/widgets/gallery_post_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:education/core/enums/view_state.dart';
 import 'package:education/ui/views/base_view.dart';
@@ -19,17 +25,23 @@ class _HomeViewState extends State<HomeView> {
   _HomeViewState({Key key});
 
   ScrollController scrollViewController;
+  ScrollController postViewController;
+  ScrollController scrollBestPostController;
 
   @override
   void initState() {
     super.initState();
     scrollViewController = ScrollController();
+    postViewController = ScrollController();
+    scrollBestPostController = ScrollController();
   }
 
   @override
   void dispose() {
     super.dispose();
     scrollViewController.dispose();
+    postViewController.dispose();
+    scrollBestPostController.dispose();
   }
 
   @override
@@ -38,69 +50,106 @@ class _HomeViewState extends State<HomeView> {
       onModelReady: (model) => model.initHomeView(context),
       builder: (context, model, child) => Scaffold(
         body: SafeArea(
-            child: model.state == ViewState.Busy
-                ? Container(child: Center(child: CircularProgressIndicator()))
-                : Stack(
-                    children: [
+          child: model.state == ViewState.Busy
+              ? Container(child: Center(child: CircularProgressIndicator()))
+              : ListView(children: <Widget>[
+                  Container(
+                    height: 240,
+                    child: Stack(children: [
+                      // BACKGROUND CURVE
                       Positioned(
                         top: 0,
                         left: 0,
                         child: Container(
-                          height: 270,
+                          height: 220,
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
                             color: Color(0xff36c1c8),
-                            borderRadius: BorderRadius.only(bottomLeft: Radius.elliptical(60, 25), bottomRight: Radius.elliptical(60, 25)),
+                            borderRadius: BorderRadius.only(bottomLeft: Radius.elliptical(30, 30), bottomRight: Radius.elliptical(30, 30)),
                           ),
                         ),
                       ),
-                      ListView(children: <Widget>[
-                        // GREETING
-                        Padding(
-                            padding: EdgeInsets.fromLTRB(20, 35, 5, 10),
+                      // HELLO
+                      Positioned(
+                        top: 0,
+                        left: 0,
+                        child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.fromLTRB(20, 18, 0, 0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Icon(Icons.bubble_chart, size: 30, color: Colors.white),
                                 SizedBox(width: 10),
+                                // NAME
                                 Flexible(
-                                    child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text('Сайн уу ',
-                                            style: GoogleFonts.kurale(
-                                                fontSize: 20, color: Colors.white, fontWeight: FontWeight.w600, letterSpacing: 1.1)),
-                                        Text(Provider.of<User>(context).name + ' !',
-                                            style: GoogleFonts.kurale(
-                                                fontSize: 20, color: Colors.white, fontWeight: FontWeight.w800, letterSpacing: 1.1)),
-                                      ],
-                                    ),
-                                    SizedBox(height: 5),
-                                    Text(model.interfaceDynamic.homeGreeting ?? 'Даалгавруудыг биелүүлж, бусадтай хуваалцаарай.',
-                                        style: GoogleFonts.kurale(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w300)),
-                                  ],
-                                ))
+                                  child: Row(
+                                    children: [
+                                      Text('Сайн уу ',
+                                          style:
+                                              GoogleFonts.kurale(fontSize: 20, color: Colors.white, fontWeight: FontWeight.w600, letterSpacing: 1)),
+                                      Text(Provider.of<User>(context).name + ' !',
+                                          style:
+                                              GoogleFonts.kurale(fontSize: 20, color: Colors.white, fontWeight: FontWeight.w600, letterSpacing: 1)),
+                                    ],
+                                  ),
+                                ),
+                                // NOTIFICATION
+                                GestureDetector(
+                                    onTap: () {
+                                      Navigator.pushNamed(context, '/notification');
+                                    },
+                                    child: Container(
+                                      height: 40,
+                                      padding: EdgeInsets.fromLTRB(23, 5, 10, 0),
+                                      color: Colors.transparent,
+                                      child: SizedBox(
+                                        width: 38,
+                                        child: Stack(
+                                          children: [
+                                            Icon(Icons.notifications_active, size: 25, color: Colors.white),
+                                            Positioned(
+                                              left: 11,
+                                              top: 0,
+                                              child: Container(
+                                                width: 15,
+                                                height: 15,
+                                                decoration: new BoxDecoration(
+                                                  color: Color(0xffc83d36),
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: Center(
+                                                  child: Text('0', style: TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold)),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )),
                               ],
                             )),
-                        // TODAY'S POSTER
-                        GestureDetector(
+                      ),
+                      // TODAY'S POSTER
+                      Positioned(
+                        top: 60,
+                        left: 20,
+                        child: GestureDetector(
                           onTap: () async {
-                            /*print('aaaaaaaaaaaaa');
-                        var appDir = await getExternalCacheDirectories();
-                        String fullPath = appDir.first.path + "/boo3.mp4'";
-                        print('full path ${fullPath}');
-                        var dio = Dio();
-                        final imgUrl = "https://firebasestorage.googleapis.com/v0/b/education-69b9a.appspot.com/o/activity_diy%2F7%2Fintro.mp4?alt=media&token=3da7caf3-6140-479b-930f-d0ddd9002754";
-                        Tool.download(dio, imgUrl, fullPath);
-                        print('bbbbbbbbbbbbb');*/
+                            print('aaaaaaaaaaaaa');
+                            /*
+                            var appDir = await getExternalCacheDirectories();
+                            String fullPath = appDir.first.path + "/boo3.mp4'";
+                            print('full path ${fullPath}');
+                            var dio = Dio();
+                            final imgUrl = "https://firebasestorage.googleapis.com/v0/b/education-69b9a.appspot.com/o/activity_diy%2F7%2Fintro.mp4?alt=media&token=3da7caf3-6140-479b-930f-d0ddd9002754";
+                            Tool.download(dio, imgUrl, fullPath);
+                            print('bbbbbbbbbbbbb');*/
                           },
                           child: Container(
-                            height: 180,
-                            margin: EdgeInsets.all(20),
+                            height: 170,
+                            width: MediaQuery.of(context).size.width - 40,
                             decoration: BoxDecoration(
                               borderRadius: new BorderRadius.all(Radius.circular(40)),
                             ),
@@ -118,189 +167,146 @@ class _HomeViewState extends State<HomeView> {
                             ),
                           ),
                         ),
-                        // ALL ACTIVITY TYPES
-                        Padding(
-                            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(Icons.bubble_chart, size: 30, color: Color(0xff36c1c8)),
-                                    SizedBox(width: 10),
-                                    Text(model.interfaceDynamic.homeActivityInfo ?? 'Даалгавруудаас сонгоорой',
-                                        style: GoogleFonts.kurale(fontSize: 20, color: Colors.black, fontWeight: FontWeight.w500)),
-                                  ],
-                                ),
-                                SizedBox(height: 10),
-                                // ACTIVITY DIY
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushNamed(context, '/activity', arguments: 'diy');
-                                  },
-                                  child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.all(Radius.circular(15)),
-                                        boxShadow: [
-                                          BoxShadow(
-                                              color: Colors.deepOrange.withOpacity(0.2), spreadRadius: 0.4, blurRadius: 9, offset: Offset(5, 5)),
-                                        ],
-                                      ),
-                                      height: 90,
-                                      padding: EdgeInsets.all(0),
-                                      child: Row(
-                                        //crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            height: 90,
-                                            width: 100,
-                                            child: FittedBox(
-                                              fit: BoxFit.fill,
-                                              child: model.interfaceDynamic.homeDiyUrl == null
-                                                  ? Image.asset('lib/ui/images/home_game.png', height: 90)
-                                                  : ClipRRect(
-                                                      borderRadius: BorderRadius.circular(15),
-                                                      child: CachedNetworkImage(
-                                                        imageUrl: model.interfaceDynamic.homeDiyUrl,
-                                                        errorWidget: (context, url, error) => Icon(Icons.error),
-                                                        height: 90,
-                                                      ),
-                                                      //Image.network(model.interfaceDynamic.homeDiyUrl, height: 90),
-                                                    ),
-                                            ),
-                                          ),
-                                          SizedBox(width: 20),
-                                          Flexible(
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                SizedBox(height: 3),
-                                                Text('Бүтээл', style: GoogleFonts.kurale(color: Colors.black87, fontSize: 16)),
-                                                SizedBox(height: 3),
-                                                Text('Хичээлүүдийг даган биелүүлж гайхалтай бүтээлтэй болоорой!',
-                                                    style: GoogleFonts.kurale(fontSize: 12, color: Colors.black54)),
-                                              ],
-                                            ),
-                                          ),
-                                          Icon(Icons.keyboard_arrow_right, size: 40, color: Color(0xff36c1c8)),
-                                        ],
-                                      )),
-                                ),
-                                SizedBox(height: 15),
-                                // ACTIVITY DISCOVER
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushNamed(context, '/activity', arguments: 'discover');
-                                  },
-                                  child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.all(Radius.circular(15)),
-                                        boxShadow: [
-                                          BoxShadow(
-                                              color: Colors.deepOrange.withOpacity(0.2), spreadRadius: 0.4, blurRadius: 9, offset: Offset(5, 5)),
-                                        ],
-                                      ),
-                                      height: 90,
-                                      padding: EdgeInsets.all(0),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            height: 90,
-                                            width: 100,
-                                            child: FittedBox(
-                                              fit: BoxFit.fill,
-                                              child: model.interfaceDynamic.homeDiscoverUrl == null
-                                                  ? Image.asset('lib/ui/images/home_discover.png', height: 90)
-                                                  : ClipRRect(
-                                                      borderRadius: BorderRadius.circular(15),
-                                                      child: CachedNetworkImage(
-                                                        imageUrl: model.interfaceDynamic.homeDiscoverUrl,
-                                                        errorWidget: (context, url, error) => Icon(Icons.error),
-                                                        height: 90,
-                                                      ),
-                                                    ),
-                                            ),
-                                          ),
-                                          SizedBox(width: 20),
-                                          Flexible(
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                SizedBox(height: 3),
-                                                Text('Өөрийгөө нээ', style: GoogleFonts.kurale(color: Colors.black87, fontSize: 16)),
-                                                SizedBox(height: 3),
-                                                Text('Нуугдмал авьяасуудаа нээж илрүүлээрэй!',
-                                                    style: GoogleFonts.kurale(fontSize: 12, color: Colors.black54)),
-                                              ],
-                                            ),
-                                          ),
-                                          Icon(Icons.keyboard_arrow_right, size: 40, color: Color(0xff36c1c8)),
-                                        ],
-                                      )),
-                                ),
-                                SizedBox(height: 15),
-                                // ACTIVITY DANCE
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushNamed(context, '/activity', arguments: 'dance');
-                                  },
-                                  child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.all(Radius.circular(15)),
-                                        boxShadow: [
-                                          BoxShadow(
-                                              color: Colors.deepOrange.withOpacity(0.2), spreadRadius: 0.4, blurRadius: 9, offset: Offset(5, 5)),
-                                        ],
-                                      ),
-                                      height: 90,
-                                      padding: EdgeInsets.all(0),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            height: 90,
-                                            width: 100,
-                                            child: FittedBox(
-                                              fit: BoxFit.fill,
-                                              child: model.interfaceDynamic.homeDanceUrl == null
-                                                  ? Image.asset('lib/ui/images/home_dance.png', height: 90)
-                                                  : ClipRRect(
-                                                      borderRadius: BorderRadius.circular(15),
-                                                      child: CachedNetworkImage(
-                                                        imageUrl: model.interfaceDynamic.homeDanceUrl,
-                                                        errorWidget: (context, url, error) => Icon(Icons.error),
-                                                        height: 90,
-                                                      ),
-                                                    ),
-                                            ),
-                                          ),
-                                          SizedBox(width: 20),
-                                          Flexible(
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                SizedBox(height: 3),
-                                                Text('Бүжиг', style: GoogleFonts.kurale(color: Colors.black87, fontSize: 16)),
-                                                SizedBox(height: 3),
-                                                Text('Шинэ хөдөлгөөн сурж, өөрийнхөө эрч хүчээ нэмээрэй!',
-                                                    style: GoogleFonts.kurale(fontSize: 12, color: Colors.black54)),
-                                              ],
-                                            ),
-                                          ),
-                                          Icon(Icons.keyboard_arrow_right, size: 40, color: Color(0xff36c1c8)),
-                                        ],
-                                      )),
-                                ),
-                              ],
-                            )),
-                      ]),
-                    ],
+                      )
+                    ]),
                   ),
-          ),
+
+                  // FEATURED CHALLENGES
+                  model.listFeaturedActivity == null
+                      ? Container()
+                      : Padding(
+                          padding: EdgeInsets.fromLTRB(20, 0, 5, 10),
+                          child: Text('Онцлох даалгаврууд',
+                              style: GoogleFonts.kurale(fontSize: 20, color: Color(0xff36c1c8), fontWeight: FontWeight.w800, letterSpacing: 1)),
+                        ),
+                  model.listFeaturedActivity == null
+                      ? Container(height: 230)
+                      : Container(
+                          height: 190,
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.all(4),
+                          child: GridView.count(
+                            controller: scrollViewController,
+                            crossAxisCount: 1,
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            mainAxisSpacing: 5.0,
+                            children: model.listFeaturedActivity.map((Activity activity) {
+                              return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    Navigator.pushNamed(context, '/activity_instruction', arguments: activity);
+                                  });
+                                },
+                                child: Container(
+                                  width: (MediaQuery.of(context).size.width) / 2,
+                                  decoration: BoxDecoration(
+                                    borderRadius: new BorderRadius.all(Radius.circular(13)),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Expanded(
+                                          child: Container(
+                                              width: (MediaQuery.of(context).size.width),
+                                              child: activity.cachePathCoverImg != null
+                                                  ? (ClipRRect(
+                                                      borderRadius: BorderRadius.only(topLeft: Radius.circular(13), topRight: Radius.circular(13)),
+                                                      child: Image.file(File(activity.cachePathCoverImg), fit: BoxFit.fitWidth),
+                                                    ))
+                                                  : (activity.coverImageUrl == null
+                                                      ? Center(child: Image.asset('lib/ui/images/loading.gif'))
+                                                      : ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius.only(topLeft: Radius.circular(13), topRight: Radius.circular(13)),
+                                                          child: CachedNetworkImage(
+                                                            imageUrl: activity.coverImageUrl,
+                                                            fit: BoxFit.cover,
+                                                            errorWidget: (context, url, error) => Icon(Icons.error),
+                                                          ),
+                                                          // Image.network(activity.coverImageUrl, fit: BoxFit.fill),
+                                                        )))),
+                                      Row(
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.fromLTRB(5, 2, 0, 2),
+                                            child: Container(
+                                                child: Text(activity.name,
+                                                    style: GoogleFonts.kurale(fontSize: 12, color: Colors.black54, fontWeight: FontWeight.w500))),
+                                          )
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                              decoration: BoxDecoration(
+                                                  color: activity.activityType == 'diy'
+                                                      ? Colors.blue.withOpacity(0.7)
+                                                      : (activity.activityType == 'discover'
+                                                          ? Colors.orange.withOpacity(0.7)
+                                                          : (activity.activityType == 'dance'
+                                                              ? Colors.red.withOpacity(0.7)
+                                                              : Colors.blue.withOpacity(0.6))),
+                                                  borderRadius: BorderRadius.all(Radius.circular(20))),
+                                              margin: EdgeInsets.fromLTRB(5, 2, 5, 4),
+                                              padding: EdgeInsets.fromLTRB(4, 2, 4, 2),
+                                              //width: 40,
+                                              height: 25,
+                                              child: Center(
+                                                  child: Text(
+                                                      activity.activityType == 'diy'
+                                                          ? 'Бүтээл'
+                                                          : (activity.activityType == 'discover'
+                                                              ? 'Өөрийгөө нээ'
+                                                              : (activity.activityType == 'dance' ? 'Бүжиг' : '')),
+                                                      style: GoogleFonts.kurale(color: Colors.white, fontSize: 11)))),
+                                          Padding(
+                                            padding: EdgeInsets.fromLTRB(0, 0, 10, 3),
+                                            child: activity.difficulty == 'easy'
+                                                ? Image.asset('lib/ui/images/icon_easy.png', height: 20)
+                                                : (activity.difficulty == 'medium'
+                                                    ? Image.asset('lib/ui/images/icon_medium.png', height: 20)
+                                                    : (activity.difficulty == 'hard'
+                                                        ? Image.asset('lib/ui/images/icon_hard.png', height: 20)
+                                                        : Text(''))),
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                  Divider(color: Colors.grey[200], thickness: 3,),
+                  // BEST POSTS
+                  model.listBestPost == null
+                      ? Container()
+                      : Padding(
+                    padding: EdgeInsets.fromLTRB(20, 0, 5, 10),
+                    child: Text('Шилдэг бүтээлүүд',
+                        style: GoogleFonts.kurale(fontSize: 20, color: Color(0xff36c1c8), fontWeight: FontWeight.w800, letterSpacing: 1)),
+                  ),
+                  model.listBestPost == null
+                      ? Container(height: 230)
+                      : Container(
+                    height: 187,
+                    alignment: Alignment.centerLeft,
+                    padding: EdgeInsets.all(4),
+                    child: GridView.count(
+                      controller: scrollBestPostController,
+                      crossAxisCount: 1,
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      mainAxisSpacing: 5.0,
+                      children: model.listBestPost.map((Post post) {
+                        return GalleryPostMinimalWidget(post: post);
+                      }).toList(),
+                    ),
+                  ),
+                ]),
+        ),
       ),
     );
   }

@@ -3,6 +3,7 @@ class User {
   String name;
   String password;
   int age;
+  String email;
   String profile_pic;
   String registeredDate;
   String type;        // null=normal, teacher=online zuwluh bagsh
@@ -11,7 +12,7 @@ class User {
   int skillTotal;
   int likeTotal;
 
-  User({this.id, this.name, this.password, this.age, this.profile_pic, this.registeredDate, this.postTotal,
+  User({this.id, this.name, this.password, this.age, this.email, this.profile_pic, this.registeredDate, this.postTotal,
         this.likeTotal, this.skillTotal, this.type});
 
   User.initial()
@@ -20,6 +21,7 @@ class User {
         password = '',
         profile_pic = null,
         age = 0,
+        email = null,
         type = null,
         registeredDate = null;
 
@@ -28,6 +30,7 @@ class User {
     name = json['name'];
     password = json['password'];
     age = json['age'];
+    email = json['email'];
     profile_pic = json['profile_pic'];
     registeredDate = json['registeredDate'].toString();
     type = json['type'] ?? '';
@@ -39,6 +42,7 @@ class User {
     data['name'] = this.name ?? '';
     data['password'] = this.password ?? null;
     data['age'] = this.age ?? 0;
+    data['email'] = this.email ?? null;
     data['profile_pic'] = this.profile_pic ?? null;
     data['registeredDate'] = this.registeredDate ?? null;
     data['type'] = this.type ?? '';

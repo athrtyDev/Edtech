@@ -177,8 +177,6 @@ class _PublishViewState extends State<PublishView> with SingleTickerProviderStat
                             widget.post.uploadMediaType = widget.post.pickedMedia.type;
                             await model.uploadFile(widget.post,
                                 widget.post.pickedMedia.storageFile == null ? File(widget.post.pickedMedia.mediaStr) : File(widget.post.pickedMedia.storageFile.path));
-                            if(widget.post.pickedMedia.storageFile == null && await File(widget.post.pickedMedia.mediaStr).exists())
-                              File(widget.post.pickedMedia.mediaStr).delete();
                             Navigator.of(context).pushNamedAndRemoveUntil('/mainPage', (Route<dynamic> route) => false);
                           },
                         ),

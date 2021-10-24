@@ -145,6 +145,7 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                                           prefs.setString('username', user.name);
                                           prefs.setString('id', user.id);
                                           prefs.setInt('age', user.age);
+                                          prefs.setString('email', user.email);
                                           prefs.setString('registeredDate', user.registeredDate);
                                           prefs.setString('type', user.type);
                                           Navigator.pushNamed(context, '/mainPage', arguments: null);

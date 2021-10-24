@@ -3,6 +3,7 @@ import 'package:education/core/classes/post.dart';
 import 'package:education/ui/views/activity_home_view.dart';
 import 'package:education/ui/views/activity_instruction_view.dart';
 import 'package:education/ui/views/gallery_view.dart';
+import 'package:education/ui/views/notification_view.dart';
 import 'package:education/ui/views/post_detail_view.dart';
 import 'package:education/ui/views/profile_view.dart';
 import 'package:education/ui/views/publish_view.dart';
@@ -39,6 +40,8 @@ class Router {
         return MaterialPageRoute(builder: (_) => ProfileView());
       case '/gallery':
         return MaterialPageRoute(builder: (_) => GalleryView());
+      case '/notification':
+        return MaterialPageRoute(builder: (_) => NotificationView());
       case '/update':
         return MaterialPageRoute(builder: (_) => UpdateView());
       default:

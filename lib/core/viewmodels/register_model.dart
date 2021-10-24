@@ -9,7 +9,7 @@ class RegisterModel extends BaseModel {
   final AuthenticationService _authenticationService = locator<AuthenticationService>();
   String errorMessage;
 
-  Future<User> registerUser(String name, String password, String age) async {
+  Future<User> registerUser(String name, String password, String age, String email) async {
     setState(ViewState.Busy);
     // Check user name exists
     name = name.toLowerCase()[0].toUpperCase() + name.toLowerCase().substring(1);
@@ -25,6 +25,7 @@ class RegisterModel extends BaseModel {
       user.name = name.toLowerCase()[0].toUpperCase() + name.toLowerCase().substring(1);
       user.password = password;
       user.age = int.tryParse(age);
+      user.email = email;
       user.registeredDate = DateTime.now().toString();
       user.postTotal = 0;
       user.likeTotal = 0;

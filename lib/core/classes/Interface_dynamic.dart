@@ -8,9 +8,11 @@ class InterfaceDynamic {
   String homeGreeting;
   String homePosterUrl;
   String appVersion;
+  String homeActivityId;
+  String homeActivityType;
 
   InterfaceDynamic({this.homeActivityInfo, this.homeDanceUrl, this.homeDiscoverUrl, this.homeDiyUrl,
-                      this.homeGreeting, this.homePosterUrl, this.appVersion});
+                      this.homeGreeting, this.homePosterUrl, this.appVersion, this.homeActivityId, this.homeActivityType});
 
   InterfaceDynamic.fromJson(Map<String, dynamic> json) {
     homeActivityInfo = Tool.nullEmptyString(json['homeActivityInfo']);
@@ -20,6 +22,8 @@ class InterfaceDynamic {
     homeGreeting = Tool.nullEmptyString(json['homeGreeting']);
     homePosterUrl = Tool.nullEmptyString(json['homePosterUrl']);
     appVersion = Tool.nullEmptyString(json['appVersion']);
+    homeActivityId = Tool.nullEmptyString(json['homeActivityId']);
+    homeActivityType = Tool.nullEmptyString(json['homeActivityType']);
   }
 
   Map<String, dynamic> toJson() {
@@ -31,6 +35,8 @@ class InterfaceDynamic {
     data['homeGreeting'] = this.homeGreeting ?? '';
     data['homePosterUrl'] = this.homePosterUrl ?? '';
     data['appVersion'] = this.appVersion ?? '';
+    data['homeActivityId'] = this.homeActivityId ?? '';
+    data['homeActivityType'] = this.homeActivityType ?? '';
     return data;
   }
 }

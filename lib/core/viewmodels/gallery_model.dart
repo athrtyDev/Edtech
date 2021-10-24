@@ -11,10 +11,7 @@ import 'package:provider/provider.dart';
 
 class GalleryModel extends BaseModel {
   final Api _api = locator<Api>();
-  List<Post> listTopPosts;
-  List<Post> listOtherPosts;
-  List<Post> listOtherShowingPosts;
-  List<Post> listSelectedPosts;
+  List<Post> listPosts;       // all top posts (not including Top posts)
   List<Like> allLikes;
   User loggedUser;
 
@@ -24,10 +21,7 @@ class GalleryModel extends BaseModel {
     allLikes = await _api.getAllLikes();
     List<Post> listAllPosts = await _api.getAllPost();
     List<Comment> listAllComments = await _api.getListComment(null);
-    listTopPosts = new List<Post>();                // all top posts
-    listOtherPosts = new List<Post>();              // non top ALL posts
-    listOtherShowingPosts = new List<Post>();       // non top SHOWING other posts
-
+    listPosts = new List<Post>();
 
     if(listAllPosts != null) {
       for (Post post in listAllPosts) {
@@ -63,12 +57,9 @@ class GalleryModel extends BaseModel {
         }
 
         // Seperate top posts and other posts
-        if(post.isTop) listTopPosts.add(post);
-        else listOtherPosts.add(post);
+        if(!post.isTop) listPosts.add(post);
       }
     }
-    if(listTopPosts.isEmpty) listTopPosts = null;
-    if(listOtherPosts.isEmpty) listOtherPosts = null;
     setState(ViewState.Idle);
     notifyListeners();
   }

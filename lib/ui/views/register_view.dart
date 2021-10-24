@@ -21,6 +21,7 @@ class _RegisterViewState extends State<RegisterView>{
   final TextEditingController _nameInput = TextEditingController();
   final TextEditingController _passwordInput = TextEditingController();
   final TextEditingController _ageInput = TextEditingController();
+  final TextEditingController _emailInput = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -82,8 +83,66 @@ class _RegisterViewState extends State<RegisterView>{
                                   ),
                                 ),
                               ),
-                              SizedBox(height: 10.0),
+                              // AGE input
+                              SizedBox(height: 10),
+                              Container(
+                                height: 60,
+                                width: 300,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100.0),
+                                  color: Colors.transparent,
+                                ),
+                                child: Center(
+                                  child: TextField(
+                                    controller: _ageInput,
+                                    style: GoogleFonts.kurale(color: Colors.grey[600]),
+                                    keyboardType: TextInputType.number,
+                                    onTap: () {
+                                      setState(() {});
+                                    },
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(borderSide: new BorderSide(color: Colors.white)),
+                                        focusedBorder: OutlineInputBorder(borderSide: new BorderSide(color: Colors.white)),
+                                        disabledBorder: OutlineInputBorder(borderSide: new BorderSide(color: Colors.white)),
+                                        enabledBorder: OutlineInputBorder(borderSide: new BorderSide(color: Colors.white)),
+                                        fillColor: Colors.grey[200],
+                                        filled: true,
+                                        hintText: "Нас",
+                                        hintStyle: GoogleFonts.kurale(color: Colors.grey[600], fontStyle: FontStyle.italic, fontSize: 16.0)),
+                                  ),
+                                ),
+                              ),
+                              // PARENTS EMAIL
+                              SizedBox(height: 10),
+                              Container(
+                                height: 60,
+                                width: 300,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100.0),
+                                  color: Colors.transparent,
+                                ),
+                                child: Center(
+                                  child: TextField(
+                                    controller: _emailInput,
+                                    keyboardType: TextInputType.emailAddress,
+                                    style: GoogleFonts.kurale(color: Colors.grey[600]),
+                                    onTap: () {
+                                      setState(() {});
+                                    },
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(borderSide: new BorderSide(color: Colors.transparent)),
+                                        focusedBorder: OutlineInputBorder(borderSide: new BorderSide(color: Colors.transparent)),
+                                        disabledBorder: OutlineInputBorder(borderSide: new BorderSide(color: Colors.transparent)),
+                                        enabledBorder: OutlineInputBorder(borderSide: new BorderSide(color: Colors.transparent)),
+                                        fillColor: Colors.grey[200],
+                                        filled: true,
+                                        hintText: "Эцэг, эхийн имейл",
+                                        hintStyle: GoogleFonts.kurale(color: Colors.grey[600], fontStyle: FontStyle.italic, fontSize: 16.0)),
+                                  ),
+                                ),
+                              ),
                               // PASSWORD input
+                              SizedBox(height: 10),
                               Container(
                                 height: 60,
                                 width: 300,
@@ -112,35 +171,6 @@ class _RegisterViewState extends State<RegisterView>{
                                   ),
                                 ),
                               ),
-                              SizedBox(height: 10),
-                              // AGE input
-                              Container(
-                                height: 60,
-                                width: 300,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100.0),
-                                  color: Colors.transparent,
-                                ),
-                                child: Center(
-                                  child: TextField(
-                                    controller: _ageInput,
-                                    style: GoogleFonts.kurale(color: Colors.grey[600]),
-                                    keyboardType: TextInputType.number,
-                                    onTap: () {
-                                      setState(() {});
-                                    },
-                                    decoration: InputDecoration(
-                                        border: OutlineInputBorder(borderSide: new BorderSide(color: Colors.white)),
-                                        focusedBorder: OutlineInputBorder(borderSide: new BorderSide(color: Colors.white)),
-                                        disabledBorder: OutlineInputBorder(borderSide: new BorderSide(color: Colors.white)),
-                                        enabledBorder: OutlineInputBorder(borderSide: new BorderSide(color: Colors.white)),
-                                        fillColor: Colors.grey[200],
-                                        filled: true,
-                                        hintText: "Нас",
-                                        hintStyle: GoogleFonts.kurale(color: Colors.grey[600], fontStyle: FontStyle.italic, fontSize: 16.0)),
-                                  ),
-                                ),
-                              ),
                               // REGISTER button
                               Container(
                                 margin: EdgeInsets.only(top: 20),
@@ -155,14 +185,15 @@ class _RegisterViewState extends State<RegisterView>{
                                       elevation: 4.0,
                                       child: Text('БҮРТГҮҮЛЭХ', style: GoogleFonts.kurale()),
                                       onPressed: () async{
-                                        if (_nameInput.text != '' && _passwordInput.text != '' && _ageInput.text != '') {
-                                          User user = await model.registerUser(_nameInput.text, _passwordInput.text, _ageInput.text);
+                                        if (_nameInput.text != '' && _passwordInput.text != '' && _ageInput.text != '' && _emailInput.text != '') {
+                                          User user = await model.registerUser(_nameInput.text, _passwordInput.text, _ageInput.text, _emailInput.text);
                                           if(user != null) {
                                             // Register success
                                             SharedPreferences prefs = await SharedPreferences.getInstance();
                                             prefs.setString('id', user.id);
                                             prefs.setString('username', user.name);
                                             prefs.setInt('age', user.age);
+                                            prefs.setString('email', user.email);
                                             prefs.setString('registeredDate', user.registeredDate);
                                             prefs.setString('type', user.type);
                                             Navigator.pushNamed(context, '/mainPage', arguments: null);

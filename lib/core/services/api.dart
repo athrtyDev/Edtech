@@ -37,9 +37,9 @@ class Api {
     }
   }
 
-  Future<List<Activity>> getAllActivity(String activityType) async {
+  Future<List<Activity>> getAllActivity() async {
     QuerySnapshot itemSnapshot = await Firestore.instance
-        .collection('Activity_' + activityType)
+        .collection('Activity')
         .where('skill', isGreaterThan: 0)
         .getDocuments();
 
@@ -49,7 +49,35 @@ class Api {
       return itemSnapshot.documents.map((activity) => new Activity.fromJson(activity.data)).toList();
   }
 
-  Future<bool> savePost(Post post, File file) async{
+  Future<List<Activity>> getActivityByType(String activityType) async {
+    QuerySnapshot itemSnapshot = await Firestore.instance
+        .collection('Activity')
+        .where('skill', isGreaterThan: 0)
+        .where('activityType', isEqualTo: activityType)
+        .getDocuments();
+
+    if(itemSnapshot.documents.isEmpty)
+      return null;
+    else
+      return itemSnapshot.documents.map((activity) => new Activity.fromJson(activity.data)).toList();
+  }
+
+  Future<Activity> getActivityById(String activityId) async {
+    QuerySnapshot itemSnapshot = await Firestore.instance
+        .collection('Activity')
+        .where('skill', isGreaterThan: 0)
+        .where('id', isEqualTo: activityId)
+        .getDocuments();
+
+    if(itemSnapshot.documents.isEmpty)
+      return null;
+    else {
+      Activity activity = Activity.fromJson(itemSnapshot.documents[0].data);
+      return activity;
+    }
+  }
+
+  Future<String> savePost(Post post, File file) async{
     try {
       // compress media
       File thumbnailFile;
@@ -121,11 +149,11 @@ class Api {
       }).catchError((error) {
         print('Post upload error:' + error);
       });
-      return true;
+      return postId;
     }
     catch(e) {
       print('SavePost function error:' + e);
-      return false;
+      return null;
     }
   }
 
@@ -156,10 +184,24 @@ class Api {
     }
   }
 
+  Future<List<Post>> getHomePost() async {
+    QuerySnapshot postSnapshot = await Firestore.instance
+        .collection('Post')
+        .orderBy('postDate', descending: true)
+        .limit(10)
+        .getDocuments();
+    if(postSnapshot.documents.isEmpty) {
+      return null;
+    }
+    else {
+      return postSnapshot.documents.map((post) => new Post.fromJson(post.data)).toList();
+    }
+  }
+
   Future<List<Post>> getPostByActivity(Activity activity) async {
     QuerySnapshot postSnapshot = await Firestore.instance
         .collection('Post')
-        .where('activityType', isEqualTo: activity.activityType)
+        //.where('activityType', isEqualTo: activity.activityType)
         .where('activityId', isEqualTo: activity.id)
         .orderBy('postDate', descending: true)
         .getDocuments();
@@ -171,11 +213,46 @@ class Api {
     }
   }
 
+  Future<void> deletePost(Post post) async{
+    print('aaaaaaaa');
+    print(post.postId);
+    print(post.coverDownloadUrl);
+    print(post.mediaDownloadUrl);
+    print(post.cacheMediaPath);
+    // delete document
+    await Firestore.instance.collection('Post')
+        .where("postId", isEqualTo: post.postId)
+        .getDocuments().then((snapshot){
+      snapshot.documents.first.reference.delete();
+      print('Successfully deleted document' );
+    });
+
+    // delete file from storage
+    StorageReference ref = await FirebaseStorage().getReferenceFromUrl(post.mediaDownloadUrl);
+    await ref.delete();
+    print('deleting media... ' + post.mediaDownloadUrl);
+    print('Successfully deleted MEDIA storage item');
+
+    if(post.uploadMediaType == 'video') {
+      ref = await FirebaseStorage().getReferenceFromUrl(post.coverDownloadUrl);
+      await ref.delete();
+      print('deleting cover... ' + post.coverDownloadUrl);
+      print('Successfully deleted COVER storage item');
+    }
+
+    // delete from cache
+    if(await File(post.cacheMediaPath).exists()) {
+      File(post.cacheMediaPath).delete();
+      print('Successfully deleted ' + post.cacheMediaPath + ' cache');
+    }
+  }
+
   Future<List<Comment>> getListComment(String postId) async {
     QuerySnapshot postSnapshot;
     if(postId == null || postId == '') {
       postSnapshot = await Firestore.instance
           .collection('Comment')
+          .orderBy('date', descending: true)
           .getDocuments();
     } else {
       postSnapshot = await Firestore.instance
@@ -221,6 +298,14 @@ class Api {
   void dislikePost(Post post, String userId) {
     Firestore.instance.collection('Like')
         .where("likedUserId", isEqualTo: userId).where("postId", isEqualTo: post.postId)
+        .getDocuments().then((snapshot){
+      snapshot.documents.first.reference.delete();
+    });
+  }
+
+  Future<void> deleteComment(String commentId) async{
+    Firestore.instance.collection('Comment')
+        .where("commentId", isEqualTo: commentId)
         .getDocuments().then((snapshot){
       snapshot.documents.first.reference.delete();
     });

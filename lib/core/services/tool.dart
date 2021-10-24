@@ -120,4 +120,13 @@ class Tool {
       return null;
     }
   }
+
+  static Future<void> cacheNewPublishedPost(String postId, var fileBytes) async{
+    // post93defbb6-3a65-4a7b-8c09-905e6af9f1c1
+    var cacheDir = await getExternalCacheDirectories();
+    String path = cacheDir.first.path;
+    String fullPath = path + "/post" + postId;
+    await File(fullPath).writeAsBytes(fileBytes);
+    print('cached new file: ' + fullPath);
+  }
 }

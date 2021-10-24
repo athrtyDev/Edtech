@@ -286,12 +286,12 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                             ),
                           ),
                         ),
+                        // RELATED POSTS
                         relatedPosts == null ? Container() :
                         Container(
                           height: 5,
                           color: Colors.grey[200],
                         ),
-                        // Related posts
                         relatedPosts == null ? Container() :
                         Container(
                           padding: EdgeInsets.fromLTRB(20, 7, 20, 7),

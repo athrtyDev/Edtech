@@ -1,5 +1,5 @@
-class Comment {
-  String commentId;
+class Notification {
+  String id;
   String postId;
   String userId;
   String userName;
@@ -8,10 +8,10 @@ class Comment {
   String comment;
   DateTime date;
 
-  Comment({this.commentId, this.postId, this.userId, this.userName, this.userProfilePic, this.userType, this.comment});
+  Notification({this.id, this.postId, this.userId, this.userName, this.userProfilePic, this.userType, this.comment});
 
-  Comment.fromJson(Map<String, dynamic> json) {
-    commentId = json['commentId'];
+  Notification.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
     postId = json['postId'];
     userId = json['userId'];
     userName = json['userName'];
@@ -23,7 +23,7 @@ class Comment {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['commentId'] = this.commentId;
+    data['id'] = this.id;
     data['postId'] = this.postId;
     data['userId'] = this.userId;
     data['userName'] = this.userName;

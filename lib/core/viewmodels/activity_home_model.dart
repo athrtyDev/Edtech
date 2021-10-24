@@ -18,7 +18,7 @@ class ActivityHomeModel extends BaseModel {
   void getActivityList(String activityType) async {
     setState(ViewState.Busy);
     if(allActivity == null) {
-      allActivity = await _api.getAllActivity(activityType);
+      allActivity = await _api.getAllActivity();
       // Multiple media update change
       if(allActivity != null) {
         // Cache cover images
@@ -27,18 +27,8 @@ class ActivityHomeModel extends BaseModel {
         var dio = Dio();
         for(Activity activity in allActivity) {
           activity.activityType = activityType;
-          // For multiple media
-          // aa.mp4;bb.mp4  => list[aa.mp4, bb.mp4] bolgoh
-          if(activity.mediaUrlAll != null) {
-            List<String> listUrlString = activity.mediaUrlAll.split(";");
-            List<String> listUrlTypeString = activity.mediaUrlAllMeta.split(";");
-            List<Media> listMedia = new List<Media>();
-            for(int index=0; index<listUrlString.length; index++) {
-              Media media = new Media(url: listUrlString[index], type: listUrlTypeString[index]);
-              listMedia.add(media);
-            }
-            activity.listMedia = listMedia;
-          }
+          if(activity.mediaUrlAll != null)
+            activity.listMedia = getListMediaOfActivity(activity);
           // Cache cover images
           activity.cachePathCoverImg = await Tool.cacheActivity(activity, path, dio);
         }
@@ -46,5 +36,18 @@ class ActivityHomeModel extends BaseModel {
     }
     setState(ViewState.Idle);
     notifyListeners();
+  }
+
+  static List<Media> getListMediaOfActivity(Activity activity) {
+    // For multiple media
+    // aa.mp4;bb.mp4  => list[aa.mp4, bb.mp4] bolgoh
+    List<String> listUrlString = activity.mediaUrlAll.split(";");
+    List<String> listUrlTypeString = activity.mediaUrlAllMeta.split(";");
+    List<Media> listMedia = new List<Media>();
+    for(int index=0; index<listUrlString.length; index++) {
+      Media media = new Media(url: listUrlString[index], type: listUrlTypeString[index]);
+      listMedia.add(media);
+    }
+    return listMedia;
   }
 }
